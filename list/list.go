@@ -1,0 +1,85 @@
+// Package list implements dinamic lists.
+package list
+
+import (
+	"sort"
+
+	"github.com/potex02/structures"
+	"golang.org/x/exp/constraints"
+)
+
+// List provides all methods to use a generic dinamic list.
+// A List contains all the methods of [structures.Structure].
+//
+// A List is indexed starting from 0.
+type List[T any] interface {
+	structures.Structure[T]
+	// Contains returns if e is present in the list.
+	Contains(e T) bool
+	// IndexOf returns the first position of e in the list.
+	// If e is not present, the result is -1.
+	IndexOf(e T) int
+	// LastIndexOf returns the last position of e in the list.
+	// If e is not present, the result is -1.
+	LastIndexOf(e T) int
+	// Get returns the elements at the specifies index.
+	// It returns an error if the the index is out of bounds.
+	Get(index int) (T, error)
+	// Set sets the value of element at the specified index and returns the overwritten value.
+	// It returns an error if the the index is out of bounds.
+	Set(index int, e T) (T, error)
+	// AddAtIndex adds the element e at the specified index.
+	// It returns an error if the the index is out of bounds.
+	AddAtIndex(index int, e T) error
+	// AddElements is a wrapper for AddSlice([]T{e...})
+	AddElements(e ...T)
+	// AddElementsAtIndex is a wrapper for AddSliceAtIndex(index, []T{e...})
+	AddElementsAtIndex(index int, e ...T) error
+	// AddSlice adds the elements of e at the end of the list.
+	AddSlice(e []T)
+	// AddSliceAtIndex adds the elements of e at the specified index.
+	// It returns an error if the the index is out of bounds.
+	AddSliceAtIndex(index int, e []T) error
+	// Remove removes the element at specified index and return the removed value.
+	// It returns an error if the the index is out of bounds.
+	Remove(index int) (T, error)
+	// RemoveElement removes the element e from the list if it is presentt.
+	// In that case, the method returns true, otherwhise it returns false.
+	RemoveElement(e T) bool
+	// Iter returns a chan wich permits to iterate a list with the range keyword.
+	//
+	// This method can only be used to iterate a [List] if the index is not needed.
+	// For now, the only way to iterate a [List] with the index is the following code:
+	//
+	//	for i := 0; i < list.Len(); i++ {
+	//		element, err := list.Get(i)
+	//		// Code
+	//	}
+	Iter() chan T
+	// Copy returns a copy of the list.
+	Copy() List[T]
+}
+
+// Sort returns a list wich contains all elements of l that have been sorted.
+//
+// The function can be used only with list with ordered types.
+// For now, is impossible to sort list with unordered types, like structs.
+func Sort[T constraints.Ordered](l List[T]) List[T] {
+
+	slice := l.ToSlice()
+	sort.Slice(slice, func(i, j int) bool {
+
+		return slice[i] < slice[j]
+
+	})
+	switch l.(type) {
+
+	case *ArrayList[T]:
+		return NewArrayListFromSlice(slice)
+	case *LinkedList[T]:
+		return NewLinkedListFromSlice(slice)
+
+	}
+	return nil
+
+}
