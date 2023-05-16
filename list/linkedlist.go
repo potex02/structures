@@ -21,10 +21,35 @@ type Entry[T any] struct {
 // NewEntry returns a new [Entry].
 //
 // element is the value of the entry.
-// prev and next are thr entries to wich the entry is linked.
+// prev and next are thr entries to which the entry is linked.
 func NewEntry[T any](element T, prev *Entry[T], next *Entry[T]) *Entry[T] {
 
 	return &Entry[T]{element: element, prev: prev, next: next}
+
+}
+
+// NewEntrySlice creates a series of linked entries which containing the elements of e.
+// The first and the last entries of the series are returned.
+func NewEntrySlice[T any](e []T) (*Entry[T], *Entry[T]) {
+
+	if len(e) == 0 {
+
+		return nil, nil
+
+	}
+	first := NewEntry(e[0], nil, nil)
+	current := first
+	for i := range e {
+
+		if i != 0 {
+
+			current.next = NewEntry(e[i], current, nil)
+			current = current.next
+
+		}
+
+	}
+	return first, current
 
 }
 
@@ -116,7 +141,7 @@ func (l *LinkedList[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool wich indicate if l is empty or not.
+// IsEmpty returns a bool which indicate if l is empty or not.
 func (l *LinkedList[T]) IsEmpty() bool {
 
 	return l.len == 0
@@ -164,7 +189,7 @@ func (l *LinkedList[T]) LastIndexOf(e T) int {
 
 }
 
-// ToSLice returns a slice wich contains all elements of l.
+// ToSLice returns a slice which contains all elements of l.
 func (l *LinkedList[T]) ToSlice() []T {
 
 	slice := make([]T, 0)
@@ -216,55 +241,16 @@ func (l *LinkedList[T]) Set(index int, e T) (T, error) {
 
 }
 
-// Add adds the element e at the end of l.
-func (l *LinkedList[T]) Add(e T) {
-
-	entry := NewEntry(e, l.tail, nil)
-	if l.len == 0 {
-
-		l.tail = entry
-		l.root = entry
-		l.len++
-		return
-
-	}
-	l.tail.SetNext(entry)
-	entry.SetPrev(l.tail)
-	l.tail = entry
-	l.len++
-
-}
-
-// AddAtIndex adds the element e at the specified index.
-// It returns an error if the the index is out of bounds.
-func (l *LinkedList[T]) AddAtIndex(index int, e T) error {
-
-	if index > l.len || index < 0 {
-
-		return errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
-
-	}
-	if index == l.len {
-
-		l.Add(e)
-		return nil
-
-	}
-	prev := l.getElementAtIndex(index - 1)
-	l.append(prev, e)
-	return nil
-
-}
-
-// AddElements is a wrapper for AddSlice(e).
-func (l *LinkedList[T]) AddElements(e ...T) {
+// Add adds the elements e at the end of l.
+func (l *LinkedList[T]) Add(e ...T) {
 
 	l.AddSlice(e)
 
 }
 
-// AddElementsAtIndex is a wrapper for AddSliceAtIndex(index, e).
-func (l *LinkedList[T]) AddElementsAtIndex(index int, e ...T) error {
+// AddAtIndex adds the elements e at the specified index.
+// It returns an error if the the index is out of bounds.
+func (l *LinkedList[T]) AddAtIndex(index int, e ...T) error {
 
 	return l.AddSliceAtIndex(index, e)
 
@@ -273,11 +259,29 @@ func (l *LinkedList[T]) AddElementsAtIndex(index int, e ...T) error {
 // AddSlice adds the elements of e at the end of l.
 func (l *LinkedList[T]) AddSlice(e []T) {
 
-	for _, i := range e {
+	if len(e) == 0 {
 
-		l.Add(i)
+		return
 
 	}
+	first, last := NewEntrySlice(e)
+	if first == nil || last == nil {
+
+		return
+
+	}
+	if l.len == 0 {
+
+		l.root = first
+		l.tail = last
+		l.len = len(e)
+		return
+
+	}
+	l.tail.SetNext(first)
+	first.SetPrev(l.tail)
+	l.tail = last
+	l.len += len(e)
 
 }
 
@@ -285,6 +289,11 @@ func (l *LinkedList[T]) AddSlice(e []T) {
 // It returns an error if the the index is out of bounds.
 func (l *LinkedList[T]) AddSliceAtIndex(index int, e []T) error {
 
+	if len(e) == 0 {
+
+		return nil
+
+	}
 	if index > l.len || index < 0 {
 
 		return errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
@@ -296,21 +305,23 @@ func (l *LinkedList[T]) AddSliceAtIndex(index int, e []T) error {
 		return nil
 
 	}
-	prev := l.getElementAtIndex(index - 1)
-	for _, i := range e {
+	first, last := NewEntrySlice(e)
+	if index == 0 {
 
-		l.append(prev, i)
-		if prev == nil {
-
-			prev = l.root
-
-		} else {
-
-			prev = prev.Next()
-
-		}
+		l.root.SetPrev(last)
+		last.SetNext(l.root)
+		l.root = first
+		l.len += len(e)
+		return nil
 
 	}
+	prev := l.getElementAtIndex(index - 1)
+	next := prev.Next()
+	prev.SetNext(first)
+	first.SetPrev(prev)
+	last.SetNext(next)
+	next.SetPrev(last)
+	l.len += len(e)
 	return nil
 
 }
@@ -370,7 +381,7 @@ func (l *LinkedList[T]) Clear() {
 
 }
 
-// Iter returns a chan wich permits to iterate l with the range keyword.
+// Iter returns a chan which permits to iterate l with the range keyword.
 // This method can only be used to iterate a [LinkedList] if the index is not needed.
 // For now, the only way to iterate a [LinkedList] with the index is the following code:
 //
@@ -397,6 +408,34 @@ func (l *LinkedList[T]) Iter() chan T {
 
 }
 
+// IterReverse returns a chan which permits to iterate l in reverse order with the range keyword.
+//
+// This method can only be used to iterate a [LinkedList] if the index is not needed.
+// For now, the only way to iterate a [LinkedList] in reverse order with the index is the following code:
+//
+//	for i := l.Len() - 1; i >= 0; i-- {
+//		element, err := l.Get(i)
+//		// Code
+//	}
+//
+// The code above should be used only if the index is really needed, because can be very expensive.
+func (l *LinkedList[T]) IterReverse() chan T {
+
+	obj := make(chan T)
+	go func() {
+
+		for i := l.tail; i != nil; i = i.Prev() {
+
+			obj <- i.Element()
+
+		}
+		close(obj)
+
+	}()
+	return obj
+
+}
+
 // Equals returns true if l and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //
@@ -410,7 +449,7 @@ func (l *LinkedList[T]) Equals(st structures.Structure[T]) bool {
 }
 
 // Copy returns a list containing a copy of the elements of l.
-// The result of this method is of type [List], but the effective list wich is created is a [LinkedList].
+// The result of this method is of type [List], but the effective list which is created is a [LinkedList].
 func (l *LinkedList[T]) Copy() List[T] {
 
 	return NewLinkedListFromSlice(l.ToSlice())
@@ -453,23 +492,6 @@ func (l *LinkedList[T]) getElementAtIndex(index int) *Entry[T] {
 
 	}
 	return result
-
-}
-func (l *LinkedList[T]) append(prev *Entry[T], e T) {
-
-	entry := NewEntry(e, prev, nil)
-	l.len++
-	if prev == nil {
-
-		entry.SetNext(l.root)
-		l.root.SetPrev(entry)
-		l.root = entry
-		return
-
-	}
-	entry.SetNext(prev.Next())
-	prev.Next().SetPrev(entry)
-	prev.SetNext(entry)
 
 }
 func (l *LinkedList[T]) rangeCheck(index int) bool {

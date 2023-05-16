@@ -7,12 +7,10 @@ package structures
 type Structure[T any] interface {
 	// Len returns the numbers of elements in the structure.
 	Len() int
-	// IsEmpty returns a bool wich indicate if the structure is empty or not.
+	// IsEmpty returns a bool which indicate if the structure is empty or not.
 	IsEmpty() bool
-	// ToSLice returns a slice wich contains all elements of the structure.
+	// ToSLice returns a slice which contains all elements of the structure.
 	ToSlice() []T
-	// Add adds the element e at the structure.
-	Add(e T)
 	// Clear removes all element from the structure.
 	Clear()
 	// Equals returns true if the structure and st are the same type of structure and their elements are equals.

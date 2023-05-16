@@ -28,13 +28,11 @@ type List[T any] interface {
 	// Set sets the value of element at the specified index and returns the overwritten value.
 	// It returns an error if the the index is out of bounds.
 	Set(index int, e T) (T, error)
-	// AddAtIndex adds the element e at the specified index.
+	// Add adds the elements e at the end if the list.
+	Add(e ...T)
+	// AddAtIndex adds the elements e at the specified index.
 	// It returns an error if the the index is out of bounds.
-	AddAtIndex(index int, e T) error
-	// AddElements is a wrapper for AddSlice([]T{e...})
-	AddElements(e ...T)
-	// AddElementsAtIndex is a wrapper for AddSliceAtIndex(index, []T{e...})
-	AddElementsAtIndex(index int, e ...T) error
+	AddAtIndex(index int, e ...T) error
 	// AddSlice adds the elements of e at the end of the list.
 	AddSlice(e []T)
 	// AddSliceAtIndex adds the elements of e at the specified index.
@@ -46,7 +44,7 @@ type List[T any] interface {
 	// RemoveElement removes the element e from the list if it is presentt.
 	// In that case, the method returns true, otherwhise it returns false.
 	RemoveElement(e T) bool
-	// Iter returns a chan wich permits to iterate a list with the range keyword.
+	// Iter returns a chan which permits to iterate a [List] with the range keyword.
 	//
 	// This method can only be used to iterate a [List] if the index is not needed.
 	// For now, the only way to iterate a [List] with the index is the following code:
@@ -56,15 +54,47 @@ type List[T any] interface {
 	//		// Code
 	//	}
 	Iter() chan T
+	// IterReverse returns a chan which permits to iterate a [List] in reverse order with the range keyword.
+	//
+	// This method can only be used to iterate a [List] if the index is not needed.
+	// For now, the only way to iterate a [List] in reverse order with the index is the following code:
+	//
+	//	for i := list.Len() - 1; i >= 0; i-- {
+	//		element, err := list.Get(i)
+	//		// Code
+	//	}
+	IterReverse() chan T
 	// Copy returns a copy of the list.
 	Copy() List[T]
 }
 
-// Sort returns a list wich contains all elements of l that have been sorted.
+// Sort returns a [List] which contains all elements of l that have been sorted.
 //
-// The function can be used only with list with ordered types.
-// For now, is impossible to sort list with unordered types, like structs.
-func Sort[T constraints.Ordered](l List[T]) List[T] {
+// This function can be used only with typed which implements the [Comparator] interface.
+func Sort[T Comparator[T]](l List[T]) List[T] {
+
+	slice := l.ToSlice()
+	sort.Slice(slice, func(i, j int) bool {
+
+		return slice[i].Compare(slice[j])
+
+	})
+	switch l.(type) {
+
+	case *ArrayList[T]:
+		return NewArrayListFromSlice(slice)
+	case *LinkedList[T]:
+		return NewLinkedListFromSlice(slice)
+
+	}
+	return nil
+
+}
+
+// Sort returns a [List] which contains all elements of l that have been sorted.
+//
+// This function can be used to with lists that contains [constraints.Ordered] types.
+func SortOrdered[T constraints.Ordered](l List[T]) List[T] {
 
 	slice := l.ToSlice()
 	sort.Slice(slice, func(i, j int) bool {
@@ -82,4 +112,37 @@ func Sort[T constraints.Ordered](l List[T]) List[T] {
 	}
 	return nil
 
+}
+
+// Sort returns a [List] which contains all elements of l that have been sorted.
+//
+// This function can be used to with any lists and require a function to make the sorting.
+// If the result of comparator is false, the the element in position i is placed before that in position j,
+// otherwhise the opposite happens.
+func SortCustom[T any](l List[T], comparator func(i T, j T) bool) List[T] {
+
+	slice := l.ToSlice()
+	sort.Slice(slice, func(i, j int) bool {
+
+		return comparator(slice[i], slice[j])
+
+	})
+	switch l.(type) {
+
+	case *ArrayList[T]:
+		return NewArrayListFromSlice(slice)
+	case *LinkedList[T]:
+		return NewLinkedListFromSlice(slice)
+
+	}
+	return nil
+
+}
+
+// Comparator defines a method used to sort a [List] though the Sort method
+type Comparator[T any] interface {
+	// Compare returns a bool which indicates how the elements have to be sorted.
+	//
+	// If the result is false, the receiver is placed before o, otherwhise it is placed after the parameter.
+	Compare(o T) bool
 }

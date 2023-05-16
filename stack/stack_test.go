@@ -135,7 +135,7 @@ func TestRemove(t *testing.T) {
 		t.Fail()
 
 	}
-	e, err = stack.Remove()
+	_, err = stack.Remove()
 	if err == nil {
 
 		t.Log("err is nil")

@@ -43,7 +43,7 @@ func (q *Queue[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool wich indicate if q is empty or not.
+// IsEmpty returns a bool which indicate if q is empty or not.
 func (q *Queue[T]) IsEmpty() bool {
 
 	return len(q.objects) == 0
@@ -76,7 +76,7 @@ func (q *Queue[T]) Tail() *T {
 
 }
 
-// ToSLice returns a slice wich contains all elements of q.
+// ToSLice returns a slice which contains all elements of q.
 func (q *Queue[T]) ToSlice() []T {
 
 	slice := make([]T, len(q.objects))

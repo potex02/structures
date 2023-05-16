@@ -42,7 +42,7 @@ func (s *Stack[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool wich indicate if s is empty or not
+// IsEmpty returns a bool which indicate if s is empty or not
 func (s *Stack[T]) IsEmpty() bool {
 
 	return len(s.objects) == 0
@@ -62,7 +62,7 @@ func (s *Stack[T]) Top() *T {
 
 }
 
-// ToSLice returns a slice wich contains all elements of s.
+// ToSLice returns a slice which contains all elements of s.
 func (s *Stack[T]) ToSlice() []T {
 
 	slice := make([]T, len(s.objects))

@@ -122,7 +122,7 @@ func TestRemove(t *testing.T) {
 		t.Fail()
 
 	}
-	e, err = queue.Remove()
+	_, err = queue.Remove()
 	if err == nil {
 
 		t.Log("err is nil")

@@ -45,7 +45,7 @@ func (a *ArrayList[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool wich indicate if a is empty or not.
+// IsEmpty returns a bool which indicate if a is empty or not.
 func (a *ArrayList[T]) IsEmpty() bool {
 
 	return len(a.objects) == 0
@@ -93,7 +93,7 @@ func (a *ArrayList[T]) LastIndexOf(e T) int {
 
 }
 
-// ToSLice returns a slice wich contains all elements of a.
+// ToSLice returns a slice which contains all elements of a.
 func (a *ArrayList[T]) ToSlice() []T {
 
 	slice := make([]T, len(a.objects))
@@ -140,43 +140,16 @@ func (a *ArrayList[T]) Set(index int, e T) (T, error) {
 
 }
 
-// Add adds the element e at the end of a.
-func (a *ArrayList[T]) Add(e T) {
-
-	a.objects = append(a.objects, e)
-
-}
-
-// AddAtIndex adds the element e at the specified index.
-// It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) AddAtIndex(index int, e T) error {
-
-	if index > len(a.objects) || index < 0 {
-
-		return errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(a.objects)))
-
-	}
-	if index == len(a.objects) {
-
-		a.Add(e)
-		return nil
-
-	}
-	a.objects = append(a.objects[:index+1], a.objects[index:]...)
-	a.objects[index] = e
-	return nil
-
-}
-
-// AddElements is a wrapper for AddSlice(e).
-func (a *ArrayList[T]) AddElements(e ...T) {
+// Add adds the elements e at the end of a.
+func (a *ArrayList[T]) Add(e ...T) {
 
 	a.AddSlice(e)
 
 }
 
-// AddElementsAtIndex is a wrapper for AddSliceAtIndex(index, e).
-func (a *ArrayList[T]) AddElementsAtIndex(index int, e ...T) error {
+// AddAtIndex adds the elements e at the specified index.
+// It returns an error if the the index is out of bounds.
+func (a *ArrayList[T]) AddAtIndex(index int, e ...T) error {
 
 	return a.AddSliceAtIndex(index, e)
 
@@ -253,7 +226,7 @@ func (a *ArrayList[T]) Clear() {
 
 }
 
-// Iter returns a chan wich permits to iterate a with the range keyword.
+// Iter returns a chan which permits to iterate a with the range keyword.
 //
 // This method can only be used to iterate an [ArrayList] if the index is not needed.
 // For now, the only way to iterate an [ArrayList] with the index is the following code:
@@ -279,6 +252,32 @@ func (a *ArrayList[T]) Iter() chan T {
 
 }
 
+// IterReverse returns a chan which permits to iterate a in reverse order with the range keyword.
+//
+// This method can only be used to iterate a [ArrayList] if the index is not needed.
+// For now, the only way to iterate a [ArrayList] in reverse order with the index is the following code:
+//
+//	for i := a.Len() - 1; i >= 0; i-- {
+//		element, err := a.Get(i)
+//		// Code
+//	}
+func (a *ArrayList[T]) IterReverse() chan T {
+
+	obj := make(chan T)
+	go func() {
+
+		for i := len(a.objects) - 1; i >= 0; i-- {
+
+			obj <- a.objects[i]
+
+		}
+		close(obj)
+
+	}()
+	return obj
+
+}
+
 // Equals returns true if a and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //
@@ -292,7 +291,7 @@ func (a *ArrayList[T]) Equals(st structures.Structure[T]) bool {
 }
 
 // Copy returns a list containing a copy of the elements of a.
-// The result of this method is of type [List], but the effective list wich is created is an [ArrayList].
+// The result of this method is of type [List], but the effective list which is created is an [ArrayList].
 func (a *ArrayList[T]) Copy() List[T] {
 
 	return NewArrayListFromSlice(a.ToSlice())
