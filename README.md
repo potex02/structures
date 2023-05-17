@@ -22,7 +22,7 @@ type Structure[T any] interface {
 ```
 The module is available through the go get command:
 ```
-go get github.com/potex02/structures/list
+go get github.com/potex02/structures
 ```
 ## available structures
 For now, the only available structures are the:
