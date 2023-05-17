@@ -100,7 +100,7 @@ func (q *Queue[T]) Remove() (T, error) {
 
 	if q.IsEmpty() {
 
-		return result, errors.New("Queue empty")
+		return result, errors.New("Empty queue")
 
 	}
 	result = q.objects[0]

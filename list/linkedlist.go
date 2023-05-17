@@ -9,99 +9,14 @@ import (
 	"github.com/potex02/structures"
 )
 
-// Entry is a component of a LinkedList.
-// An entry is linked to the previous and the next entries.
-type Entry[T any] struct {
-	// contains filtered or unexported fields
-	element T
-	prev    *Entry[T]
-	next    *Entry[T]
-}
-
-// NewEntry returns a new [Entry].
-//
-// element is the value of the entry.
-// prev and next are thr entries to which the entry is linked.
-func NewEntry[T any](element T, prev *Entry[T], next *Entry[T]) *Entry[T] {
-
-	return &Entry[T]{element: element, prev: prev, next: next}
-
-}
-
-// NewEntrySlice creates a series of linked entries which containing the elements of e.
-// The first and the last entries of the series are returned.
-func NewEntrySlice[T any](e []T) (*Entry[T], *Entry[T]) {
-
-	if len(e) == 0 {
-
-		return nil, nil
-
-	}
-	first := NewEntry(e[0], nil, nil)
-	current := first
-	for i := range e {
-
-		if i != 0 {
-
-			current.next = NewEntry(e[i], current, nil)
-			current = current.next
-
-		}
-
-	}
-	return first, current
-
-}
-
-// Element returns the element of e.
-func (e *Entry[T]) Element() T {
-
-	return e.element
-
-}
-
-// Element sets the element of e.
-func (e *Entry[T]) SetElement(element T) {
-
-	e.element = element
-
-}
-
-// Prev returns a pointer at the entry previous to e.
-func (e *Entry[T]) Prev() *Entry[T] {
-
-	return e.prev
-
-}
-
-// SetPrev sets the entry previous to e.
-func (e *Entry[T]) SetPrev(prev *Entry[T]) {
-
-	e.prev = prev
-
-}
-
-// Next returns a pointer at the entry next to e.
-func (e *Entry[T]) Next() *Entry[T] {
-
-	return e.next
-
-}
-
-// SetNext sets the entry next to e.
-func (e *Entry[T]) SetNext(next *Entry[T]) {
-
-	e.next = next
-
-}
-
 // LinkedList provides a generic double linked list.
+// The list is implemented through a series of linked [structures.Entry].
 //
-// The list is implemented through a series of linked [Entry].
+// It implements the interface [List].
 type LinkedList[T any] struct {
 	// contains filtered or unexported fields
-	root *Entry[T]
-	tail *Entry[T]
+	root *structures.Entry[T]
+	tail *structures.Entry[T]
 	len  int
 }
 
@@ -155,7 +70,7 @@ func (l *LinkedList[T]) Contains(e T) bool {
 
 }
 
-// IndexOf returns the last position of e in l.
+// IndexOf returns the first position of e in l.
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) IndexOf(e T) int {
 
@@ -192,10 +107,12 @@ func (l *LinkedList[T]) LastIndexOf(e T) int {
 // ToSLice returns a slice which contains all elements of l.
 func (l *LinkedList[T]) ToSlice() []T {
 
-	slice := make([]T, 0)
+	slice := make([]T, l.len)
+	j := 0
 	for i := l.root; i != nil; i = i.Next() {
 
-		slice = append(slice, i.Element())
+		slice[j] = i.Element()
+		j++
 
 	}
 	return slice
@@ -264,7 +181,7 @@ func (l *LinkedList[T]) AddSlice(e []T) {
 		return
 
 	}
-	first, last := NewEntrySlice(e)
+	first, last := structures.NewEntrySlice(e)
 	if first == nil || last == nil {
 
 		return
@@ -305,7 +222,7 @@ func (l *LinkedList[T]) AddSliceAtIndex(index int, e []T) error {
 		return nil
 
 	}
-	first, last := NewEntrySlice(e)
+	first, last := structures.NewEntrySlice(e)
 	if index == 0 {
 
 		l.root.SetPrev(last)
@@ -339,6 +256,7 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 	}
 	entry := l.getElementAtIndex(index)
 	result = entry.Element()
+
 	if entry.Prev() == nil {
 
 		l.root = entry.Next()
@@ -348,7 +266,15 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 		entry.Prev().SetNext(entry.Next())
 
 	}
-	entry.Next().SetPrev(entry.Prev())
+	if entry.Next() == nil {
+
+		l.tail = entry.Prev()
+
+	} else {
+
+		entry.Next().SetPrev(entry.Prev())
+
+	}
 	l.len--
 	return result, nil
 
@@ -396,12 +322,12 @@ func (l *LinkedList[T]) Iter() chan T {
 	obj := make(chan T)
 	go func() {
 
+		defer close(obj)
 		for i := l.root; i != nil; i = i.Next() {
 
 			obj <- i.Element()
 
 		}
-		close(obj)
 
 	}()
 	return obj
@@ -424,12 +350,12 @@ func (l *LinkedList[T]) IterReverse() chan T {
 	obj := make(chan T)
 	go func() {
 
+		defer close(obj)
 		for i := l.tail; i != nil; i = i.Prev() {
 
 			obj <- i.Element()
 
 		}
-		close(obj)
 
 	}()
 	return obj
@@ -440,7 +366,7 @@ func (l *LinkedList[T]) IterReverse() chan T {
 // In any other case, it returns false.
 //
 // Equals does not take into account the effective type of st. This means that if st is an [ArrayList],
-// but the elements of l and the elements of st are equals, this methods returns anyway true.
+// but the elements of l and the elements of st are equals, this method returns anyway true.
 func (l *LinkedList[T]) Equals(st structures.Structure[T]) bool {
 
 	list, ok := st.(List[T])
@@ -462,7 +388,7 @@ func (l *LinkedList[T]) String() string {
 	return fmt.Sprintf("LinkedList[%T]%v", *new(T), l.ToSlice())
 
 }
-func (l *LinkedList[T]) getElementAtIndex(index int) *Entry[T] {
+func (l *LinkedList[T]) getElementAtIndex(index int) *structures.Entry[T] {
 
 	if index <= l.len/2 {
 

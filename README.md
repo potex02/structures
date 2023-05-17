@@ -20,14 +20,16 @@ type Structure[T any] interface {
 	String() string
 }
 ```
-The module is aviable through the go get command:
+The module is available through the go get command:
 ```
 go get github.com/potex02/structures/list
 ```
-## Aviable structures
-For now, the only aviable structures are the:
-- List: an interface implemented by ArrayList and LinkedList;
-- Stack;
+## available structures
+For now, the only available structures are the:
+- Lists:
+	- ArrayList;
+	- LinkedList (double linked list with a pointer to the root and one to the tail);
+- Stacks:
+	- ArrayStack;
+	- LinkedStack;
 - Queue.
-The ArrayList, Stack and Queue are implemented through a slice,<br/>
-while the LinkedList is a double linked list with a pointer to the root and one to the tail.

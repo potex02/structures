@@ -10,6 +10,8 @@ import (
 )
 
 // ArrayList provides a generic list implemented with a slice.
+//
+// It implements the interface [List].
 type ArrayList[T any] struct {
 	// contains filtered or unexported fields
 	objects []T
@@ -38,34 +40,34 @@ func NewArrayListFromStructure[T any](c structures.Structure[T]) *ArrayList[T] {
 
 }
 
-// Len returns the length of a.
-func (a *ArrayList[T]) Len() int {
+// Len returns the length of l.
+func (l *ArrayList[T]) Len() int {
 
-	return len(a.objects)
-
-}
-
-// IsEmpty returns a bool which indicate if a is empty or not.
-func (a *ArrayList[T]) IsEmpty() bool {
-
-	return len(a.objects) == 0
+	return len(l.objects)
 
 }
 
-// Contains returns if e is present in a.
-func (a *ArrayList[T]) Contains(e T) bool {
+// IsEmpty returns a bool which indicate if l is empty or not.
+func (l *ArrayList[T]) IsEmpty() bool {
 
-	return a.IndexOf(e) >= 0
+	return len(l.objects) == 0
 
 }
 
-// IndexOf returns the last position of e in a.
+// Contains returns if e is present in l.
+func (l *ArrayList[T]) Contains(e T) bool {
+
+	return l.IndexOf(e) >= 0
+
+}
+
+// IndexOf returns the first position of e in l.
 // If e is not present, the result is -1.
-func (a *ArrayList[T]) IndexOf(e T) int {
+func (l *ArrayList[T]) IndexOf(e T) int {
 
-	for i := range a.objects {
+	for i := range l.objects {
 
-		if reflect.DeepEqual(a.objects[i], e) {
+		if reflect.DeepEqual(l.objects[i], e) {
 
 			return i
 
@@ -76,13 +78,13 @@ func (a *ArrayList[T]) IndexOf(e T) int {
 
 }
 
-// LastIndexOf returns the last position of e in a.
+// LastIndexOf returns the last position of e in l.
 // If e is not present, the result is -1.
-func (a *ArrayList[T]) LastIndexOf(e T) int {
+func (l *ArrayList[T]) LastIndexOf(e T) int {
 
-	for i := len(a.objects) - 1; i != -1; i-- {
+	for i := len(l.objects) - 1; i != -1; i-- {
 
-		if reflect.DeepEqual(a.objects[i], e) {
+		if reflect.DeepEqual(l.objects[i], e) {
 
 			return i
 
@@ -93,123 +95,123 @@ func (a *ArrayList[T]) LastIndexOf(e T) int {
 
 }
 
-// ToSLice returns a slice which contains all elements of a.
-func (a *ArrayList[T]) ToSlice() []T {
+// ToSLice returns a slice which contains all elements of l.
+func (l *ArrayList[T]) ToSlice() []T {
 
-	slice := make([]T, len(a.objects))
-	copy(slice, a.objects)
+	slice := make([]T, len(l.objects))
+	copy(slice, l.objects)
 	return slice
 
 }
 
 // Get returns the elements at the specifies index.
 // It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) Get(index int) (T, error) {
+func (l *ArrayList[T]) Get(index int) (T, error) {
 
-	if !a.rangeCheck(index) {
+	if !l.rangeCheck(index) {
 
 		var result T
 
-		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(a.objects)))
+		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
 	}
-	return a.objects[index], nil
+	return l.objects[index], nil
 
 }
 
 // Set sets the value of element at the specified index and returns the overwritten value.
 // It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) Set(index int, e T) (T, error) {
+func (l *ArrayList[T]) Set(index int, e T) (T, error) {
 
 	var result T
 
-	if index == len(a.objects) {
+	if index == len(l.objects) {
 
-		a.Add(e)
+		l.Add(e)
 		return result, nil
 
 	}
-	if !a.rangeCheck(index) {
+	if !l.rangeCheck(index) {
 
-		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(a.objects)))
+		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
 	}
-	result = a.objects[index]
-	a.objects[index] = e
+	result = l.objects[index]
+	l.objects[index] = e
 	return result, nil
 
 }
 
-// Add adds the elements e at the end of a.
-func (a *ArrayList[T]) Add(e ...T) {
+// Add adds the elements e at the end of l.
+func (l *ArrayList[T]) Add(e ...T) {
 
-	a.AddSlice(e)
+	l.AddSlice(e)
 
 }
 
 // AddAtIndex adds the elements e at the specified index.
 // It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) AddAtIndex(index int, e ...T) error {
+func (l *ArrayList[T]) AddAtIndex(index int, e ...T) error {
 
-	return a.AddSliceAtIndex(index, e)
+	return l.AddSliceAtIndex(index, e)
 
 }
 
-// AddSlice adds the elements of e at the end of a.
-func (a *ArrayList[T]) AddSlice(e []T) {
+// AddSlice adds the elements of e at the end of l.
+func (l *ArrayList[T]) AddSlice(e []T) {
 
-	a.objects = append(a.objects, e...)
+	l.objects = append(l.objects, e...)
 
 }
 
 // AddSliceAtIndex adds the elements of e at the specified index.
 // It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) AddSliceAtIndex(index int, e []T) error {
+func (l *ArrayList[T]) AddSliceAtIndex(index int, e []T) error {
 
-	if index > len(a.objects) || index < 0 {
+	if index > len(l.objects) || index < 0 {
 
-		return errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(a.objects)))
+		return errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
 	}
-	if index == len(a.objects) {
+	if index == len(l.objects) {
 
-		a.AddSlice(e)
+		l.AddSlice(e)
 		return nil
 
 	}
-	elements := make([]T, len(a.objects))
-	copy(elements, a.objects)
-	a.objects = append(append(a.objects[:index], e...), elements[index:]...)
+	elements := make([]T, len(l.objects))
+	copy(elements, l.objects)
+	l.objects = append(append(l.objects[:index], e...), elements[index:]...)
 	return nil
 
 }
 
 // Remove removes the element at specified index and return the removed value.
 // It returns an error if the the index is out of bounds.
-func (a *ArrayList[T]) Remove(index int) (T, error) {
+func (l *ArrayList[T]) Remove(index int) (T, error) {
 
 	var result T
 
-	if !a.rangeCheck(index) {
+	if !l.rangeCheck(index) {
 
-		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(a.objects)))
+		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
 	}
-	result = a.objects[index]
-	a.objects = append(a.objects[:index], a.objects[index+1:]...)
+	result = l.objects[index]
+	l.objects = append(l.objects[:index], l.objects[index+1:]...)
 	return result, nil
 
 }
 
-// RemoveElement removes the element e from a if it is present.
+// RemoveElement removes the element e from l if it is present.
 // In that case, the method returns true, otherwhise it returns false.
-func (a *ArrayList[T]) RemoveElement(e T) bool {
+func (l *ArrayList[T]) RemoveElement(e T) bool {
 
-	for i := 0; i != len(a.objects); i++ {
+	for i := 0; i != len(l.objects); i++ {
 
-		if reflect.DeepEqual(a.objects[i], e) {
+		if reflect.DeepEqual(l.objects[i], e) {
 
-			a.Remove(i)
+			l.Remove(i)
 			return true
 
 		}
@@ -219,93 +221,93 @@ func (a *ArrayList[T]) RemoveElement(e T) bool {
 
 }
 
-// Clear removes all element from a.
-func (a *ArrayList[T]) Clear() {
+// Clear removes all element from l.
+func (l *ArrayList[T]) Clear() {
 
-	a.objects = []T{}
+	l.objects = []T{}
 
 }
 
-// Iter returns a chan which permits to iterate a with the range keyword.
+// Iter returns a chan which permits to iterate l with the range keyword.
 //
 // This method can only be used to iterate an [ArrayList] if the index is not needed.
 // For now, the only way to iterate an [ArrayList] with the index is the following code:
 //
-//	for i := 0; i < a.Len(); i++ {
-//		element, err := a.Get(i)
+//	for i := 0; i < l.Len(); i++ {
+//		element, err := l.Get(i)
 //		// Code
 //	}
-func (a *ArrayList[T]) Iter() chan T {
+func (l *ArrayList[T]) Iter() chan T {
 
 	obj := make(chan T)
 	go func() {
 
-		for _, i := range a.objects {
+		defer close(obj)
+		for _, i := range l.objects {
 
 			obj <- i
 
 		}
-		close(obj)
 
 	}()
 	return obj
 
 }
 
-// IterReverse returns a chan which permits to iterate a in reverse order with the range keyword.
+// IterReverse returns a chan which permits to iterate l in reverse order with the range keyword.
 //
 // This method can only be used to iterate a [ArrayList] if the index is not needed.
 // For now, the only way to iterate a [ArrayList] in reverse order with the index is the following code:
 //
-//	for i := a.Len() - 1; i >= 0; i-- {
-//		element, err := a.Get(i)
+//	for i := l.Len() - 1; i >= 0; i-- {
+//		element, err := l.Get(i)
 //		// Code
 //	}
-func (a *ArrayList[T]) IterReverse() chan T {
+func (l *ArrayList[T]) IterReverse() chan T {
 
 	obj := make(chan T)
 	go func() {
 
-		for i := len(a.objects) - 1; i >= 0; i-- {
+		defer close(obj)
+		for i := len(l.objects) - 1; i >= 0; i-- {
 
-			obj <- a.objects[i]
+			obj <- l.objects[i]
 
 		}
-		close(obj)
 
 	}()
 	return obj
 
 }
 
-// Equals returns true if a and st are both lists and their elements are equals.
+// Equals returns true if l and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //
 // Equals does not take into account the effective type of st. This means that if st is a [LinkedList],
-// but the elements of a and the elements of st are equals, this methods returns anyway true.
-func (a *ArrayList[T]) Equals(st structures.Structure[T]) bool {
+// but the elements of l and the elements of st are equals, this method returns anyway true.
+func (l *ArrayList[T]) Equals(st structures.Structure[T]) bool {
 
 	list, ok := st.(List[T])
-	return ok && reflect.DeepEqual(a.ToSlice(), list.ToSlice())
+	return ok && reflect.DeepEqual(l.ToSlice(), list.ToSlice())
 
 }
 
-// Copy returns a list containing a copy of the elements of a.
+// Copy returns a list containing a copy of the elements of l.
 // The result of this method is of type [List], but the effective list which is created is an [ArrayList].
-func (a *ArrayList[T]) Copy() List[T] {
+func (l *ArrayList[T]) Copy() List[T] {
 
-	return NewArrayListFromSlice(a.ToSlice())
-
-}
-
-// String returns a rapresentation of a in the form of a string.
-func (a *ArrayList[T]) String() string {
-
-	return fmt.Sprintf("ArrayList[%T]%v", *new(T), a.objects)
+	return NewArrayListFromSlice(l.ToSlice())
 
 }
-func (a *ArrayList[T]) rangeCheck(index int) bool {
 
-	return index >= 0 && index < len(a.objects)
+// String returns a rapresentation of l in the form of a string.
+func (l *ArrayList[T]) String() string {
+
+	return fmt.Sprintf("ArrayList[%T]%v", *new(T), l.objects)
+
+}
+func (l *ArrayList[T]) rangeCheck(index int) bool {
+
+	return index >= 0 && index < len(l.objects)
 
 }

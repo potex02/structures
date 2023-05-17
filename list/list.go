@@ -9,9 +9,9 @@ import (
 )
 
 // List provides all methods to use a generic dinamic list.
-// A List contains all the methods of [structures.Structure].
+// A list contains all the methods of [structures.Structure].
 //
-// A List is indexed starting from 0.
+// A list is indexed starting from 0.
 type List[T any] interface {
 	structures.Structure[T]
 	// Contains returns if e is present in the list.
