@@ -42,30 +42,30 @@ func NewEntrySlice[T any](e []T) (*Entry[T], *Entry[T]) {
 
 }
 
-// NewSingleEntry returns a new [Entry] for a single linked structure.
+// NewEntrySingle returns a new [Entry] for a single linked structure.
 //
 // Element is the value of the entry.
 // Next is the entry to which the entry is linked.
-func NewSingleEntry[T any](element T, next *Entry[T]) *Entry[T] {
+func NewEntrySingle[T any](element T, next *Entry[T]) *Entry[T] {
 
 	return &Entry[T]{element: element, prev: nil, next: next}
 
 }
 
-// NewSingleEntrySlice creates a series of single linked entries which containing the elements of e.
+// NewEntrySliceSingle creates a series of single linked entries which containing the elements of e.
 // The first and the last entries of the series are returned.
-func NewSingleEntrySlice[T any](e []T) (*Entry[T], *Entry[T]) {
+func NewEntrySliceSingle[T any](e []T) (*Entry[T], *Entry[T]) {
 
 	if len(e) == 0 {
 
 		return nil, nil
 
 	}
-	first := NewSingleEntry(e[len(e)-1], nil)
+	first := NewEntrySingle(e[len(e)-1], nil)
 	current := first
 	for i := len(e) - 2; i >= 0; i-- {
 
-		current.next = NewSingleEntry(e[i], nil)
+		current.next = NewEntrySingle(e[i], nil)
 		current = current.next
 
 	}

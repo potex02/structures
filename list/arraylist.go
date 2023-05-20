@@ -108,7 +108,7 @@ func (l *ArrayList[T]) ToSlice() []T {
 // It returns an error if the the index is out of bounds.
 func (l *ArrayList[T]) Get(index int) (T, error) {
 
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		var result T
 
@@ -131,7 +131,7 @@ func (l *ArrayList[T]) Set(index int, e T) (T, error) {
 		return result, nil
 
 	}
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
@@ -192,7 +192,7 @@ func (l *ArrayList[T]) Remove(index int) (T, error) {
 
 	var result T
 
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(len(l.objects)))
 
@@ -304,10 +304,5 @@ func (l *ArrayList[T]) Copy() List[T] {
 func (l *ArrayList[T]) String() string {
 
 	return fmt.Sprintf("ArrayList[%T]%v", *new(T), l.objects)
-
-}
-func (l *ArrayList[T]) rangeCheck(index int) bool {
-
-	return index >= 0 && index < len(l.objects)
 
 }

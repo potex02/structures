@@ -76,11 +76,11 @@ func TestTopArrayStack(t *testing.T) {
 	}
 
 }
-func TestRemoveArrayStack(t *testing.T) {
+func TestPopArrayStack(t *testing.T) {
 
 	var stack *ArrayStack[float32] = NewArrayStack[float32](1.3, -2.5)
 
-	e, err := stack.Remove()
+	e, err := stack.Pop()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -99,7 +99,7 @@ func TestRemoveArrayStack(t *testing.T) {
 		t.Fail()
 
 	}
-	e, err = stack.Remove()
+	e, err = stack.Pop()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -118,7 +118,7 @@ func TestRemoveArrayStack(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = stack.Remove()
+	_, err = stack.Pop()
 	if err == nil {
 
 		t.Log("err is nil")

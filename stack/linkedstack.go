@@ -9,6 +9,7 @@ import (
 )
 
 // ArrayStack provides a generic linked stack.
+// The stack is implemented through a series of linked [structures.Entry].
 //
 // It implements the interface [Stack].
 type LinkedStack[T any] struct {
@@ -18,7 +19,7 @@ type LinkedStack[T any] struct {
 }
 
 // NewLinkedStack returns a new [LinkedStack] containing the elements c.
-// The top of the stack is the last element of c
+// The top of the stack is the last element of c.
 //
 // if no argument is passed, it will be created an empty [LinkedStack].
 func NewLinkedStack[T any](c ...T) *LinkedStack[T] {
@@ -48,15 +49,15 @@ func (s *LinkedStack[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if s is empty or not
+// IsEmpty returns a bool which indicate if s is empty or not.
 func (s *LinkedStack[T]) IsEmpty() bool {
 
 	return s.len == 0
 
 }
 
-// Top returns the the top of s.
-// If s is empty, the method returns nil.
+// Top returns the top element of s.
+// If s is empty, the method returns an error.
 func (s *LinkedStack[T]) Top() (T, error) {
 
 	if s.IsEmpty() {
@@ -93,16 +94,16 @@ func (s *LinkedStack[T]) Push(e ...T) {
 		return
 
 	}
-	first, last := structures.NewSingleEntrySlice(e)
+	first, last := structures.NewEntrySliceSingle(e)
 	last.SetNext(s.top)
 	s.top = first
 	s.len += len(e)
 
 }
 
-// Remove removes an element from the top of s and returns the removed element.
-// It returns an error is s is empty.
-func (s *LinkedStack[T]) Remove() (T, error) {
+// Pop removes an element from the top of s and returns the removed element.
+// If s is empty, the method returns an error.
+func (s *LinkedStack[T]) Pop() (T, error) {
 
 	var result T
 
@@ -151,9 +152,9 @@ func (s *LinkedStack[T]) String() string {
 
 	if s.IsEmpty() {
 
-		return fmt.Sprintf("Stack[%T][%d, ]", *new(T), s.len)
+		return fmt.Sprintf("LinkedStack[%T][%d, ]", *new(T), s.len)
 
 	}
-	return fmt.Sprintf("Stack[%T][%d, %v]", *new(T), s.len, s.top.Element())
+	return fmt.Sprintf("LinkedStack[%T][%d, %v]", *new(T), s.len, s.top.Element())
 
 }

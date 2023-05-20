@@ -123,7 +123,7 @@ func (l *LinkedList[T]) ToSlice() []T {
 // It returns an error if the the index is out of bounds.
 func (l *LinkedList[T]) Get(index int) (T, error) {
 
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		var result T
 
@@ -146,7 +146,7 @@ func (l *LinkedList[T]) Set(index int, e T) (T, error) {
 		return result, nil
 
 	}
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
 
@@ -249,7 +249,7 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 
 	var result T
 
-	if !l.rangeCheck(index) {
+	if !rangeCheck[T](l, index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
 
@@ -418,10 +418,5 @@ func (l *LinkedList[T]) getElementAtIndex(index int) *structures.Entry[T] {
 
 	}
 	return result
-
-}
-func (l *LinkedList[T]) rangeCheck(index int) bool {
-
-	return index >= 0 && index < l.len
 
 }

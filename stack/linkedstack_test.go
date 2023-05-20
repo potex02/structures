@@ -76,11 +76,11 @@ func TestTopLinkedStack(t *testing.T) {
 	}
 
 }
-func TestRemoveLinkedStack(t *testing.T) {
+func TestPopLinkedStack(t *testing.T) {
 
 	var stack *LinkedStack[float32] = NewLinkedStack[float32](1.3, -2.5)
 
-	e, err := stack.Remove()
+	e, err := stack.Pop()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -99,7 +99,7 @@ func TestRemoveLinkedStack(t *testing.T) {
 		t.Fail()
 
 	}
-	e, err = stack.Remove()
+	e, err = stack.Pop()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -118,7 +118,7 @@ func TestRemoveLinkedStack(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = stack.Remove()
+	_, err = stack.Pop()
 	if err == nil {
 
 		t.Log("err is nil")

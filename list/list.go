@@ -6,6 +6,7 @@ import (
 
 	"github.com/potex02/structures"
 	"golang.org/x/exp/constraints"
+	"golang.org/x/exp/slices"
 )
 
 // List provides all methods to use a generic dinamic list.
@@ -68,9 +69,17 @@ type List[T any] interface {
 	Copy() List[T]
 }
 
+// Comparator defines a method used to sort a [List] though the Sort method
+type Comparator[T any] interface {
+	// Compare returns a bool which indicates how the elements have to be sorted.
+	//
+	// If the result is false, the receiver is placed before o, otherwhise it is placed after the parameter.
+	Compare(o T) bool
+}
+
 // Sort returns a [List] which contains all elements of l that have been sorted.
 //
-// This function can be used only with typed which implements the [Comparator] interface.
+// This function can be used only with types which implements the [Comparator] interface.
 func Sort[T Comparator[T]](l List[T]) List[T] {
 
 	slice := l.ToSlice()
@@ -91,17 +100,13 @@ func Sort[T Comparator[T]](l List[T]) List[T] {
 
 }
 
-// Sort returns a [List] which contains all elements of l that have been sorted.
+// SortOrdered returns a [List] which contains all elements of l that have been sorted.
 //
-// This function can be used to with lists that contains [constraints.Ordered] types.
+// This function can be used only with types which implements the [constraints.Ordered] interface.
 func SortOrdered[T constraints.Ordered](l List[T]) List[T] {
 
 	slice := l.ToSlice()
-	sort.Slice(slice, func(i, j int) bool {
-
-		return slice[i] < slice[j]
-
-	})
+	slices.Sort(slice)
 	switch l.(type) {
 
 	case *ArrayList[T]:
@@ -114,19 +119,15 @@ func SortOrdered[T constraints.Ordered](l List[T]) List[T] {
 
 }
 
-// Sort returns a [List] which contains all elements of l that have been sorted.
+// SortCustom returns a [List] which contains all elements of l that have been sorted.
 //
-// This function can be used to with any lists and require a function to make the sorting.
+// This function can be used to with any list and require a function to make the sorting.
 // If the result of comparator is false, the the element in position i is placed before that in position j,
 // otherwhise the opposite happens.
 func SortCustom[T any](l List[T], comparator func(i T, j T) bool) List[T] {
 
 	slice := l.ToSlice()
-	sort.Slice(slice, func(i, j int) bool {
-
-		return comparator(slice[i], slice[j])
-
-	})
+	slices.SortFunc(slice, comparator)
 	switch l.(type) {
 
 	case *ArrayList[T]:
@@ -138,11 +139,8 @@ func SortCustom[T any](l List[T], comparator func(i T, j T) bool) List[T] {
 	return nil
 
 }
+func rangeCheck[T any](list List[T], index int) bool {
 
-// Comparator defines a method used to sort a [List] though the Sort method
-type Comparator[T any] interface {
-	// Compare returns a bool which indicates how the elements have to be sorted.
-	//
-	// If the result is false, the receiver is placed before o, otherwhise it is placed after the parameter.
-	Compare(o T) bool
+	return index >= 0 && index < list.Len()
+
 }

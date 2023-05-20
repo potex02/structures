@@ -1,4 +1,3 @@
-// Package stack implements dinamic stacks.
 package stack
 
 import (
@@ -18,7 +17,7 @@ type ArrayStack[T any] struct {
 }
 
 // NewArrayStack returns a new [ArrayStack] containing the elements c.
-// The top of the stack is the last element of c
+// The top of the stack is the last element of c.
 //
 // if no argument is passed, it will be created an empty [ArrayStack].
 func NewArrayStack[T any](c ...T) *ArrayStack[T] {
@@ -42,15 +41,15 @@ func (s *ArrayStack[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if s is empty or not
+// IsEmpty returns a bool which indicate if s is empty or not.
 func (s *ArrayStack[T]) IsEmpty() bool {
 
 	return len(s.objects) == 0
 
 }
 
-// Top returns the the top of s.
-// If s is empty, the method returns nil.
+// Top returns the top element of s.
+// If s is empty, the method returns an error.
 func (s *ArrayStack[T]) Top() (T, error) {
 
 	if s.IsEmpty() {
@@ -80,9 +79,9 @@ func (s *ArrayStack[T]) Push(e ...T) {
 
 }
 
-// Remove removes an element from the top of s and returns the removed element.
-// It returns an error is s is empty.
-func (s *ArrayStack[T]) Remove() (T, error) {
+// Pop removes an element from the top of s and returns the removed element.
+// If s is empty, the method returns an error.
+func (s *ArrayStack[T]) Pop() (T, error) {
 
 	var result T
 

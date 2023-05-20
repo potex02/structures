@@ -1,3 +1,4 @@
+[![GoDoc](https://godoc.org/github.com/potex02/structures?status.svg)](https://godoc.org/github.com/potex02/structures)
 ### Note: this module is still under heavy development.
 ### Future releases may completely break compatibility with previous ones.
 # Structures
@@ -24,7 +25,7 @@ The module is available through the go get command:
 ```
 go get github.com/potex02/structures
 ```
-## available structures
+## Available structures
 For now, the only available structures are the:
 - Lists:
 	- ArrayList;
@@ -32,4 +33,11 @@ For now, the only available structures are the:
 - Stacks:
 	- ArrayStack;
 	- LinkedStack;
-- Queue.
+- Queues:
+	- ArrayQueue;
+	- LinkedQueue.
+
+To be added:
+- Double queues;
+- Sets;
+- Maps.
