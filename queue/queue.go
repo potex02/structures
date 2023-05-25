@@ -3,7 +3,7 @@ package queue
 
 import "github.com/potex02/structures"
 
-//Queue provides all methods to use a generic queue.
+// Queue provides all methods to use a generic queue.
 // A queue contains all the methods of [structures.Structure].
 type Queue[T any] interface {
 	structures.Structure[T]
@@ -20,7 +20,7 @@ type Queue[T any] interface {
 	Pop() (T, error)
 }
 
-//DoubleQueue provides all methods to use a generic double queue.
+// DoubleQueue provides all methods to use a generic double queue.
 // A double queue contains all the methods of [structures.Structure].
 type DoubleQueue[T any] interface {
 	structures.Structure[T]
