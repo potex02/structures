@@ -1,5 +1,5 @@
 [![GoDoc](https://godoc.org/github.com/potex02/structures?status.svg)](https://godoc.org/github.com/potex02/structures)
-### Note: this module is still under heavy development.
+### Note: this module is still under development.
 ### Future releases may completely break compatibility with previous ones.
 # Structures
 An implementation of the data structures in Go using generics types.<br/>
@@ -36,8 +36,10 @@ For now, the only available structures are the:
 - Queues:
 	- ArrayQueue;
 	- LinkedQueue.
+- Double queues:
+	- DoubleArrayQueue;
+	- DoubleLinkedQueue
 
 To be added:
-- Double queues;
 - Sets;
 - Maps.

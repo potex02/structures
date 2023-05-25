@@ -76,6 +76,28 @@ func TestTopLinkedStack(t *testing.T) {
 	}
 
 }
+
+func TestPushLinkedStack(t *testing.T) {
+
+	var stack *LinkedStack[float32] = NewLinkedStack[float32]()
+
+	stack.Push(1, 3)
+	if !reflect.DeepEqual(stack.ToSlice(), []float32{1, 3}) {
+
+		t.Log("stack is", stack.ToSlice())
+		t.Fail()
+
+	}
+	stack.Push(-3)
+	e, _ := stack.Top()
+	if e != -3 {
+
+		t.Log("stack top is", e)
+		t.Fail()
+
+	}
+
+}
 func TestPopLinkedStack(t *testing.T) {
 
 	var stack *LinkedStack[float32] = NewLinkedStack[float32](1.3, -2.5)

@@ -7,9 +7,9 @@ import (
 	"github.com/potex02/structures"
 )
 
-func TestNewArrayQueue(t *testing.T) {
+func TestNewDoubleArrayQueue(t *testing.T) {
 
-	var queue structures.Structure[float32] = NewArrayQueue[float32]()
+	var queue structures.Structure[float32] = NewDoubleArrayQueue[float32]()
 
 	if queue == nil {
 
@@ -25,9 +25,10 @@ func TestNewArrayQueue(t *testing.T) {
 	}
 
 }
-func TestNewArrayQueueFromSlice(t *testing.T) {
 
-	var queue *ArrayQueue[float32] = NewArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
+func TestNewDoubleArrayQueueFromSlice(t *testing.T) {
+
+	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
 
 	if queue == nil {
 
@@ -41,7 +42,7 @@ func TestNewArrayQueueFromSlice(t *testing.T) {
 		t.Fail()
 
 	}
-	if !reflect.DeepEqual(queue.objects, []float32{1.3, -2.5, 3.0, -4.0}) {
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{1.3, -2.5, 3.0, -4.0}) {
 
 		t.Log("queue objects are", queue.objects)
 		t.Fail()
@@ -49,9 +50,10 @@ func TestNewArrayQueueFromSlice(t *testing.T) {
 	}
 
 }
-func TestHeadTailArrayQueue(t *testing.T) {
 
-	var queue *ArrayQueue[float32] = NewArrayQueue[float32]()
+func TestHeadTailDoubleArrayQueue(t *testing.T) {
+
+	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32]()
 
 	_, err := queue.Head()
 	if err == nil {
@@ -67,7 +69,7 @@ func TestHeadTailArrayQueue(t *testing.T) {
 		t.Fail()
 
 	}
-	queue = NewArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
+	queue = NewDoubleArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
 	head, err := queue.Head()
 	if head != 1.3 {
 
@@ -96,11 +98,12 @@ func TestHeadTailArrayQueue(t *testing.T) {
 	}
 
 }
-func TestPopArrayQueue(t *testing.T) {
 
-	var queue Queue[float32] = NewArrayQueue[float32](1.3, -2.5)
+func TestPopDoubleArrayQueue(t *testing.T) {
 
-	e, err := queue.Pop()
+	var queue DoubleQueue[float32] = NewDoubleArrayQueue[float32](1.3, 3, -2.5)
+
+	e, err := queue.PopHead()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -113,13 +116,13 @@ func TestPopArrayQueue(t *testing.T) {
 		t.Fail()
 
 	}
-	if queue.Len() != 1 {
+	if queue.Len() != 2 {
 
-		t.Log("Size is not 1")
+		t.Log("Size is not 2")
 		t.Fail()
 
 	}
-	e, err = queue.Pop()
+	e, err = queue.PopTail()
 	if err != nil {
 
 		t.Log("err is", err)
@@ -132,13 +135,40 @@ func TestPopArrayQueue(t *testing.T) {
 		t.Fail()
 
 	}
+	if queue.Len() != 1 {
+
+		t.Log("Size is not 1")
+		t.Fail()
+
+	}
+	e, err = queue.PopTail()
+	if err != nil {
+
+		t.Log("err is", err)
+		t.Fail()
+
+	}
+	if e != 3 {
+
+		t.Log("e is", e)
+		t.Fail()
+
+	}
 	if !queue.IsEmpty() {
 
 		t.Log("queue not empty")
 		t.Fail()
 
 	}
-	_, err = queue.Pop()
+	queue = NewDoubleArrayQueue[float32]()
+	_, err = queue.PopHead()
+	if err == nil {
+
+		t.Log("err is nil")
+		t.Fail()
+
+	}
+	_, err = queue.PopTail()
 	if err == nil {
 
 		t.Log("err is nil")
@@ -147,17 +177,18 @@ func TestPopArrayQueue(t *testing.T) {
 	}
 
 }
-func TestEqualsArrayQueue(t *testing.T) {
 
-	var queue *ArrayQueue[float32] = NewArrayQueue[float32](1.3, -2.5)
+func TestEqualsDoubleArrayQueue(t *testing.T) {
 
-	if !queue.Equals(NewArrayQueue[float32](1.3, -2.5)) {
+	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32](1.3, -2.5)
+
+	if !queue.Equals(NewDoubleArrayQueue[float32](1.3, -2.5)) {
 
 		t.Log("queues are not equals")
 		t.Fail()
 
 	}
-	if queue.Equals(NewLinkedQueue[float32](1.3, -2.5, -1)) {
+	if queue.Equals(NewDoubleLinkedQueue[float32](1.3, -2.5, -1)) {
 
 		t.Log("queues are equals")
 		t.Fail()

@@ -96,7 +96,30 @@ func TestHeadTailLinkedQueue(t *testing.T) {
 	}
 
 }
-func TestRemoveLinkedQueue(t *testing.T) {
+
+func TestPushLinkedQueue(t *testing.T) {
+
+	var queue *LinkedQueue[float32] = NewLinkedQueue[float32]()
+
+	queue.Push(1, 3)
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{1, 3}) {
+
+		t.Log("queue is", queue.ToSlice())
+		t.Fail()
+
+	}
+	queue.Push(-3)
+	e, _ := queue.Tail()
+	if e != -3 {
+
+		t.Log("queue tail is", e)
+		t.Fail()
+
+	}
+
+}
+
+func TestPopLinkedQueue(t *testing.T) {
 
 	var queue Queue[float32] = NewLinkedQueue[float32](1.3, -2.5)
 

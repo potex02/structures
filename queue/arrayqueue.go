@@ -16,7 +16,7 @@ type ArrayQueue[T any] struct {
 	objects []T
 }
 
-// New returns a new [ArrayQueue] containing the elements c.
+// NewArrayQueue returns a new [ArrayQueue] containing the elements c.
 // The head of the queue is the first element of c, while the tail is the last element.
 //
 // if no argument is passed, it will be created an empty [ArrayQueue].
@@ -26,7 +26,7 @@ func NewArrayQueue[T any](c ...T) *ArrayQueue[T] {
 
 }
 
-// NewFromSlice returns a new [ArrayQueue] containing the elements of slice c.
+// NewArrayQueueFromSlice returns a new [ArrayQueue] containing the elements of slice c.
 func NewArrayQueueFromSlice[T any](c []T) *ArrayQueue[T] {
 
 	return &ArrayQueue[T]{objects: c}

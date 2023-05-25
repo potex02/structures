@@ -8,7 +8,7 @@ import (
 	"github.com/potex02/structures"
 )
 
-// ArrayQueue provides a generic single queue implemented with a slice.
+// ArrayQueue provides a generic single queue implemented.
 // The queue is implemented through a series of linked [structures.Entry].
 //
 // It implements the interface [Queue].
@@ -18,7 +18,7 @@ type LinkedQueue[T any] struct {
 	len  int
 }
 
-// New returns a new [LinkedQueue] containing the elements c.
+// NewLinkedQueue returns a new [LinkedQueue] containing the elements c.
 // The head of the queue is the first element of c, while the tail is the last element.
 //
 // if no argument is passed, it will be created an empty [LinkedQueue].
@@ -28,7 +28,7 @@ func NewLinkedQueue[T any](c ...T) *LinkedQueue[T] {
 
 }
 
-// NewFromSlice returns a new [LinkedQueue] containing the elements of slice c.
+// NewLinkedQueueFromSlice returns a new [LinkedQueue] containing the elements of slice c.
 func NewLinkedQueueFromSlice[T any](c []T) *LinkedQueue[T] {
 
 	queue := &LinkedQueue[T]{head: nil, tail: nil, len: 0}
@@ -151,7 +151,6 @@ func (q *LinkedQueue[T]) Pop() (T, error) {
 		q.Clear()
 
 	}
-
 	return result, nil
 
 }
