@@ -6,14 +6,15 @@ import (
 	"reflect"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/list"
 )
 
-// ArrayQueue provides a generic single queue implemented with a slice.
+// ArrayQueue provides a generic single queue implemented through an [list.ArrayList].
 //
 // It implements the interface [Queue].
 type ArrayQueue[T any] struct {
 	// contains filtered or unexported fields
-	objects []T
+	objects list.List[T]
 }
 
 // NewArrayQueue returns a new [ArrayQueue] containing the elements c.
@@ -29,21 +30,21 @@ func NewArrayQueue[T any](c ...T) *ArrayQueue[T] {
 // NewArrayQueueFromSlice returns a new [ArrayQueue] containing the elements of slice c.
 func NewArrayQueueFromSlice[T any](c []T) *ArrayQueue[T] {
 
-	return &ArrayQueue[T]{objects: c}
+	return &ArrayQueue[T]{objects: list.NewArrayListFromSlice(c)}
 
 }
 
 // Len returns the length of q.
 func (q *ArrayQueue[T]) Len() int {
 
-	return len(q.objects)
+	return q.objects.Len()
 
 }
 
 // IsEmpty returns a bool which indicate if q is empty or not.
 func (q *ArrayQueue[T]) IsEmpty() bool {
 
-	return len(q.objects) == 0
+	return q.objects.IsEmpty()
 
 }
 
@@ -51,14 +52,13 @@ func (q *ArrayQueue[T]) IsEmpty() bool {
 // If q is empty, the method returns an error.
 func (q *ArrayQueue[T]) Head() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(0)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.objects[0], nil
+	return result, err
 
 }
 
@@ -66,30 +66,27 @@ func (q *ArrayQueue[T]) Head() (T, error) {
 // If q is empty, the method returns an error.
 func (q *ArrayQueue[T]) Tail() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(q.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.objects[len(q.objects)-1], nil
+	return result, err
 
 }
 
 // ToSLice returns a slice which contains all elements of q.
 func (q *ArrayQueue[T]) ToSlice() []T {
 
-	slice := make([]T, len(q.objects))
-	copy(slice, q.objects)
-	return slice
+	return q.objects.ToSlice()
 
 }
 
 // Push adds the elements e at the tail of q.
 func (q *ArrayQueue[T]) Push(e ...T) {
 
-	q.objects = append(q.objects, e...)
+	q.objects.Add(e...)
 
 }
 
@@ -97,31 +94,21 @@ func (q *ArrayQueue[T]) Push(e ...T) {
 // If q is empty, the method returns an error.
 func (q *ArrayQueue[T]) Pop() (T, error) {
 
-	var result T
+	result, err := q.objects.Remove(0)
 
-	if q.IsEmpty() {
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	result = q.objects[0]
-	if len(q.objects) > 1 {
-
-		q.objects = q.objects[1:]
-
-	} else {
-
-		q.Clear()
-
-	}
-	return result, nil
+	return result, err
 
 }
 
 // Clear removes all element from q.
 func (q *ArrayQueue[T]) Clear() {
 
-	q.objects = []T{}
+	q.objects.Clear()
 
 }
 
@@ -142,9 +129,11 @@ func (q *ArrayQueue[T]) String() string {
 
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("ArrayQueue[%T][%d, ]", *new(T), len(q.objects))
+		return fmt.Sprintf("ArrayQueue[%T][%d, ]", *new(T), q.objects.Len())
 
 	}
-	return fmt.Sprintf("ArrayQueue[%T][%d, %v %v]", *new(T), len(q.objects), q.objects[0], q.objects[len(q.objects)-1])
+	head, _ := q.Head()
+	tail, _ := q.Tail()
+	return fmt.Sprintf("ArrayQueue[%T][%d, %v %v]", *new(T), q.objects.Len(), head, tail)
 
 }
