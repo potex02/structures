@@ -41,7 +41,7 @@ func TestNewArrayStackFromSlice(t *testing.T) {
 		t.Fail()
 
 	}
-	if !reflect.DeepEqual(stack.objects, []float32{1.3, -2.5, 3.0, -4.0}) {
+	if !reflect.DeepEqual(stack.ToSlice(), []float32{1.3, -2.5, 3.0, -4.0}) {
 
 		t.Log("stack objects are", stack.objects)
 		t.Fail()

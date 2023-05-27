@@ -6,14 +6,15 @@ import (
 	"reflect"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/list"
 )
 
-// ArrayStack provides a generic stack implemented with a slice.
+// ArrayStack provides a generic stack implemented through an [list.ArrayList].
 //
 // It implements the interface [Stack].
 type ArrayStack[T any] struct {
 	// contains filtered or unexported fields
-	objects []T
+	objects list.List[T]
 }
 
 // NewArrayStack returns a new [ArrayStack] containing the elements c.
@@ -30,21 +31,21 @@ func NewArrayStack[T any](c ...T) *ArrayStack[T] {
 // The top of the stack is the last element of c
 func NewArrayStackFromSlice[T any](c []T) *ArrayStack[T] {
 
-	return &ArrayStack[T]{objects: c}
+	return &ArrayStack[T]{objects: list.NewArrayListFromSlice(c)}
 
 }
 
 // Len returns the length of s.
 func (s *ArrayStack[T]) Len() int {
 
-	return len(s.objects)
+	return s.objects.Len()
 
 }
 
 // IsEmpty returns a bool which indicate if s is empty or not.
 func (s *ArrayStack[T]) IsEmpty() bool {
 
-	return len(s.objects) == 0
+	return s.objects.IsEmpty()
 
 }
 
@@ -52,30 +53,27 @@ func (s *ArrayStack[T]) IsEmpty() bool {
 // If s is empty, the method returns an error.
 func (s *ArrayStack[T]) Top() (T, error) {
 
-	if s.IsEmpty() {
-
-		var result T
+	result, err := s.objects.Get(s.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty stack")
 
 	}
-	return s.objects[len(s.objects)-1], nil
+	return result, err
 
 }
 
 // ToSLice returns a slice which contains all elements of s.
 func (s *ArrayStack[T]) ToSlice() []T {
 
-	slice := make([]T, len(s.objects))
-	copy(slice, s.objects)
-	return slice
+	return s.objects.ToSlice()
 
 }
 
 // Push adds the elements e at the top of s.
 func (s *ArrayStack[T]) Push(e ...T) {
 
-	s.objects = append(s.objects, e...)
+	s.objects.Add(e...)
 
 }
 
@@ -83,21 +81,10 @@ func (s *ArrayStack[T]) Push(e ...T) {
 // If s is empty, the method returns an error.
 func (s *ArrayStack[T]) Pop() (T, error) {
 
-	var result T
-
-	if s.IsEmpty() {
+	result, err := s.objects.Remove(s.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty stack")
-
-	}
-	result = s.objects[len(s.objects)-1]
-	if len(s.objects) > 1 {
-
-		s.objects = s.objects[:len(s.objects)-1]
-
-	} else {
-
-		s.Clear()
 
 	}
 	return result, nil
@@ -107,7 +94,7 @@ func (s *ArrayStack[T]) Pop() (T, error) {
 // Clear removes all element from s.
 func (s *ArrayStack[T]) Clear() {
 
-	s.objects = []T{}
+	s.objects.Clear()
 
 }
 
@@ -128,9 +115,10 @@ func (s *ArrayStack[T]) String() string {
 
 	if s.IsEmpty() {
 
-		return fmt.Sprintf("ArrayStack[%T][%d, ]", *new(T), len(s.objects))
+		return fmt.Sprintf("ArrayStack[%T][%d, ]", *new(T), s.objects.Len())
 
 	}
-	return fmt.Sprintf("ArrayStack[%T][%d, %v]", *new(T), len(s.objects), s.objects[len(s.objects)-1])
+	element, _ := s.Top()
+	return fmt.Sprintf("ArrayStack[%T][%d, %v]", *new(T), s.objects.Len(), element)
 
 }
