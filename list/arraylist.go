@@ -17,7 +17,7 @@ type ArrayList[T any] struct {
 	objects []T
 }
 
-// NewArrayList returns a new empty [ArrayList] containing the elements c.
+// NewArrayList returns a new [ArrayList] containing the elements c.
 //
 // if no argument is passed, it will be created an empty [ArrayList].
 func NewArrayList[T any](c ...T) *ArrayList[T] {

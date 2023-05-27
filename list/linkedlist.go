@@ -20,7 +20,7 @@ type LinkedList[T any] struct {
 	len  int
 }
 
-// NewLinkedList returns a new empty [LinkedList] containing the elements c.
+// NewLinkedList returns a new [LinkedList] containing the elements c.
 //
 // if no argument is passed, it will be created an empty [LinkedList].
 func NewLinkedList[T any](c ...T) *LinkedList[T] {

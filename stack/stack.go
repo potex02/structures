@@ -1,4 +1,4 @@
-// Package stack implements dinamic stacks.
+// Package stack implements dynamic stacks.
 package stack
 
 import "github.com/potex02/structures"

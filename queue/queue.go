@@ -1,4 +1,4 @@
-// Package queue implements single and double dinamic queues.
+// Package queue implements single and double dynamic queues.
 package queue
 
 import "github.com/potex02/structures"

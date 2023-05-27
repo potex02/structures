@@ -35,10 +35,10 @@ For now, the only available structures are the:
 	- LinkedStack;
 - Queues:
 	- ArrayQueue;
-	- LinkedQueue.
+	- LinkedQueue;
 - Double queues:
 	- DoubleArrayQueue;
-	- DoubleLinkedQueue
+	- DoubleLinkedQueue.
 
 To be added:
 - Sets;

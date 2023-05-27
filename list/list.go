@@ -1,4 +1,4 @@
-// Package list implements dinamic lists.
+// Package list implements dynamic lists.
 package list
 
 import (
@@ -9,7 +9,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// List provides all methods to use a generic dinamic list.
+// List provides all methods to use a generic dynamic list.
 // A list contains all the methods of [structures.Structure].
 //
 // A list is indexed starting from 0.
