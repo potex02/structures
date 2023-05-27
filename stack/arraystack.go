@@ -87,7 +87,7 @@ func (s *ArrayStack[T]) Pop() (T, error) {
 		return result, errors.New("Empty stack")
 
 	}
-	return result, nil
+	return result, err
 
 }
 
