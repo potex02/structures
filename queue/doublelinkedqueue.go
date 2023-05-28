@@ -6,17 +6,15 @@ import (
 	"reflect"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/list"
 )
 
-// DoubleLinkedQueue provides a generic double queue.
-// The queue is implemented through a series of linked [structures.Entry].
+// DoubleLinkedQueue provides a generic double queue through an [list.LinkedList].
 //
 // It implements the interface [DoubleQueue].
 type DoubleLinkedQueue[T any] struct {
 	// contains filtered or unexported fields
-	head *structures.Entry[T]
-	tail *structures.Entry[T]
-	len  int
+	objects list.List[T]
 }
 
 // NewDoubleLinkedQueue returns a new [DoubleLinkedQueue] containing the elements c.
@@ -32,27 +30,21 @@ func NewDoubleLinkedQueue[T any](c ...T) *DoubleLinkedQueue[T] {
 // NewDoubleLinkedQueueFromSlice returns a new [DoubleLinkedQueue] containing the elements of slice c.
 func NewDoubleLinkedQueueFromSlice[T any](c []T) *DoubleLinkedQueue[T] {
 
-	queue := &DoubleLinkedQueue[T]{head: nil, tail: nil, len: 0}
-	if len(c) != 0 {
-
-		queue.PushTail(c...)
-
-	}
-	return queue
+	return &DoubleLinkedQueue[T]{objects: list.NewLinkedListFromSlice(c)}
 
 }
 
 // Len returns the length of q.
 func (q *DoubleLinkedQueue[T]) Len() int {
 
-	return q.len
+	return q.objects.Len()
 
 }
 
 // IsEmpty returns a bool which indicate if q is empty or not.
 func (q *DoubleLinkedQueue[T]) IsEmpty() bool {
 
-	return q.len == 0
+	return q.objects.IsEmpty()
 
 }
 
@@ -60,14 +52,13 @@ func (q *DoubleLinkedQueue[T]) IsEmpty() bool {
 // If q is empty, the method returns an error.
 func (q *DoubleLinkedQueue[T]) Head() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(0)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.head.Element(), nil
+	return result, err
 
 }
 
@@ -75,83 +66,40 @@ func (q *DoubleLinkedQueue[T]) Head() (T, error) {
 // If q is empty, the method returns an error.
 func (q *DoubleLinkedQueue[T]) Tail() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(q.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.tail.Element(), nil
+	return result, err
 
 }
 
 // ToSLice returns a slice which contains all elements of q.
 func (q *DoubleLinkedQueue[T]) ToSlice() []T {
 
-	slice := make([]T, q.len)
-	j := 0
-	for i := q.head; i != nil; i = i.Next() {
-
-		slice[j] = i.Element()
-		j++
-
-	}
-	return slice
+	return q.objects.ToSlice()
 
 }
 
 // PushHead adds the elements e at the head of q.
 func (q *DoubleLinkedQueue[T]) PushHead(e ...T) {
 
-	if len(e) == 0 {
-
-		return
-
-	}
 	elements := make([]T, len(e))
 	for i := 0; i != len(e); i++ {
 
 		elements[i] = e[len(e)-i-1]
 
 	}
-	first, last := structures.NewEntrySlice(elements)
-	if q.len == 0 {
-
-		q.head = first
-		q.tail = last
-		q.len = len(e)
-		return
-
-	}
-	last.SetNext(q.head)
-	q.head.SetPrev(last)
-	q.head = first
-	q.len += len(e)
+	q.objects.AddAtIndex(0, elements...)
 
 }
 
 // PushTail adds the elements e at the tail of q.
 func (q *DoubleLinkedQueue[T]) PushTail(e ...T) {
 
-	if len(e) == 0 {
-
-		return
-
-	}
-	first, last := structures.NewEntrySlice(e)
-	if q.len == 0 {
-
-		q.head = first
-		q.tail = last
-		q.len = len(e)
-		return
-
-	}
-	first.SetPrev(q.tail)
-	q.tail.SetNext(first)
-	q.tail = last
-	q.len += len(e)
+	q.objects.Add(e...)
 
 }
 
@@ -159,26 +107,13 @@ func (q *DoubleLinkedQueue[T]) PushTail(e ...T) {
 // If q is empty, the method returns an error.
 func (q *DoubleLinkedQueue[T]) PopHead() (T, error) {
 
-	var result T
-
-	if q.IsEmpty() {
+	result, err := q.objects.Remove(0)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	result = q.head.Element()
-	if q.len > 1 {
-
-		q.head = q.head.Next()
-		q.head.SetPrev(nil)
-		q.len--
-
-	} else {
-
-		q.Clear()
-
-	}
-	return result, nil
+	return result, err
 
 }
 
@@ -186,35 +121,20 @@ func (q *DoubleLinkedQueue[T]) PopHead() (T, error) {
 // If q is empty, the method returns an error.
 func (q *DoubleLinkedQueue[T]) PopTail() (T, error) {
 
-	var result T
-
-	if q.IsEmpty() {
+	result, err := q.objects.Remove(q.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	result = q.tail.Element()
-	if q.len > 1 {
-
-		q.tail = q.tail.Prev()
-		q.tail.SetNext(nil)
-		q.len--
-
-	} else {
-
-		q.Clear()
-
-	}
-	return result, nil
+	return result, err
 
 }
 
 // Clear removes all element from q.
 func (q *DoubleLinkedQueue[T]) Clear() {
 
-	q.head = nil
-	q.tail = nil
-	q.len--
+	q.objects.Clear()
 
 }
 
@@ -235,9 +155,11 @@ func (q *DoubleLinkedQueue[T]) String() string {
 
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("DoubleLinkedQueue[%T][%d, ]", *new(T), q.len)
+		return fmt.Sprintf("DoubleLinkedQueue[%T][%d, ]", *new(T), q.Len())
 
 	}
-	return fmt.Sprintf("DoubleLinkedQueue[%T][%d, %v %v]", *new(T), q.len, q.head.Element(), q.tail.Element())
+	head, _ := q.Head()
+	tail, _ := q.Tail()
+	return fmt.Sprintf("DoubleLinkedQueue[%T][%d, %v %v]", *new(T), q.Len(), head, tail)
 
 }

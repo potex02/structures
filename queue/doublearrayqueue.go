@@ -6,14 +6,15 @@ import (
 	"reflect"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/list"
 )
 
-// DoubleArrayQueue provides a generic double queue implemented with a slice.
+// DoubleArrayQueue provides a generic double queue implemented through an [list.ArrayList].
 //
 // It implements the interface [DoubleQueue].
 type DoubleArrayQueue[T any] struct {
 	// contains filtered or unexported fields
-	objects []T
+	objects list.List[T]
 }
 
 // NewDoubleArrayQueue returns a new [DoubleArrayQueue] containing the elements c.
@@ -29,21 +30,21 @@ func NewDoubleArrayQueue[T any](c ...T) *DoubleArrayQueue[T] {
 // NewDoubleArrayQueueFromSlice returns a new [DoubleArrayQueue] containing the elements of slice c.
 func NewDoubleArrayQueueFromSlice[T any](c []T) *DoubleArrayQueue[T] {
 
-	return &DoubleArrayQueue[T]{objects: c}
+	return &DoubleArrayQueue[T]{objects: list.NewArrayListFromSlice(c)}
 
 }
 
 // Len returns the length of q.
 func (q *DoubleArrayQueue[T]) Len() int {
 
-	return len(q.objects)
+	return q.objects.Len()
 
 }
 
 // IsEmpty returns a bool which indicate if q is empty or not.
 func (q *DoubleArrayQueue[T]) IsEmpty() bool {
 
-	return len(q.objects) == 0
+	return q.objects.IsEmpty()
 
 }
 
@@ -51,14 +52,13 @@ func (q *DoubleArrayQueue[T]) IsEmpty() bool {
 // If q is empty, the method returns an error.
 func (q *DoubleArrayQueue[T]) Head() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(0)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.objects[0], nil
+	return result, err
 
 }
 
@@ -66,37 +66,40 @@ func (q *DoubleArrayQueue[T]) Head() (T, error) {
 // If q is empty, the method returns an error.
 func (q *DoubleArrayQueue[T]) Tail() (T, error) {
 
-	if q.IsEmpty() {
-
-		var result T
+	result, err := q.objects.Get(q.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	return q.objects[len(q.objects)-1], nil
+	return result, err
 
 }
 
 // ToSLice returns a slice which contains all elements of q.
 func (q *DoubleArrayQueue[T]) ToSlice() []T {
 
-	slice := make([]T, len(q.objects))
-	copy(slice, q.objects)
-	return slice
+	return q.objects.ToSlice()
 
 }
 
 // PushHead adds the elements e at the head of q.
 func (q *DoubleArrayQueue[T]) PushHead(e ...T) {
 
-	q.objects = append(e, q.objects...)
+	elements := make([]T, len(e))
+	for i := 0; i != len(e); i++ {
+
+		elements[i] = e[len(e)-i-1]
+
+	}
+	q.objects.AddAtIndex(0, elements...)
 
 }
 
 // PushTail adds the elements e at the tail of q.
 func (q *DoubleArrayQueue[T]) PushTail(e ...T) {
 
-	q.objects = append(q.objects, e...)
+	q.objects.Add(e...)
 
 }
 
@@ -104,24 +107,13 @@ func (q *DoubleArrayQueue[T]) PushTail(e ...T) {
 // If q is empty, the method returns an error.
 func (q *DoubleArrayQueue[T]) PopHead() (T, error) {
 
-	var result T
-
-	if q.IsEmpty() {
+	result, err := q.objects.Remove(0)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	result = q.objects[0]
-	if len(q.objects) > 1 {
-
-		q.objects = q.objects[1:]
-
-	} else {
-
-		q.Clear()
-
-	}
-	return result, nil
+	return result, err
 
 }
 
@@ -129,31 +121,20 @@ func (q *DoubleArrayQueue[T]) PopHead() (T, error) {
 // If q is empty, the method returns an error.
 func (q *DoubleArrayQueue[T]) PopTail() (T, error) {
 
-	var result T
-
-	if q.IsEmpty() {
+	result, err := q.objects.Remove(q.Len() - 1)
+	if err != nil {
 
 		return result, errors.New("Empty queue")
 
 	}
-	result = q.objects[len(q.objects)-1]
-	if len(q.objects) > 1 {
-
-		q.objects = q.objects[:len(q.objects)-1]
-
-	} else {
-
-		q.Clear()
-
-	}
-	return result, nil
+	return result, err
 
 }
 
 // Clear removes all element from q.
 func (q *DoubleArrayQueue[T]) Clear() {
 
-	q.objects = []T{}
+	q.objects.Clear()
 
 }
 
@@ -174,9 +155,11 @@ func (q *DoubleArrayQueue[T]) String() string {
 
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("DoubleArrayQueue[%T][%d, ]", *new(T), len(q.objects))
+		return fmt.Sprintf("DoubleArrayQueue[%T][%d, ]", *new(T), q.objects.Len())
 
 	}
-	return fmt.Sprintf("DoubleArrayQueue[%T][%d, %v %v]", *new(T), len(q.objects), q.objects[0], q.objects[len(q.objects)-1])
+	head, _ := q.Head()
+	tail, _ := q.Tail()
+	return fmt.Sprintf("DoubleArrayQueue[%T][%d, %v %v]", *new(T), q.objects.Len(), head, tail)
 
 }

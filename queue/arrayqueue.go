@@ -95,7 +95,6 @@ func (q *ArrayQueue[T]) Push(e ...T) {
 func (q *ArrayQueue[T]) Pop() (T, error) {
 
 	result, err := q.objects.Remove(0)
-
 	if err != nil {
 
 		return result, errors.New("Empty queue")

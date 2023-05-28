@@ -1,11 +1,12 @@
 [![GoDoc](https://godoc.org/github.com/potex02/structures?status.svg)](https://godoc.org/github.com/potex02/structures)
 ### Note: this module is still under development.
-### Future releases may completely break compatibility with previous ones.
+### Future releases can break compatibility with previous ones.
 # Structures
 An implementation of the data structures in Go using generics types.<br/>
 The module provides the Structure interface which is implemented by all the the defined data structures:
 ```go
 type Structure[T any] interface {
+	fmt.Stringer
 	// Len returns the numbers of elements in the structure.
 	Len() int
 	// IsEmpty returns a bool which indicate if the structure is empty or not.
@@ -17,8 +18,6 @@ type Structure[T any] interface {
 	// Equals returns true if the structure and st are the same type of structure and their elements are equals.
 	// In any other case, it returns false.
 	Equals(s Structure[T]) bool
-	// String returns a rapresentation of the structure in the form of a string.
-	String() string
 }
 ```
 The module is available through the go get command:

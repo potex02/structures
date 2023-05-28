@@ -99,6 +99,43 @@ func TestHeadTailDoubleArrayQueue(t *testing.T) {
 
 }
 
+func TestPushDoubleArrayQueue(t *testing.T) {
+
+	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32]()
+
+	queue.PushHead(1, 3)
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{3, 1}) {
+
+		t.Log("queue is", queue.ToSlice())
+		t.Fail()
+
+	}
+	queue.PushHead(-3)
+	e, _ := queue.Head()
+	if e != -3 {
+
+		t.Log("queue head is", queue.ToSlice())
+		t.Fail()
+
+	}
+	queue.PushTail(-1.5)
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{-3, 3, 1, -1.5}) {
+
+		t.Log("queue is", queue.ToSlice())
+		t.Fail()
+
+	}
+	queue.PushTail(2, 12)
+	e, _ = queue.Tail()
+	if e != 12 {
+
+		t.Log("queue tail is", e)
+		t.Fail()
+
+	}
+
+}
+
 func TestPopDoubleArrayQueue(t *testing.T) {
 
 	var queue DoubleQueue[float32] = NewDoubleArrayQueue[float32](1.3, 3, -2.5)
