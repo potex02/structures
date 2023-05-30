@@ -41,15 +41,15 @@ func TestNewHashTableFromSlice(t *testing.T) {
 		t.Fail()
 
 	}
-	if element, _ := table.Get("Hello"); element != 1.2 {
+	if e, _ := table.Get("Hello"); e != 1.2 {
 
-		t.Log("element is", element)
+		t.Log("element is", e)
 		t.Fail()
 
 	}
-	if element, _ := table.Get("Ciao"); element != 5.6 {
+	if e, _ := table.Get("Ciao"); e != 5.6 {
 
-		t.Log("element is", element)
+		t.Log("element is", e)
 		t.Fail()
 
 	}
@@ -116,7 +116,6 @@ func TestGetHashTable(t *testing.T) {
 	}
 
 }
-
 func TestPutHashTable(t *testing.T) {
 
 	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})

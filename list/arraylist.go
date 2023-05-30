@@ -228,14 +228,24 @@ func (l *ArrayList[T]) Clear() {
 
 }
 
-// Iter returns a chan which permits to iterate l with the range keyword.
+// Iter returns a chan which permits to iterate an [ArrayList] with the range keyword.
+//
+//	for i := range l.Iter() {
+//		// code
+//	}
 //
 // This method can only be used to iterate an [ArrayList] if the index is not needed.
-// For now, the only way to iterate an [ArrayList] with the index is the following code:
+// if you need to iterate an [ArrayList] with the index there are two options:
 //
-//	for i := 0; i < l.Len(); i++ {
-//		element, err := l.Get(i)
+//	for i := 0; i < list.Len(); i++ {
+//		element, err := list.Get(i)
 //		// Code
+//	}
+//
+//	j := 0
+//	for i := range l.Iter() {
+//		// code
+//		j++
 //	}
 func (l *ArrayList[T]) Iter() chan T {
 
@@ -254,14 +264,24 @@ func (l *ArrayList[T]) Iter() chan T {
 
 }
 
-// IterReverse returns a chan which permits to iterate l in reverse order with the range keyword.
+// IterReverse returns a chan which permits to iterate an [ArrayList] in reverse order with the range keyword.
 //
-// This method can only be used to iterate a [ArrayList] if the index is not needed.
-// For now, the only way to iterate a [ArrayList] in reverse order with the index is the following code:
+//	for i := range l.IterReverse() {
+//		// code
+//	}
 //
-//	for i := l.Len() - 1; i >= 0; i-- {
-//		element, err := l.Get(i)
+// This method can only be used to iterate an [ArrayList] if the index is not needed.
+// if you need to iterate an [ArrayList] in reverse order with the index there are two options:
+//
+//	for i := list.Len() - 1; i >= 0; i-- {
+//		element, err := list.Get(i)
 //		// Code
+//	}
+//
+//	j := l.Len() -1
+//	for i := range l.Iter() {
+//		// code
+//		j--
 //	}
 func (l *ArrayList[T]) IterReverse() chan T {
 

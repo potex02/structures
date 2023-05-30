@@ -25,7 +25,6 @@ func TestNewDoubleArrayQueue(t *testing.T) {
 	}
 
 }
-
 func TestNewDoubleArrayQueueFromSlice(t *testing.T) {
 
 	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
@@ -50,20 +49,17 @@ func TestNewDoubleArrayQueueFromSlice(t *testing.T) {
 	}
 
 }
-
 func TestHeadTailDoubleArrayQueue(t *testing.T) {
 
 	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32]()
 
-	_, err := queue.Head()
-	if err == nil {
+	if _, err := queue.Head(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	_, err = queue.Tail()
-	if err == nil {
+	if _, err := queue.Tail(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
@@ -98,7 +94,6 @@ func TestHeadTailDoubleArrayQueue(t *testing.T) {
 	}
 
 }
-
 func TestPushDoubleArrayQueue(t *testing.T) {
 
 	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32]()
@@ -111,8 +106,7 @@ func TestPushDoubleArrayQueue(t *testing.T) {
 
 	}
 	queue.PushHead(-3)
-	e, _ := queue.Head()
-	if e != -3 {
+	if e, _ := queue.Head(); e != -3 {
 
 		t.Log("queue head is", queue.ToSlice())
 		t.Fail()
@@ -126,8 +120,7 @@ func TestPushDoubleArrayQueue(t *testing.T) {
 
 	}
 	queue.PushTail(2, 12)
-	e, _ = queue.Tail()
-	if e != 12 {
+	if e, _ := queue.Tail(); e != 12 {
 
 		t.Log("queue tail is", e)
 		t.Fail()
@@ -135,7 +128,6 @@ func TestPushDoubleArrayQueue(t *testing.T) {
 	}
 
 }
-
 func TestPopDoubleArrayQueue(t *testing.T) {
 
 	var queue DoubleQueue[float32] = NewDoubleArrayQueue[float32](1.3, 3, -2.5)
@@ -198,15 +190,13 @@ func TestPopDoubleArrayQueue(t *testing.T) {
 
 	}
 	queue = NewDoubleArrayQueue[float32]()
-	_, err = queue.PopHead()
-	if err == nil {
+	if _, err := queue.PopHead(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()
 
 	}
-	_, err = queue.PopTail()
-	if err == nil {
+	if _, err := queue.PopTail(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()
@@ -214,7 +204,6 @@ func TestPopDoubleArrayQueue(t *testing.T) {
 	}
 
 }
-
 func TestEqualsDoubleArrayQueue(t *testing.T) {
 
 	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32](1.3, -2.5)

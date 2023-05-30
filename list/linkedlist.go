@@ -307,16 +307,27 @@ func (l *LinkedList[T]) Clear() {
 
 }
 
-// Iter returns a chan which permits to iterate l with the range keyword.
-// This method can only be used to iterate a [LinkedList] if the index is not needed.
-// For now, the only way to iterate a [LinkedList] with the index is the following code:
+// Iter returns a chan which permits to iterate a [LinkedList] with the range keyword.
 //
-//	for i := 0; i < l.Len(); i++ {
-//		element, err := l.Get(i)
+//	for i := range l.Iter() {
+//		// code
+//	}
+//
+// This method can only be used to iterate a [LinkedList] if the index is not needed.
+// if you need to iterate a [LinkedList] with the index there are two options:
+//
+//	for i := 0; i < list.Len(); i++ {
+//		element, err := list.Get(i)
 //		// Code
 //	}
 //
-// The code above should be used only if the index is really needed, because can be very expensive.
+// The code above should not be used, because can be very expensive.
+//
+//	j := 0
+//	for i := range l.Iter() {
+//		// code
+//		j++
+//	}
 func (l *LinkedList[T]) Iter() chan T {
 
 	obj := make(chan T)
@@ -334,17 +345,27 @@ func (l *LinkedList[T]) Iter() chan T {
 
 }
 
-// IterReverse returns a chan which permits to iterate l in reverse order with the range keyword.
+// IterReverse returns a chan which permits to iterate a [LinkedList] in reverse order with the range keyword.
+//
+//	for i := range l.IterReverse() {
+//		// code
+//	}
 //
 // This method can only be used to iterate a [LinkedList] if the index is not needed.
-// For now, the only way to iterate a [LinkedList] in reverse order with the index is the following code:
+// if you need to iterate a [LinkedList] in reverse order with the index there are two options:
 //
-//	for i := l.Len() - 1; i >= 0; i-- {
-//		element, err := l.Get(i)
+//	for i := list.Len() - 1; i >= 0; i-- {
+//		element, err := list.Get(i)
 //		// Code
 //	}
 //
-// The code above should be used only if the index is really needed, because can be very expensive.
+// The code above should not be used, because can be very expensive.
+//
+//	j := l.Len() -1
+//	for i := range l.Iter() {
+//		// code
+//		j--
+//	}
 func (l *LinkedList[T]) IterReverse() chan T {
 
 	obj := make(chan T)

@@ -53,8 +53,7 @@ func TestTopArrayStack(t *testing.T) {
 
 	var stack Stack[float32] = NewArrayStack[float32]()
 
-	_, err := stack.Top()
-	if err == nil {
+	if _, err := stack.Top(); err == nil {
 
 		t.Log("the stack is not empty")
 		t.Fail()
@@ -118,8 +117,7 @@ func TestPopArrayStack(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = stack.Pop()
-	if err == nil {
+	if _, err := stack.Pop(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()

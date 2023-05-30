@@ -37,8 +37,8 @@ For now, the only available structures are the:
 	- LinkedQueue;
 - Double queues:
 	- DoubleArrayQueue;
-	- DoubleLinkedQueue.
+	- DoubleLinkedQueue;
+- HashTable.
 
 To be added:
-- Sets;
-- Maps.
+- Sets.

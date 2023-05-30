@@ -53,15 +53,13 @@ func TestHeadTailLinkedQueue(t *testing.T) {
 
 	var queue *LinkedQueue[float32] = NewLinkedQueue[float32]()
 
-	_, err := queue.Head()
-	if err == nil {
+	if _, err := queue.Head(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	_, err = queue.Tail()
-	if err == nil {
+	if _, err := queue.Tail(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
@@ -96,7 +94,6 @@ func TestHeadTailLinkedQueue(t *testing.T) {
 	}
 
 }
-
 func TestPushLinkedQueue(t *testing.T) {
 
 	var queue *LinkedQueue[float32] = NewLinkedQueue[float32]()
@@ -109,8 +106,7 @@ func TestPushLinkedQueue(t *testing.T) {
 
 	}
 	queue.Push(-3)
-	e, _ := queue.Tail()
-	if e != -3 {
+	if e, _ := queue.Tail(); e != -3 {
 
 		t.Log("queue tail is", e)
 		t.Fail()
@@ -118,7 +114,6 @@ func TestPushLinkedQueue(t *testing.T) {
 	}
 
 }
-
 func TestPopLinkedQueue(t *testing.T) {
 
 	var queue Queue[float32] = NewLinkedQueue[float32](1.3, -2.5)
@@ -161,8 +156,7 @@ func TestPopLinkedQueue(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = queue.Pop()
-	if err == nil {
+	if _, err := queue.Pop(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()

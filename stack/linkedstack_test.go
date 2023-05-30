@@ -53,8 +53,7 @@ func TestTopLinkedStack(t *testing.T) {
 
 	var stack Stack[float32] = NewLinkedStack[float32]()
 
-	_, err := stack.Top()
-	if err == nil {
+	if _, err := stack.Top(); err == nil {
 
 		t.Log("the stack is not empty")
 		t.Fail()
@@ -76,7 +75,6 @@ func TestTopLinkedStack(t *testing.T) {
 	}
 
 }
-
 func TestPushLinkedStack(t *testing.T) {
 
 	var stack *LinkedStack[float32] = NewLinkedStack[float32]()
@@ -89,8 +87,7 @@ func TestPushLinkedStack(t *testing.T) {
 
 	}
 	stack.Push(-3)
-	e, _ := stack.Top()
-	if e != -3 {
+	if e, _ := stack.Top(); e != -3 {
 
 		t.Log("stack top is", e)
 		t.Fail()
@@ -140,8 +137,7 @@ func TestPopLinkedStack(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = stack.Pop()
-	if err == nil {
+	if _, err = stack.Pop(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()

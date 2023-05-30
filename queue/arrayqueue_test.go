@@ -53,15 +53,13 @@ func TestHeadTailArrayQueue(t *testing.T) {
 
 	var queue *ArrayQueue[float32] = NewArrayQueue[float32]()
 
-	_, err := queue.Head()
-	if err == nil {
+	if _, err := queue.Head(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	_, err = queue.Tail()
-	if err == nil {
+	if _, err := queue.Tail(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
@@ -138,8 +136,7 @@ func TestPopArrayQueue(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = queue.Pop()
-	if err == nil {
+	if _, err := queue.Pop(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()

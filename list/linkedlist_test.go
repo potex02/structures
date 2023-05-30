@@ -100,9 +100,8 @@ func TestIndexOfLinkedList(t *testing.T) {
 func TestToSliceLinkedList(t *testing.T) {
 
 	var list *LinkedList[int] = NewLinkedList(1, 2, 3, -4)
-	var slice []int = list.ToSlice()
 
-	if !reflect.DeepEqual(slice, []int{1, 2, 3, -4}) {
+	if slice := list.ToSlice(); !reflect.DeepEqual(slice, []int{1, 2, 3, -4}) {
 
 		t.Log("slice is", slice)
 		t.Fail()
@@ -127,15 +126,13 @@ func TestGetLinkedList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = list.Get(-1)
-	if err == nil {
+	if _, err = list.Get(-1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
 
 	}
-	_, err = list.Get(4)
-	if err == nil {
+	if _, err = list.Get(4); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
@@ -173,15 +170,13 @@ func TestSetLinkedList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = list.Set(-1, -1)
-	if err == nil {
+	if _, err = list.Set(-1, -1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
 
 	}
-	_, err = list.Set(6, -1)
-	if err == nil {
+	if _, err = list.Set(6, -1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
@@ -195,7 +190,6 @@ func TestSetLinkedList(t *testing.T) {
 	}
 
 }
-
 func TestAddLinkedList(t *testing.T) {
 
 	var list *LinkedList[int] = NewLinkedList(1, 2, 3, 5)
@@ -245,7 +239,6 @@ func TestAddLinkedList(t *testing.T) {
 	}
 
 }
-
 func TestAddSliceLinkedList(t *testing.T) {
 
 	var list *LinkedList[int] = NewLinkedList(1, 2, 3, 5)
@@ -323,8 +316,7 @@ func TestRemoveLinkedList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err := list.Remove(0)
-	if err != nil {
+	if _, err := list.Remove(0); err != nil {
 
 		t.Fail()
 
@@ -464,7 +456,6 @@ func TestSortLinkedList(t *testing.T) {
 	}
 
 }
-
 func TestComparatorSort(t *testing.T) {
 
 	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})

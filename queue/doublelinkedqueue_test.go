@@ -49,20 +49,17 @@ func TestNewDoubleLinkedQueueFromSlice(t *testing.T) {
 	}
 
 }
-
 func TestHeadTailDoubleLinkedQueue(t *testing.T) {
 
 	var queue *DoubleLinkedQueue[float32] = NewDoubleLinkedQueue[float32]()
 
-	_, err := queue.Head()
-	if err == nil {
+	if _, err := queue.Head(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	_, err = queue.Tail()
-	if err == nil {
+	if _, err := queue.Tail(); err == nil {
 
 		t.Log("the queue is not empty")
 		t.Fail()
@@ -97,7 +94,6 @@ func TestHeadTailDoubleLinkedQueue(t *testing.T) {
 	}
 
 }
-
 func TestPushDoubleLinkedQueue(t *testing.T) {
 
 	var queue *DoubleLinkedQueue[float32] = NewDoubleLinkedQueue[float32]()
@@ -110,8 +106,7 @@ func TestPushDoubleLinkedQueue(t *testing.T) {
 
 	}
 	queue.PushHead(-3)
-	e, _ := queue.Head()
-	if e != -3 {
+	if e, _ := queue.Head(); e != -3 {
 
 		t.Log("queue head is", queue.ToSlice())
 		t.Fail()
@@ -125,8 +120,7 @@ func TestPushDoubleLinkedQueue(t *testing.T) {
 
 	}
 	queue.PushTail(2, 12)
-	e, _ = queue.Tail()
-	if e != 12 {
+	if e, _ := queue.Tail(); e != 12 {
 
 		t.Log("queue tail is", e)
 		t.Fail()
@@ -134,7 +128,6 @@ func TestPushDoubleLinkedQueue(t *testing.T) {
 	}
 
 }
-
 func TestPopDoubleLinkedyQueue(t *testing.T) {
 
 	var queue DoubleQueue[float32] = NewDoubleLinkedQueue[float32](1.3, 3, -2.5)
@@ -197,15 +190,13 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 
 	}
 	queue = NewDoubleLinkedQueue[float32]()
-	_, err = queue.PopHead()
-	if err == nil {
+	if _, err := queue.PopHead(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()
 
 	}
-	_, err = queue.PopTail()
-	if err == nil {
+	if _, err := queue.PopTail(); err == nil {
 
 		t.Log("err is nil")
 		t.Fail()
@@ -213,7 +204,6 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 	}
 
 }
-
 func TestEqualsDoubleLinkedQueue(t *testing.T) {
 
 	var queue *DoubleLinkedQueue[float32] = NewDoubleLinkedQueue[float32](1.3, -2.5)

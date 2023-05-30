@@ -47,22 +47,42 @@ type List[T any] interface {
 	RemoveElement(e T) bool
 	// Iter returns a chan which permits to iterate a [List] with the range keyword.
 	//
+	//	for i := range l.Iter() {
+	//		// code
+	//	}
+	//
 	// This method can only be used to iterate a [List] if the index is not needed.
-	// For now, the only way to iterate a [List] with the index is the following code:
+	// if you need to iterate a [List] with the index there are two options:
 	//
 	//	for i := 0; i < list.Len(); i++ {
 	//		element, err := list.Get(i)
 	//		// Code
 	//	}
+	//
+	//	j := 0
+	//	for i := range l.Iter() {
+	//		// code
+	//		j++
+	//	}
 	Iter() chan T
 	// IterReverse returns a chan which permits to iterate a [List] in reverse order with the range keyword.
 	//
+	//	for i := range l.IterReverse() {
+	//		// code
+	//	}
+	//
 	// This method can only be used to iterate a [List] if the index is not needed.
-	// For now, the only way to iterate a [List] in reverse order with the index is the following code:
+	// if you need to iterate a [List] in reverse order with the index there are two options:
 	//
 	//	for i := list.Len() - 1; i >= 0; i-- {
 	//		element, err := list.Get(i)
 	//		// Code
+	//	}
+	//
+	//	j := l.Len() -1
+	//	for i := range l.Iter() {
+	//		// code
+	//		j--
 	//	}
 	IterReverse() chan T
 	// Copy returns a copy of the list.

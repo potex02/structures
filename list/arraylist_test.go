@@ -100,9 +100,8 @@ func TestIndexOfArrayList(t *testing.T) {
 func TestToSliceArrayList(t *testing.T) {
 
 	var list *ArrayList[int] = NewArrayList(1, 2, 3, -4)
-	var slice []int = list.ToSlice()
 
-	if !reflect.DeepEqual(slice, []int{1, 2, 3, -4}) {
+	if slice := list.ToSlice(); !reflect.DeepEqual(slice, []int{1, 2, 3, -4}) {
 
 		t.Log("slice is", slice)
 		t.Fail()
@@ -127,15 +126,13 @@ func TestGetArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = list.Get(-1)
-	if err == nil {
+	if _, err = list.Get(-1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
 
 	}
-	_, err = list.Get(4)
-	if err == nil {
+	if _, err = list.Get(4); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
@@ -173,15 +170,13 @@ func TestSetArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err = list.Set(-1, -1)
-	if err == nil {
+	if _, err = list.Set(-1, -1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
 
 	}
-	_, err = list.Set(6, -1)
-	if err == nil {
+	if _, err = list.Set(6, -1); err == nil {
 
 		t.Log("error is", err)
 		t.Fail()
@@ -321,8 +316,7 @@ func TestRemoveArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	_, err := list.Remove(0)
-	if err != nil {
+	if _, err := list.Remove(0); err != nil {
 
 		t.Fail()
 
