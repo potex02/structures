@@ -3,11 +3,13 @@ package queue
 import (
 	"errors"
 	"fmt"
-	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
 )
+
+var _ structures.Structure[int] = NewDoubleArrayQueue[int]()
+var _ DoubleQueue[int] = NewDoubleArrayQueue[int]()
 
 // DoubleArrayQueue provides a generic double queue implemented through an [list.ArrayList].
 //
@@ -146,7 +148,12 @@ func (q *DoubleArrayQueue[T]) Clear() {
 func (q *DoubleArrayQueue[T]) Equal(st structures.Structure[T]) bool {
 
 	queue, ok := st.(DoubleQueue[T])
-	return ok && reflect.DeepEqual(q.ToSlice(), queue.ToSlice())
+	if ok {
+
+		return q.objects.Equal(list.NewArrayListFromSlice(queue.ToSlice()))
+
+	}
+	return false
 
 }
 

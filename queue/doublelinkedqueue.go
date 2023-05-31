@@ -3,11 +3,13 @@ package queue
 import (
 	"errors"
 	"fmt"
-	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
 )
+
+var _ structures.Structure[int] = NewDoubleLinkedQueue[int]()
+var _ DoubleQueue[int] = NewDoubleLinkedQueue[int]()
 
 // DoubleLinkedQueue provides a generic double queue through an [list.LinkedList].
 //
@@ -146,7 +148,12 @@ func (q *DoubleLinkedQueue[T]) Clear() {
 func (q *DoubleLinkedQueue[T]) Equal(st structures.Structure[T]) bool {
 
 	queue, ok := st.(DoubleQueue[T])
-	return ok && reflect.DeepEqual(q.ToSlice(), queue.ToSlice())
+	if ok {
+
+		return q.objects.Equal(list.NewArrayListFromSlice(queue.ToSlice()))
+
+	}
+	return false
 
 }
 

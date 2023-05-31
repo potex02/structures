@@ -378,6 +378,7 @@ func TestIterLinkedList(t *testing.T) {
 func TestEqualsLinkedList(t *testing.T) {
 
 	var list List[int] = NewLinkedList(1, 2, 3, 5)
+	var listTest List[test] = NewArrayList[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
 
 	if !list.Equal(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
 
@@ -398,6 +399,18 @@ func TestEqualsLinkedList(t *testing.T) {
 
 	}
 	if list.Equal(NewArrayListFromSlice([]int{-1, 2, 3, 5})) {
+
+		t.Log("lists are equals")
+		t.Fail()
+
+	}
+	if !listTest.Equal(NewArrayList[test](test{n1: 2, n2: 2}, test{n1: 0, n2: -4})) {
+
+		t.Log("lists are not equals")
+		t.Fail()
+
+	}
+	if listTest.Equal(NewArrayList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
 
 		t.Log("lists are equals")
 		t.Fail()

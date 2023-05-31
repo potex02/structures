@@ -5,6 +5,9 @@ import "github.com/potex02/structures"
 
 // Stack provides all methods to use a generic stack.
 // A stack contains all the methods of [structures.Structure].
+//
+// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
 type Stack[T any] interface {
 	structures.Structure[T]
 	// Top returns the top element of the stack.

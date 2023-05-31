@@ -29,3 +29,8 @@ func (e *Entry[K, T]) SetElement(element T) {
 	e.element = element
 
 }
+func (e *Entry[K, T]) Compare(o *Entry[K, T]) int {
+
+	return e.key.Compare(o.Key())
+
+}

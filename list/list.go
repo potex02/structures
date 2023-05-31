@@ -14,6 +14,9 @@ import (
 // A list contains all the methods of [structures.Structure].
 //
 // A list is indexed starting from 0.
+//
+// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
 type List[T any] interface {
 	structures.Structure[T]
 	// Contains returns if e is present in the list.

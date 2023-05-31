@@ -8,12 +8,20 @@ import (
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
 	"github.com/potex02/structures/util"
+	"github.com/potex02/structures/util/wrapper"
 )
+
+var _ structures.Structure[int] = NewHashTable[wrapper.Int, int]()
 
 // HashTable provides a generic table.
 // The table is implemented through hashing.
 //
 // It implements the interface [structures.Structure].
+//
+// The check on the equality of the keys is done with the Compare(o K) method.
+//
+// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
 type HashTable[K util.Hasher[K], T any] struct {
 	// contains filtered or unexported fields
 	objects map[string]list.List[*Entry[K, T]]
@@ -273,7 +281,43 @@ func (t *HashTable[K, T]) Clear() {
 // In any other case, it returns false.
 func (t *HashTable[K, T]) Equal(st structures.Structure[T]) bool {
 
-	return reflect.DeepEqual(t, st)
+	table, ok := st.(*HashTable[K, T])
+	if ok {
+
+		if t.Len() != table.Len() {
+
+			return false
+
+		}
+		_, ok := interface{}(*new(T)).(util.Equaler[T])
+		for i := range t.Keys().Iter() {
+
+			e1, _ := t.Get(i)
+			e2, found := table.Get(i)
+			if !found {
+
+				return false
+
+			}
+			if ok {
+
+				if !interface{}(e1).(util.Equaler[T]).Equal(e2) {
+
+					return false
+
+				}
+
+			} else if !reflect.DeepEqual(e1, e2) {
+
+				return false
+
+			}
+
+		}
+		return true
+
+	}
+	return false
 
 }
 

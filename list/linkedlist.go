@@ -7,7 +7,11 @@ import (
 	"strconv"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util"
 )
+
+var _ structures.Structure[int] = NewLinkedList[int]()
+var _ List[int] = NewLinkedList[int]()
 
 // LinkedList provides a generic double linked list.
 // The list is implemented through a series of linked [structures.Entry].
@@ -74,9 +78,18 @@ func (l *LinkedList[T]) Contains(e T) bool {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) IndexOf(e T) int {
 
+	element, ok := interface{}(e).(util.Equaler[T])
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
-		if reflect.DeepEqual(j.Element(), e) {
+		if ok {
+
+			if element.Equal(j.Element()) {
+
+				return i
+
+			}
+
+		} else if reflect.DeepEqual(j.Element(), e) {
 
 			return i
 
@@ -91,9 +104,18 @@ func (l *LinkedList[T]) IndexOf(e T) int {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) LastIndexOf(e T) int {
 
+	element, ok := interface{}(e).(util.Equaler[T])
 	for i, j := l.len-1, l.tail; j != nil; i, j = i-1, j.Prev() {
 
-		if reflect.DeepEqual(j.Element(), e) {
+		if ok {
+
+			if element.Equal(j.Element()) {
+
+				return i
+
+			}
+
+		} else if reflect.DeepEqual(j.Element(), e) {
 
 			return i
 
@@ -284,9 +306,19 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 // In that case, the method returns true, otherwhise it returns false.
 func (l *LinkedList[T]) RemoveElement(e T) bool {
 
+	element, ok := interface{}(e).(util.Equaler[T])
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
-		if reflect.DeepEqual(j.Element(), e) {
+		if ok {
+
+			if element.Equal(j.Element()) {
+
+				l.Remove(i)
+				return true
+
+			}
+
+		} else if reflect.DeepEqual(j.Element(), e) {
 
 			l.Remove(i)
 			return true
@@ -391,7 +423,34 @@ func (l *LinkedList[T]) IterReverse() chan T {
 func (l *LinkedList[T]) Equal(st structures.Structure[T]) bool {
 
 	list, ok := st.(List[T])
-	return ok && reflect.DeepEqual(l.ToSlice(), list.ToSlice())
+	if ok {
+
+		if l.Len() != list.Len() {
+
+			return false
+
+		}
+		_, ok := interface{}(*new(T)).(util.Equaler[T])
+		if !ok {
+
+			return reflect.DeepEqual(l.ToSlice(), list.ToSlice())
+
+		}
+		channel := list.Iter()
+		for i := l.root; i != nil; i = i.Next() {
+
+			element := <-channel
+			if !interface{}(i).(util.Equaler[T]).Equal(element) {
+
+				return false
+
+			}
+
+		}
+		return true
+
+	}
+	return false
 
 }
 

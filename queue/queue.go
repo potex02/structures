@@ -5,6 +5,9 @@ import "github.com/potex02/structures"
 
 // Queue provides all methods to use a generic queue.
 // A queue contains all the methods of [structures.Structure].
+//
+// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
 type Queue[T any] interface {
 	structures.Structure[T]
 	// Head returns the head element of the queue.
@@ -22,6 +25,9 @@ type Queue[T any] interface {
 
 // DoubleQueue provides all methods to use a generic double queue.
 // A double queue contains all the methods of [structures.Structure].
+//
+// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
 type DoubleQueue[T any] interface {
 	structures.Structure[T]
 	// Head returns the head element of the queue.

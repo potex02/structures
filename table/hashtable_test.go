@@ -1,7 +1,6 @@
 package table
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/potex02/structures"
@@ -176,24 +175,54 @@ func TestRemove(t *testing.T) {
 func TestEqualsHashTable(t *testing.T) {
 
 	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
 
-	if !reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
+	if !table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables are not equals")
 		t.Fail()
 
 	}
-	if reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.5, 5.6})) {
+	if table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.5, 5.6})) {
 
 		t.Log("tables are equals")
 		t.Fail()
 
 	}
-	if reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
+	if table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables not equals")
 		t.Fail()
 
 	}
+	if !tableTest.Equal(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 2, n2: 2}, {n1: 0, n2: -4}})) {
+
+		t.Log("tables are not equals")
+		t.Fail()
+
+	}
+	if tableTest.Equal(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 1}, {n1: -2, n2: -4}})) {
+
+		t.Log("tables are equals")
+		t.Fail()
+
+	}
+	if tableTest.Equal(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{-1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})) {
+
+		t.Log("tables are equals")
+		t.Fail()
+
+	}
+
+}
+
+type test struct {
+	n1 int
+	n2 int
+}
+
+func (t test) Equal(o test) bool {
+
+	return t.n2 == o.n2
 
 }

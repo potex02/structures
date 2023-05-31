@@ -3,10 +3,13 @@ package stack
 import (
 	"errors"
 	"fmt"
-	"reflect"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/list"
 )
+
+var _ structures.Structure[int] = NewLinkedStack[int]()
+var _ Stack[int] = NewLinkedStack[int]()
 
 // ArrayStack provides a generic linked stack.
 // The stack is implemented through a series of linked [structures.Entry].
@@ -143,7 +146,12 @@ func (s *LinkedStack[T]) Clear() {
 func (s *LinkedStack[T]) Equal(st structures.Structure[T]) bool {
 
 	stack, ok := st.(Stack[T])
-	return ok && reflect.DeepEqual(s.ToSlice(), stack.ToSlice())
+	if ok {
+
+		return list.NewArrayListFromSlice(s.ToSlice()).Equal(list.NewArrayListFromSlice(stack.ToSlice()))
+
+	}
+	return false
 
 }
 

@@ -378,6 +378,7 @@ func TestIterArrayList(t *testing.T) {
 func TestEqualsArrayList(t *testing.T) {
 
 	var list List[int] = NewArrayList(1, 2, 3, 5)
+	var listTest List[test] = NewArrayList[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
 
 	if !list.Equal(NewArrayListFromSlice([]int{1, 2, 3, 5})) {
 
@@ -398,6 +399,18 @@ func TestEqualsArrayList(t *testing.T) {
 
 	}
 	if list.Equal(NewLinkedListFromSlice([]int{-1, 2, 3, 5})) {
+
+		t.Log("lists are equals")
+		t.Fail()
+
+	}
+	if !listTest.Equal(NewArrayList[test](test{n1: 2, n2: 2}, test{n1: 0, n2: -4})) {
+
+		t.Log("lists are not equals")
+		t.Fail()
+
+	}
+	if listTest.Equal(NewArrayList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
 
 		t.Log("lists are equals")
 		t.Fail()
@@ -456,8 +469,27 @@ func TestSortArrayList(t *testing.T) {
 
 }
 
+func TestComparatorSortArrayList(t *testing.T) {
+
+	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})
+
+	if !reflect.DeepEqual(Sort(list), NewArrayList(test{-1, 19}, test{1, 2}, test{4, 5}, test{7, -5})) {
+
+		t.Log("list is", Sort(list))
+		t.Fail()
+
+	}
+
+}
+
 type test struct {
 	n1, n2 int
+}
+
+func (t test) Equal(o test) bool {
+
+	return t.n2 == o.n2
+
 }
 
 func (t test) Compare(o test) int {
@@ -473,18 +505,5 @@ func (t test) Compare(o test) int {
 
 	}
 	return 1
-
-}
-
-func TestComparatorSortArrayList(t *testing.T) {
-
-	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})
-
-	if !reflect.DeepEqual(Sort(list), NewArrayList(test{-1, 19}, test{1, 2}, test{4, 5}, test{7, -5})) {
-
-		t.Log("list is", Sort(list))
-		t.Fail()
-
-	}
 
 }
