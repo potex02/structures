@@ -138,12 +138,12 @@ func (q *DoubleArrayQueue[T]) Clear() {
 
 }
 
-// Equals returns true if q and st are both double queues and their elements are equals.
+// Equal returns true if q and st are both double queues and their elements are equals.
 // In any other case, it returns false.
 //
-// Equals does not take into account the effective type of st. This means that if st is a [DoubleLinkedQueue],
+// Equal does not take into account the effective type of st. This means that if st is a [DoubleLinkedQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
-func (q *DoubleArrayQueue[T]) Equals(st structures.Structure[T]) bool {
+func (q *DoubleArrayQueue[T]) Equal(st structures.Structure[T]) bool {
 
 	queue, ok := st.(DoubleQueue[T])
 	return ok && reflect.DeepEqual(q.ToSlice(), queue.ToSlice())

@@ -383,12 +383,12 @@ func (l *LinkedList[T]) IterReverse() chan T {
 
 }
 
-// Equals returns true if l and st are both lists and their elements are equals.
+// Equal returns true if l and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //
-// Equals does not take into account the effective type of st. This means that if st is an [ArrayList],
+// Equal does not take into account the effective type of st. This means that if st is an [ArrayList],
 // but the elements of l and the elements of st are equals, this method returns anyway true.
-func (l *LinkedList[T]) Equals(st structures.Structure[T]) bool {
+func (l *LinkedList[T]) Equal(st structures.Structure[T]) bool {
 
 	list, ok := st.(List[T])
 	return ok && reflect.DeepEqual(l.ToSlice(), list.ToSlice())

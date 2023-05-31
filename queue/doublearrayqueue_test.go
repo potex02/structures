@@ -208,13 +208,13 @@ func TestEqualsDoubleArrayQueue(t *testing.T) {
 
 	var queue *DoubleArrayQueue[float32] = NewDoubleArrayQueue[float32](1.3, -2.5)
 
-	if !queue.Equals(NewDoubleArrayQueue[float32](1.3, -2.5)) {
+	if !queue.Equal(NewDoubleArrayQueue[float32](1.3, -2.5)) {
 
 		t.Log("queues are not equals")
 		t.Fail()
 
 	}
-	if queue.Equals(NewDoubleLinkedQueue[float32](1.3, -2.5, -1)) {
+	if queue.Equal(NewDoubleLinkedQueue[float32](1.3, -2.5, -1)) {
 
 		t.Log("queues are equals")
 		t.Fail()

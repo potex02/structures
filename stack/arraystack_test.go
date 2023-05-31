@@ -129,13 +129,13 @@ func TestEqualsArrayStack(t *testing.T) {
 
 	var stack *ArrayStack[float64] = NewArrayStack(1.3, -2.5)
 
-	if !stack.Equals(NewArrayStack(1.3, -2.5)) {
+	if !stack.Equal(NewArrayStack(1.3, -2.5)) {
 
 		t.Log("stacks are not equals")
 		t.Fail()
 
 	}
-	if stack.Equals(NewLinkedStack[float64](1.3, -2.5, -1)) {
+	if stack.Equal(NewLinkedStack[float64](1.3, -2.5, -1)) {
 
 		t.Log("stacks are equals")
 		t.Fail()

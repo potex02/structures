@@ -1,13 +1,18 @@
 // Package structures implements the most common used data structures.
 package structures
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/potex02/structures/util"
+)
 
 // Structure defines commons methods for all data structures.
 //
-// A Structure is a generic and can be used with any type T.
+// A Structure is a generic that can be used with any type T.
 type Structure[T any] interface {
 	fmt.Stringer
+	util.Equaler[Structure[T]]
 	// Len returns the numbers of elements in the structure.
 	Len() int
 	// IsEmpty returns a bool which indicate if the structure is empty or not.
@@ -16,7 +21,4 @@ type Structure[T any] interface {
 	ToSlice() []T
 	// Clear removes all element from the structure.
 	Clear()
-	// Equals returns true if the structure and st are the same type of structure and their elements are equals.
-	// In any other case, it returns false.
-	Equals(s Structure[T]) bool
 }

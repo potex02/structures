@@ -379,25 +379,25 @@ func TestEqualsLinkedList(t *testing.T) {
 
 	var list List[int] = NewLinkedList(1, 2, 3, 5)
 
-	if !list.Equals(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
+	if !list.Equal(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
 
 		t.Log("lists are not equals")
 		t.Fail()
 
 	}
-	if list.Equals(NewLinkedListFromSlice([]int{-1, 2, 3, 5})) {
+	if list.Equal(NewLinkedListFromSlice([]int{-1, 2, 3, 5})) {
 
 		t.Log("lists are equals")
 		t.Fail()
 
 	}
-	if !list.Equals(NewArrayListFromSlice([]int{1, 2, 3, 5})) {
+	if !list.Equal(NewArrayListFromSlice([]int{1, 2, 3, 5})) {
 
 		t.Log("lists are not equals")
 		t.Fail()
 
 	}
-	if list.Equals(NewArrayListFromSlice([]int{-1, 2, 3, 5})) {
+	if list.Equal(NewArrayListFromSlice([]int{-1, 2, 3, 5})) {
 
 		t.Log("lists are equals")
 		t.Fail()

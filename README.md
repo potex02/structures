@@ -5,8 +5,12 @@
 An implementation of the data structures in Go using generics types.<br/>
 The module provides the Structure interface which is implemented by all the the defined data structures:
 ```go
+// Structure defines commons methods for all data structures.
+//
+// A Structure is a generic that can be used with any type T.
 type Structure[T any] interface {
 	fmt.Stringer
+	util.Equaler[Structure[T]]
 	// Len returns the numbers of elements in the structure.
 	Len() int
 	// IsEmpty returns a bool which indicate if the structure is empty or not.
@@ -15,9 +19,6 @@ type Structure[T any] interface {
 	ToSlice() []T
 	// Clear removes all element from the structure.
 	Clear()
-	// Equals returns true if the structure and st are the same type of structure and their elements are equals.
-	// In any other case, it returns false.
-	Equals(s Structure[T]) bool
 }
 ```
 The module is available through the go get command:

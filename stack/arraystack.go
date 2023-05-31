@@ -98,12 +98,12 @@ func (s *ArrayStack[T]) Clear() {
 
 }
 
-// Equals returns true if s and st are both stacks and their elements are equals.
+// Equal returns true if s and st are both stacks and their elements are equals.
 // In any other case, it returns false.
 //
-// Equals does not take into account the effective type of st. This means that if st is a [LinkedStack],
+// Equal does not take into account the effective type of st. This means that if st is a [LinkedStack],
 // but the elements of s and the elements of st are equals, this method returns anyway true.
-func (s *ArrayStack[T]) Equals(st structures.Structure[T]) bool {
+func (s *ArrayStack[T]) Equal(st structures.Structure[T]) bool {
 
 	stack, ok := st.(Stack[T])
 	return ok && reflect.DeepEqual(s.ToSlice(), stack.ToSlice())

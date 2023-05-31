@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util"
 	"golang.org/x/exp/constraints"
 	"golang.org/x/exp/slices"
 )
@@ -89,23 +90,15 @@ type List[T any] interface {
 	Copy() List[T]
 }
 
-// Comparator defines a method used to sort a [List] though the Sort method
-type Comparator[T any] interface {
-	// Compare returns a bool which indicates how the elements have to be sorted.
-	//
-	// If the result is false, the receiver is placed before o, otherwhise it is placed after the parameter.
-	Compare(o T) bool
-}
-
 // Sort returns a [List] which contains all elements of l that have been sorted.
 //
-// This function can be used only with types which implements the [Comparator] interface.
-func Sort[T Comparator[T]](l List[T]) List[T] {
+// This function can be used only with types which implements the [util.Comparer] interface.
+func Sort[T util.Comparer[T]](l List[T]) List[T] {
 
 	slice := l.ToSlice()
 	sort.Slice(slice, func(i, j int) bool {
 
-		return slice[i].Compare(slice[j])
+		return slice[i].Compare(slice[j]) < 0
 
 	})
 	switch l.(type) {

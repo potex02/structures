@@ -7,29 +7,30 @@ import (
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
+	"github.com/potex02/structures/util"
 )
 
 // HashTable provides a generic table.
 // The table is implemented through hashing.
 //
 // It implements the interface [structures.Structure].
-type HashTable[K comparable, T any] struct {
+type HashTable[K util.Hasher[K], T any] struct {
 	// contains filtered or unexported fields
-	objects map[K]T
+	objects map[string]list.List[*Entry[K, T]]
 }
 
 // NewHashTable returns a new [HashTable] containing the elements c.
 //
 // if no argument is passed, it will be created an empty [HashTable].
-func NewHashTable[K comparable, T any]() *HashTable[K, T] {
+func NewHashTable[K util.Hasher[K], T any]() *HashTable[K, T] {
 
-	return &HashTable[K, T]{objects: map[K]T{}}
+	return &HashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
 
 }
 
 // NewHashTableFromSlice returns a new [HashTable] containing the elements of slice c.
 // it panics if key and c have different lengths.
-func NewHashTableFromSlice[K comparable, T any](key []K, c []T) *HashTable[K, T] {
+func NewHashTableFromSlice[K util.Hasher[K], T any](key []K, c []T) *HashTable[K, T] {
 
 	table := NewHashTable[K, T]()
 	if len(c) != 0 {
@@ -44,22 +45,45 @@ func NewHashTableFromSlice[K comparable, T any](key []K, c []T) *HashTable[K, T]
 // Len returns the length of t.
 func (t *HashTable[K, T]) Len() int {
 
-	return len(t.objects)
+	result := 0
+	for _, i := range t.objects {
+
+		result += i.Len()
+
+	}
+	return result
 
 }
 
 // IsEmpty returns a bool which indicate if t is empty or not.
 func (t *HashTable[K, T]) IsEmpty() bool {
 
-	return len(t.objects) == 0
+	return t.Len() == 0
 
 }
 
 // ContainsKey returns true if the key is present on t.
 func (t *HashTable[K, T]) ContainsKey(key K) bool {
 
-	_, ok := t.objects[key]
-	return ok
+	hash := key.Hash()
+	for i := range t.objects {
+
+		if i == hash {
+
+			for j := range t.objects[i].Iter() {
+
+				if key.Compare(j.Key()) == 0 {
+
+					return true
+
+				}
+
+			}
+
+		}
+
+	}
+	return false
 
 }
 
@@ -68,9 +92,13 @@ func (t *HashTable[K, T]) ContainsElement(e T) bool {
 
 	for _, i := range t.objects {
 
-		if reflect.DeepEqual(i, e) {
+		for j := range i.Iter() {
 
-			return true
+			if reflect.DeepEqual(e, j.Element()) {
+
+				return true
+
+			}
 
 		}
 
@@ -83,11 +111,13 @@ func (t *HashTable[K, T]) ContainsElement(e T) bool {
 func (t *HashTable[K, T]) Keys() list.List[K] {
 
 	list := list.NewArrayList[K]()
-	j := 0
-	for i := range t.objects {
+	for _, i := range t.objects {
 
-		list.Add(i)
-		j++
+		for j := range i.Iter() {
+
+			list.Add(j.Key())
+
+		}
 
 	}
 	return list
@@ -98,11 +128,13 @@ func (t *HashTable[K, T]) Keys() list.List[K] {
 func (t *HashTable[K, T]) Elements() list.List[T] {
 
 	list := list.NewArrayList[T]()
-	j := 0
 	for _, i := range t.objects {
 
-		list.Add(i)
-		j++
+		for j := range i.Iter() {
+
+			list.Add(j.Element())
+
+		}
 
 	}
 	return list
@@ -112,15 +144,7 @@ func (t *HashTable[K, T]) Elements() list.List[T] {
 // ToSLice returns a slice which contains all elements of t.
 func (t *HashTable[K, T]) ToSlice() []T {
 
-	slice := make([]T, len(t.objects))
-	j := 0
-	for _, i := range t.objects {
-
-		slice[j] = i
-		j++
-
-	}
-	return slice
+	return t.Elements().ToSlice()
 
 }
 
@@ -128,8 +152,27 @@ func (t *HashTable[K, T]) ToSlice() []T {
 // The method returns false if the key is not found.
 func (t *HashTable[K, T]) Get(key K) (T, bool) {
 
-	result, ok := t.objects[key]
-	return result, ok
+	var result T
+
+	hash := key.Hash()
+	for i := range t.objects {
+
+		if i == hash {
+
+			for j := range t.objects[i].Iter() {
+
+				if key.Compare(j.Key()) == 0 {
+
+					return j.Element(), true
+
+				}
+
+			}
+
+		}
+
+	}
+	return result, false
 
 }
 
@@ -137,9 +180,33 @@ func (t *HashTable[K, T]) Get(key K) (T, bool) {
 // If the element is not present, the method returns false.
 func (t *HashTable[K, T]) Put(key K, e T) (T, bool) {
 
-	result, ok := t.objects[key]
-	t.objects[key] = e
-	return result, ok
+	var result T
+
+	hash := key.Hash()
+	for i := range t.objects {
+
+		if i == hash {
+
+			for j := range t.objects[i].Iter() {
+
+				if key.Compare(j.Key()) == 0 {
+
+					result = j.Element()
+					j.SetElement(e)
+					return result, true
+
+				}
+
+			}
+			t.objects[i].Add(NewEntry(key, e))
+			return result, false
+
+		}
+
+	}
+	list := list.NewLinkedList(NewEntry(key, e))
+	t.objects[hash] = list
+	return result, false
 
 }
 
@@ -164,26 +231,47 @@ func (t *HashTable[K, T]) PutSlice(key []K, e []T) {
 // It returns false if the the key does not exists.
 func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 
-	result, ok := t.objects[key]
-	if ok {
+	var result T
 
-		delete(t.objects, key)
+	hash := key.Hash()
+	for i := range t.objects {
+
+		if i == hash {
+
+			for j := range t.objects[i].Iter() {
+
+				if key.Compare(j.Key()) == 0 {
+
+					result = j.Element()
+					t.objects[i].RemoveElement(j)
+					if t.objects[i].IsEmpty() {
+
+						delete(t.objects, i)
+
+					}
+					return result, true
+
+				}
+
+			}
+
+		}
 
 	}
-	return result, ok
+	return result, false
 
 }
 
 // Clear removes all element from t.
 func (t *HashTable[K, T]) Clear() {
 
-	t.objects = map[K]T{}
+	t.objects = map[string]list.List[*Entry[K, T]]{}
 
 }
 
-// Equals returns true if t and st are both [HashTable] and their keys and elements are equals.
+// Equal returns true if t and st are both [HashTable] and their keys and elements are equals.
 // In any other case, it returns false.
-func (t *HashTable[K, T]) Equals(st structures.Structure[T]) bool {
+func (t *HashTable[K, T]) Equal(st structures.Structure[T]) bool {
 
 	return reflect.DeepEqual(t, st)
 
@@ -193,9 +281,13 @@ func (t *HashTable[K, T]) Equals(st structures.Structure[T]) bool {
 func (t *HashTable[K, T]) Copy() *HashTable[K, T] {
 
 	table := NewHashTable[K, T]()
-	for i, j := range t.objects {
+	for _, i := range t.objects {
 
-		table.Put(i, j)
+		for j := range i.Iter() {
+
+			table.Put(j.Key(), j.Element())
+
+		}
 
 	}
 	return table
@@ -205,6 +297,24 @@ func (t *HashTable[K, T]) Copy() *HashTable[K, T] {
 // String returns a rapresentation of t in the form of a string
 func (t *HashTable[K, T]) String() string {
 
-	return fmt.Sprintf("HashTable[%T, %T]%v", *new(K), *new(T), t.objects)
+	result := fmt.Sprintf("HashTable[%T, %T][", *new(K), *new(T))
+	first := true
+	for _, i := range t.objects {
+
+		for j := range i.Iter() {
+
+			if !first {
+
+				result += ", "
+
+			}
+			result += fmt.Sprintf("%v: %v", j.Key(), j.Element())
+			first = false
+
+		}
+
+	}
+	result += "]"
+	return result
 
 }

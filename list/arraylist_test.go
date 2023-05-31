@@ -379,25 +379,25 @@ func TestEqualsArrayList(t *testing.T) {
 
 	var list List[int] = NewArrayList(1, 2, 3, 5)
 
-	if !list.Equals(NewArrayListFromSlice([]int{1, 2, 3, 5})) {
+	if !list.Equal(NewArrayListFromSlice([]int{1, 2, 3, 5})) {
 
 		t.Log("lists are not equals")
 		t.Fail()
 
 	}
-	if list.Equals(NewArrayListFromSlice([]int{-1, 2, 3, 5})) {
+	if list.Equal(NewArrayListFromSlice([]int{-1, 2, 3, 5})) {
 
 		t.Log("lists are equals")
 		t.Fail()
 
 	}
-	if !list.Equals(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
+	if !list.Equal(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
 
 		t.Log("lists are not equals")
 		t.Fail()
 
 	}
-	if list.Equals(NewLinkedListFromSlice([]int{-1, 2, 3, 5})) {
+	if list.Equal(NewLinkedListFromSlice([]int{-1, 2, 3, 5})) {
 
 		t.Log("lists are equals")
 		t.Fail()
@@ -460,9 +460,19 @@ type test struct {
 	n1, n2 int
 }
 
-func (t test) Compare(o test) bool {
+func (t test) Compare(o test) int {
 
-	return t.n1 < o.n1
+	if t.n1 < o.n1 {
+
+		return -1
+
+	}
+	if t.n1 == o.n1 {
+
+		return 0
+
+	}
+	return 1
 
 }
 

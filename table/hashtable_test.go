@@ -5,11 +5,12 @@ import (
 	"testing"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util/wrapper"
 )
 
 func TestNewHashTable(t *testing.T) {
 
-	var table structures.Structure[int] = NewHashTable[string, int]()
+	var table structures.Structure[int] = NewHashTable[wrapper.String, int]()
 
 	if table == nil {
 
@@ -27,7 +28,7 @@ func TestNewHashTable(t *testing.T) {
 }
 func TestNewHashTableFromSlice(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	if table == nil {
 
@@ -57,7 +58,7 @@ func TestNewHashTableFromSlice(t *testing.T) {
 }
 func TestContainsKeyHashTable(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	if ok := table.ContainsKey("hello"); ok {
 
@@ -75,7 +76,7 @@ func TestContainsKeyHashTable(t *testing.T) {
 }
 func TestContainsElementHashTable(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	if ok := table.ContainsElement(-1); ok {
 
@@ -93,7 +94,7 @@ func TestContainsElementHashTable(t *testing.T) {
 }
 func TestGetHashTable(t *testing.T) {
 
-	var table *HashTable[byte, int] = NewHashTableFromSlice([]byte{'a', 'b'}, []int{1, -1})
+	var table *HashTable[wrapper.Byte, int] = NewHashTableFromSlice([]wrapper.Byte{'a', 'b'}, []int{1, -1})
 
 	e, ok := table.Get('a')
 	if !ok {
@@ -118,7 +119,7 @@ func TestGetHashTable(t *testing.T) {
 }
 func TestPutHashTable(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	if _, ok := table.Put("a", -7.8); ok {
 
@@ -148,7 +149,7 @@ func TestPutHashTable(t *testing.T) {
 }
 func TestRemove(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	e, ok := table.Remove("Ciao")
 	if !ok {
@@ -174,21 +175,21 @@ func TestRemove(t *testing.T) {
 }
 func TestEqualsHashTable(t *testing.T) {
 
-	var table *HashTable[string, float32] = NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
-	if !reflect.DeepEqual(table, NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
+	if !reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables are not equals")
 		t.Fail()
 
 	}
-	if reflect.DeepEqual(table, NewHashTableFromSlice([]string{"Hello", "Ciao"}, []float32{1.5, 5.6})) {
+	if reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.5, 5.6})) {
 
 		t.Log("tables are equals")
 		t.Fail()
 
 	}
-	if reflect.DeepEqual(table, NewHashTableFromSlice([]string{"Hello", "ciao"}, []float32{1.2, 5.6})) {
+	if reflect.DeepEqual(table, NewHashTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables not equals")
 		t.Fail()
