@@ -12,7 +12,7 @@ import (
 // A Structure is a generic that can be used with any type T.
 type Structure[T any] interface {
 	fmt.Stringer
-	util.Equaler[Structure[T]]
+	util.Equaler
 	// Len returns the numbers of elements in the structure.
 	Len() int
 	// IsEmpty returns a bool which indicate if the structure is empty or not.

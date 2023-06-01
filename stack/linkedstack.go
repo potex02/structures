@@ -143,7 +143,7 @@ func (s *LinkedStack[T]) Clear() {
 //
 // Equal does not take into account the effective type of st. This means that if st is an [ArrayStack],
 // but the elements of s and the elements of st are equals, this method returns anyway true.
-func (s *LinkedStack[T]) Equal(st structures.Structure[T]) bool {
+func (s *LinkedStack[T]) Equal(st any) bool {
 
 	stack, ok := st.(Stack[T])
 	if ok {

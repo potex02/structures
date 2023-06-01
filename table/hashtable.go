@@ -18,11 +18,11 @@ var _ structures.Structure[int] = NewHashTable[wrapper.Int, int]()
 //
 // It implements the interface [structures.Structure].
 //
-// The check on the equality of the keys is done with the Compare(o K) method.
+// The check on the equality of the keys is done with the Compare method.
 //
-// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
-type HashTable[K util.Hasher[K], T any] struct {
+type HashTable[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	objects map[string]list.List[*Entry[K, T]]
 }
@@ -30,7 +30,7 @@ type HashTable[K util.Hasher[K], T any] struct {
 // NewHashTable returns a new [HashTable] containing the elements c.
 //
 // if no argument is passed, it will be created an empty [HashTable].
-func NewHashTable[K util.Hasher[K], T any]() *HashTable[K, T] {
+func NewHashTable[K util.Hasher, T any]() *HashTable[K, T] {
 
 	return &HashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
 
@@ -38,7 +38,7 @@ func NewHashTable[K util.Hasher[K], T any]() *HashTable[K, T] {
 
 // NewHashTableFromSlice returns a new [HashTable] containing the elements of slice c.
 // it panics if key and c have different lengths.
-func NewHashTableFromSlice[K util.Hasher[K], T any](key []K, c []T) *HashTable[K, T] {
+func NewHashTableFromSlice[K util.Hasher, T any](key []K, c []T) *HashTable[K, T] {
 
 	table := NewHashTable[K, T]()
 	if len(c) != 0 {
@@ -279,7 +279,7 @@ func (t *HashTable[K, T]) Clear() {
 
 // Equal returns true if t and st are both [HashTable] and their keys and elements are equals.
 // In any other case, it returns false.
-func (t *HashTable[K, T]) Equal(st structures.Structure[T]) bool {
+func (t *HashTable[K, T]) Equal(st any) bool {
 
 	table, ok := st.(*HashTable[K, T])
 	if ok {
@@ -289,7 +289,7 @@ func (t *HashTable[K, T]) Equal(st structures.Structure[T]) bool {
 			return false
 
 		}
-		_, ok := interface{}(*new(T)).(util.Equaler[T])
+		_, ok := interface{}(*new(T)).(util.Equaler)
 		for i := range t.Keys().Iter() {
 
 			e1, _ := t.Get(i)
@@ -301,7 +301,7 @@ func (t *HashTable[K, T]) Equal(st structures.Structure[T]) bool {
 			}
 			if ok {
 
-				if !interface{}(e1).(util.Equaler[T]).Equal(e2) {
+				if !interface{}(e1).(util.Equaler).Equal(e2) {
 
 					return false
 

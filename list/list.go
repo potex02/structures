@@ -15,7 +15,7 @@ import (
 //
 // A list is indexed starting from 0.
 //
-// The check on the equality of the elements is done with Equal(o T) method if T implements [util.Equaler],
+// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
 type List[T any] interface {
 	structures.Structure[T]
@@ -96,7 +96,7 @@ type List[T any] interface {
 // Sort returns a [List] which contains all elements of l that have been sorted.
 //
 // This function can be used only with types which implements the [util.Comparer] interface.
-func Sort[T util.Comparer[T]](l List[T]) List[T] {
+func Sort[T util.Comparer](l List[T]) List[T] {
 
 	slice := l.ToSlice()
 	sort.Slice(slice, func(i, j int) bool {

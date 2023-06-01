@@ -172,7 +172,7 @@ func (q *LinkedQueue[T]) Clear() {
 //
 // Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
-func (q *LinkedQueue[T]) Equal(st structures.Structure[T]) bool {
+func (q *LinkedQueue[T]) Equal(st any) bool {
 
 	queue, ok := st.(Queue[T])
 	if ok {

@@ -2,35 +2,43 @@ package wrapper
 
 import "fmt"
 
-var _ Wrapper[uint, Uint] = Uint(0)
-var _ Wrapper[uint8, Uint8] = Uint8(0)
-var _ Wrapper[uint16, Uint16] = Uint16(0)
-var _ Wrapper[uint32, Uint32] = Uint32(0)
-var _ Wrapper[uint64, Uint64] = Uint64(0)
-var _ Wrapper[uintptr, UintPtr] = UintPtr(0)
-var _ Wrapper[byte, Byte] = Byte('a')
+var _ Wrapper[uint] = Uint(0)
+var _ Wrapper[uint8] = Uint8(0)
+var _ Wrapper[uint16] = Uint16(0)
+var _ Wrapper[uint32] = Uint32(0)
+var _ Wrapper[uint64] = Uint64(0)
+var _ Wrapper[uintptr] = UintPtr(0)
+var _ Wrapper[byte] = Byte('a')
 
 // Uint is a wrapper type for uint.
 type Uint uint
 
-// Equal returns true if u and o are equals.
-func (u Uint) Equal(o Uint) bool {
+// Equal returns true if u and o are both [Uint] and are equals.
+func (u Uint) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(Uint)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u Uint) Compare(o Uint) int {
+// 0 if u and o are equals,
+// -2 if o is not [Uint].
+func (u Uint) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(Uint)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 
@@ -56,24 +64,32 @@ func (u Uint) ToValue() uint {
 // Uint8 is a wrapper type for uint8.
 type Uint8 uint8
 
-// Equal returns true if u and o are equals.
-func (u Uint8) Equal(o Uint8) bool {
+// Equal returns true if u and o are both [Uint8] and are equals.
+func (u Uint8) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(Uint8)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u Uint8) Compare(o Uint8) int {
+// 0 if u and o are equals,
+// -2 if o is not [Uint8].
+func (u Uint8) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(Uint8)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 
@@ -99,24 +115,32 @@ func (u Uint8) ToValue() uint8 {
 // Uint16 is a wrapper type for uint16.
 type Uint16 uint16
 
-// Equal returns true if u and o are equals.
-func (u Uint16) Equal(o Uint16) bool {
+// Equal returns true if u and o are both [Uint16] and are equals.
+func (u Uint16) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(Uint16)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u Uint16) Compare(o Uint16) int {
+// 0 if u and o are equals,
+// -2 if o is not [Uint16].
+func (u Uint16) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(Uint16)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 
@@ -142,24 +166,32 @@ func (u Uint16) ToValue() uint16 {
 // Uint32 is a wrapper type for uint32.
 type Uint32 uint32
 
-// Equal returns true if u and o are equals.
-func (u Uint32) Equal(o Uint32) bool {
+// Equal returns true if u and o are both [Uint32] and are equals.
+func (u Uint32) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(Uint32)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u Uint32) Compare(o Uint32) int {
+// 0 if u and o are equals,
+// -2 if o is not [Uint32].
+func (u Uint32) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(Uint32)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 
@@ -185,24 +217,32 @@ func (u Uint32) ToValue() uint32 {
 // Uint64 is a wrapper type for uint64.
 type Uint64 uint64
 
-// Equal returns true if u and o are equals.
-func (u Uint64) Equal(o Uint64) bool {
+// Equal returns true if u and o are both [Uint64] and are equals.
+func (u Uint64) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(Uint64)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u Uint64) Compare(o Uint64) int {
+// 0 if u and o are equals,
+// -2 if o is not [Uint64].
+func (u Uint64) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(Uint64)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 
@@ -228,24 +268,32 @@ func (u Uint64) ToValue() uint64 {
 // UintPtr is a wrapper type for uintptr.
 type UintPtr uintptr
 
-// Equal returns true if u and o are equals.
-func (u UintPtr) Equal(o UintPtr) bool {
+// Equal returns true if u and o are both [UintPtr] and are equals.
+func (u UintPtr) Equal(o any) bool {
 
-	return u == o
+	value, ok := o.(UintPtr)
+	return ok && u == value
 
 }
 
 // Compare returns -1 if u is less than o,
 // 1 if u is greater than o,
-// 0 if u and o are equals.
-func (u UintPtr) Compare(o UintPtr) int {
+// 0 if u and o are equals,
+// -2 if o is not [UintPtr].
+func (u UintPtr) Compare(o any) int {
 
-	if u < o {
+	value, ok := o.(UintPtr)
+	if !ok {
+
+		return -2
+
+	}
+	if u < value {
 
 		return -1
 
 	}
-	if u == o {
+	if u == value {
 
 		return 0
 

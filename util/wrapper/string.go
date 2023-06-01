@@ -1,30 +1,38 @@
 package wrapper
 
-var _ Wrapper[string, String] = String("")
+var _ Wrapper[string] = String("")
 
 // String is a wrapper type for string.
 type String string
 
-// Equal returns true if s and o are equals.
-func (s String) Equal(o String) bool {
+// Equal returns true if s and o are both [String] and are equals.
+func (s String) Equal(o any) bool {
 
-	return s == o
+	value, ok := o.(String)
+	return ok && s == value
 
 }
 
 // Compare returns -1 if s is less than o,
 // 1 if s is greater than o,
-// 0 if s and o are equals.
+// 0 if s and o are equals,
+// -2 if o is not [String].
 //
 // The comparison is made in lexicographical order.
-func (s String) Compare(o String) int {
+func (s String) Compare(o any) int {
 
-	if s < o {
+	value, ok := o.(String)
+	if !ok {
+
+		return -2
+
+	}
+	if s < value {
 
 		return -1
 
 	}
-	if s == o {
+	if s == value {
 
 		return 0
 

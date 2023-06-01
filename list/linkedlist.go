@@ -78,7 +78,7 @@ func (l *LinkedList[T]) Contains(e T) bool {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) IndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler[T])
+	element, ok := interface{}(e).(util.Equaler)
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
 		if ok {
@@ -104,7 +104,7 @@ func (l *LinkedList[T]) IndexOf(e T) int {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) LastIndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler[T])
+	element, ok := interface{}(e).(util.Equaler)
 	for i, j := l.len-1, l.tail; j != nil; i, j = i-1, j.Prev() {
 
 		if ok {
@@ -306,7 +306,7 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 // In that case, the method returns true, otherwhise it returns false.
 func (l *LinkedList[T]) RemoveElement(e T) bool {
 
-	element, ok := interface{}(e).(util.Equaler[T])
+	element, ok := interface{}(e).(util.Equaler)
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
 		if ok {
@@ -420,7 +420,7 @@ func (l *LinkedList[T]) IterReverse() chan T {
 //
 // Equal does not take into account the effective type of st. This means that if st is an [ArrayList],
 // but the elements of l and the elements of st are equals, this method returns anyway true.
-func (l *LinkedList[T]) Equal(st structures.Structure[T]) bool {
+func (l *LinkedList[T]) Equal(st any) bool {
 
 	list, ok := st.(List[T])
 	if ok {
@@ -430,7 +430,7 @@ func (l *LinkedList[T]) Equal(st structures.Structure[T]) bool {
 			return false
 
 		}
-		_, ok := interface{}(*new(T)).(util.Equaler[T])
+		_, ok := interface{}(*new(T)).(util.Equaler)
 		if !ok {
 
 			return reflect.DeepEqual(l.ToSlice(), list.ToSlice())
@@ -440,7 +440,7 @@ func (l *LinkedList[T]) Equal(st structures.Structure[T]) bool {
 		for i := l.root; i != nil; i = i.Next() {
 
 			element := <-channel
-			if !interface{}(i).(util.Equaler[T]).Equal(element) {
+			if !interface{}(i).(util.Equaler).Equal(element) {
 
 				return false
 

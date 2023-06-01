@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-var _ Wrapper[complex64, Complex64] = Complex64(0)
-var _ Wrapper[complex128, Complex128] = Complex128(0)
+var _ Wrapper[complex64] = Complex64(0)
+var _ Wrapper[complex128] = Complex128(0)
 
 // Complex64 is a wrapper type for complex64.
 type Complex64 complex64
@@ -34,24 +34,32 @@ func (c Complex64) Norm() float64 {
 
 }
 
-// Equal returns true if c and o are equals.
-func (c Complex64) Equal(o Complex64) bool {
+// Equal returns true if c and o are both [Complex64] and are equals.
+func (c Complex64) Equal(o any) bool {
 
-	return c == o
+	value, ok := o.(Complex64)
+	return ok && c == value
 
 }
 
 // Compare returns -1 if c is less than o,
 // 1 if c is greater than o,
-// 0 if c and o are equals.
-func (c Complex64) Compare(o Complex64) int {
+// 0 if c and o are equals,
+// -2 if o is not [Complex64].
+func (c Complex64) Compare(o any) int {
 
-	if c.Norm() < o.Norm() {
+	value, ok := o.(Complex64)
+	if !ok {
+
+		return -2
+
+	}
+	if c.Norm() < value.Norm() {
 
 		return -1
 
 	}
-	if c.Norm() == o.Norm() {
+	if c.Norm() == value.Norm() {
 
 		return 0
 
@@ -100,24 +108,32 @@ func (c Complex128) Norm() float64 {
 
 }
 
-// Equal returns true if c and o are equals.
-func (c Complex128) Equal(o Complex128) bool {
+// Equal returns true if c and o are both [Complex128] and are equals.
+func (c Complex128) Equal(o any) bool {
 
-	return c == o
+	value, ok := o.(Complex128)
+	return ok && c == value
 
 }
 
 // Compare returns -1 if c is less than o,
 // 1 if c is greater than o,
-// 0 if c and o are equals.
-func (c Complex128) Compare(o Complex128) int {
+// 0 if c and o are equals,
+// -2 if o is not [Complex128].
+func (c Complex128) Compare(o any) int {
 
-	if c.Norm() < o.Norm() {
+	value, ok := o.(Complex128)
+	if !ok {
+
+		return -2
+
+	}
+	if c.Norm() < value.Norm() {
 
 		return -1
 
 	}
-	if c.Norm() == o.Norm() {
+	if c.Norm() == value.Norm() {
 
 		return 0
 

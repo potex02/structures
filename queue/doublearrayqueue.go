@@ -145,7 +145,7 @@ func (q *DoubleArrayQueue[T]) Clear() {
 //
 // Equal does not take into account the effective type of st. This means that if st is a [DoubleLinkedQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
-func (q *DoubleArrayQueue[T]) Equal(st structures.Structure[T]) bool {
+func (q *DoubleArrayQueue[T]) Equal(st any) bool {
 
 	queue, ok := st.(DoubleQueue[T])
 	if ok {

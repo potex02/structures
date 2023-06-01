@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util/wrapper"
 )
 
 func TestNewArrayList(t *testing.T) {
@@ -486,24 +487,21 @@ type test struct {
 	n1, n2 int
 }
 
-func (t test) Equal(o test) bool {
+func (t test) Equal(o any) bool {
 
-	return t.n2 == o.n2
+	test, ok := o.(test)
+	return ok && t.n2 == test.n2
 
 }
 
-func (t test) Compare(o test) int {
+func (t test) Compare(o any) int {
 
-	if t.n1 < o.n1 {
+	test, ok := o.(test)
+	if !ok {
 
-		return -1
-
-	}
-	if t.n1 == o.n1 {
-
-		return 0
+		return -2
 
 	}
-	return 1
+	return wrapper.Int(t.n1).Compare(wrapper.Int(test.n1))
 
 }

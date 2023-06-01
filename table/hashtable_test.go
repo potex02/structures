@@ -221,8 +221,9 @@ type test struct {
 	n2 int
 }
 
-func (t test) Equal(o test) bool {
+func (t test) Equal(o any) bool {
 
-	return t.n2 == o.n2
+	test, ok := o.(test)
+	return ok && t.n2 == test.n2
 
 }

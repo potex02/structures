@@ -469,7 +469,7 @@ func TestSortLinkedList(t *testing.T) {
 	}
 
 }
-func TestComparatorSort(t *testing.T) {
+func TestComparatorSortLinkedList(t *testing.T) {
 
 	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})
 
