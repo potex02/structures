@@ -144,7 +144,7 @@ func TestPopArrayQueue(t *testing.T) {
 	}
 
 }
-func TestEqualsArrayQueue(t *testing.T) {
+func TestEqualArrayQueue(t *testing.T) {
 
 	var queue *ArrayQueue[float32] = NewArrayQueue[float32](1.3, -2.5)
 

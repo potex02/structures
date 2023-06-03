@@ -13,6 +13,7 @@ import (
 type Structure[T any] interface {
 	fmt.Stringer
 	util.Equaler
+	util.Hasher
 	// Len returns the numbers of elements in the structure.
 	Len() int
 	// IsEmpty returns a bool which indicate if the structure is empty or not.

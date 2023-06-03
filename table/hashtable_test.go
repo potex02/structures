@@ -172,7 +172,7 @@ func TestRemove(t *testing.T) {
 	}
 
 }
-func TestEqualsHashTable(t *testing.T) {
+func TestEqualHashTable(t *testing.T) {
 
 	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
@@ -210,6 +210,37 @@ func TestEqualsHashTable(t *testing.T) {
 	if tableTest.Equal(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{-1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})) {
 
 		t.Log("tables are equals")
+		t.Fail()
+
+	}
+
+}
+func TestCompareHashTabble(t *testing.T) {
+
+	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
+
+	if table.Compare(NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) != 0 {
+
+		t.Log("compare is not 0")
+		t.Fail()
+
+	}
+	if table.Compare(NewHashTableFromSlice([]wrapper.String{"Hello"}, []float32{5.6})) != 1 {
+
+		t.Log("compare is not 1")
+		t.Fail()
+
+	}
+	if tableTest.Compare(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{-1, 2, 3}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}, {n1: 0, n2: 0}})) != -1 {
+
+		t.Log("compare is not -1")
+		t.Fail()
+
+	}
+	if table.Compare(nil) != -2 {
+
+		t.Log("compare is not -2")
 		t.Fail()
 
 	}

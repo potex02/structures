@@ -423,24 +423,27 @@ func (l *LinkedList[T]) IterReverse() chan T {
 func (l *LinkedList[T]) Equal(st any) bool {
 
 	list, ok := st.(List[T])
-	if ok {
+	if ok && l != nil && list != nil {
 
 		if l.Len() != list.Len() {
 
 			return false
 
 		}
-		_, ok := interface{}(*new(T)).(util.Equaler)
-		if !ok {
-
-			return reflect.DeepEqual(l.ToSlice(), list.ToSlice())
-
-		}
 		channel := list.Iter()
 		for i := l.root; i != nil; i = i.Next() {
 
-			element := <-channel
-			if !interface{}(i).(util.Equaler).Equal(element) {
+			element, ok := interface{}(i.Element()).(util.Equaler)
+			other := <-channel
+			if ok {
+
+				if !element.Equal(other) {
+
+					return false
+
+				}
+
+			} else if !reflect.DeepEqual(i.Element(), other) {
 
 				return false
 
@@ -451,6 +454,61 @@ func (l *LinkedList[T]) Equal(st any) bool {
 
 	}
 	return false
+
+}
+
+// Compare returns 0 if l and st are equals,
+// -1 if l is shorten than st,
+// 1 if l is longer than st,
+// -2 if st is not a [List] or if one between l and st is nil.
+//
+// If l and st have the same length, the result is the comparison
+// between the first different element of the two lists if T implemets [util.Comparer],
+// otherwhise the result is 0.
+func (l *LinkedList[T]) Compare(st any) int {
+
+	list, ok := st.(List[T])
+	if ok && l != nil && list != nil {
+
+		if l.Len() < list.Len() {
+
+			return -1
+
+		}
+		if l.Len() > list.Len() {
+
+			return 1
+
+		}
+		channel := list.Iter()
+		for i := l.root; i != nil; i = i.Next() {
+
+			element, ok := interface{}(i.Element()).(util.Comparer)
+			other := <-channel
+			if !ok {
+
+				return 0
+
+			}
+			if result := element.Compare(other); result != 0 {
+
+				return result
+
+			}
+
+		}
+		return 0
+
+	}
+	return -2
+
+}
+
+// Hash returns the hash code of l.
+func (l *LinkedList[T]) Hash() string {
+
+	check := reflect.TypeOf(new(T)).String()
+	return fmt.Sprintf("%v%v", check[1:], l.Len())
 
 }
 
@@ -465,7 +523,8 @@ func (l *LinkedList[T]) Copy() List[T] {
 // String returns a rapresentation of l in the form of a string.
 func (l *LinkedList[T]) String() string {
 
-	return fmt.Sprintf("LinkedList[%T]%v", *new(T), l.ToSlice())
+	check := reflect.TypeOf(new(T)).String()
+	return fmt.Sprintf("ArrayList[%v]%v", check[1:], l.ToSlice())
 
 }
 func (l *LinkedList[T]) getElementAtIndex(index int) *structures.Entry[T] {

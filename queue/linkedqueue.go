@@ -3,6 +3,7 @@ package queue
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
@@ -175,23 +176,54 @@ func (q *LinkedQueue[T]) Clear() {
 func (q *LinkedQueue[T]) Equal(st any) bool {
 
 	queue, ok := st.(Queue[T])
-	if ok {
+	if ok && q != nil && queue != nil {
 
-		return list.NewArrayListFromSlice(q.ToSlice()).Equal(list.NewArrayListFromSlice(queue.ToSlice()))
+		return list.NewArrayListFromStructure[T](q).Equal(list.NewArrayListFromStructure[T](queue))
 
 	}
 	return false
 
 }
 
+// Compare returns 0 if q and st are equals,
+// -1 if q is shorten than st,
+// 1 if q is longer than st,
+// -2 if st is not a [Queue] or if one between q and st is nil.
+//
+// If q and st have the same length, the result is the comparison
+// between the first different element of the two queues if T implemets [util.Comparer],
+// otherwhise the result is 0.
+func (q *LinkedQueue[T]) Compare(st any) int {
+
+	queue, ok := st.(Queue[T])
+	if ok && q != nil && queue != nil {
+
+		return list.NewArrayListFromStructure[T](q).Compare(list.NewArrayListFromStructure[T](queue))
+
+	}
+	return -2
+
+}
+
+// Hash returns the hash code of q.
+func (q *LinkedQueue[T]) Hash() string {
+
+	check := reflect.TypeOf(new(T)).String()
+	head, _ := q.Head()
+	tail, _ := q.Tail()
+	return fmt.Sprintf("%v%v%v", check[1:], head, tail)
+
+}
+
 // String returns a rapresentation of q in the form of a string.
 func (q *LinkedQueue[T]) String() string {
 
+	check := reflect.TypeOf(new(T)).String()
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("LinkedQueue[%T][%d, ]", *new(T), q.len)
+		return fmt.Sprintf("LinkedQueue[%T][%d, ]", check[1:], q.len)
 
 	}
-	return fmt.Sprintf("LinkedQueue[%T][%d, %v %v]", *new(T), q.len, q.head.Element(), q.tail.Element())
+	return fmt.Sprintf("LinkedQueue[%T][%d, %v %v]", check[1:], q.len, q.head.Element(), q.tail.Element())
 
 }

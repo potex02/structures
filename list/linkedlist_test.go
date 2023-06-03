@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util/wrapper"
 )
 
 func TestNewLinkedList(t *testing.T) {
@@ -375,10 +376,10 @@ func TestIterLinkedList(t *testing.T) {
 	}
 
 }
-func TestEqualsLinkedList(t *testing.T) {
+func TestEqualLinkedList(t *testing.T) {
 
 	var list List[int] = NewLinkedList(1, 2, 3, 5)
-	var listTest List[test] = NewArrayList[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
+	var listTest List[test] = NewLinkedList[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
 
 	if !list.Equal(NewLinkedListFromSlice([]int{1, 2, 3, 5})) {
 
@@ -410,9 +411,40 @@ func TestEqualsLinkedList(t *testing.T) {
 		t.Fail()
 
 	}
-	if listTest.Equal(NewArrayList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
+	if listTest.Equal(NewLinkedList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
 
 		t.Log("lists are equals")
+		t.Fail()
+
+	}
+
+}
+func TestCompareLinkedList(t *testing.T) {
+
+	var list List[List[int]] = NewLinkedList[List[int]](NewLinkedList(1, 2, 3), NewArrayList(4, 2), NewArrayList(5, 6, 8, 8))
+	var listWrapper List[List[wrapper.Int]] = NewLinkedList[List[wrapper.Int]](NewLinkedList[wrapper.Int](1, 2, 3), NewArrayList[wrapper.Int](4, 2), NewArrayList[wrapper.Int](5, 6, 8, 8))
+
+	if list.Compare(NewArrayList[List[int]](NewArrayList(1, 2, 3), NewLinkedList(2, 2), NewArrayList(5, 6, 8, 8))) != 0 {
+
+		t.Log("compare is not 0")
+		t.Fail()
+
+	}
+	if list.Compare(NewArrayList[List[int]](NewLinkedList(1, 2, 3), NewArrayList(5, 6, 8, 8))) != 1 {
+
+		t.Log("compare is not 1")
+		t.Fail()
+
+	}
+	if listWrapper.Compare(NewArrayList[List[wrapper.Int]](NewLinkedList[wrapper.Int](1, 2, 3), NewLinkedList[wrapper.Int](5, 2), NewArrayList[wrapper.Int](5, 6, 8, 8))) != -1 {
+
+		t.Log("compare is not -1")
+		t.Fail()
+
+	}
+	if listWrapper.Compare(NewArrayList[List[wrapper.Int]](NewLinkedList[wrapper.Int](1, 2, 3), NewLinkedList[wrapper.Int](5, 6, 8, 8))) != 1 {
+
+		t.Log("compare is not 1")
 		t.Fail()
 
 	}

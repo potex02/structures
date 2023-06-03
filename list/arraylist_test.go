@@ -376,7 +376,7 @@ func TestIterArrayList(t *testing.T) {
 	}
 
 }
-func TestEqualsArrayList(t *testing.T) {
+func TestEqualArrayList(t *testing.T) {
 
 	var list List[int] = NewArrayList(1, 2, 3, 5)
 	var listTest List[test] = NewArrayList[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
@@ -411,9 +411,40 @@ func TestEqualsArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if listTest.Equal(NewArrayList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
+	if listTest.Equal(NewLinkedList[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
 
 		t.Log("lists are equals")
+		t.Fail()
+
+	}
+
+}
+func TestCompareArrayList(t *testing.T) {
+
+	var list List[List[int]] = NewArrayList[List[int]](NewLinkedList(1, 2, 3), NewArrayList(4, 2), NewArrayList(5, 6, 8, 8))
+	var listWrapper List[List[wrapper.Int]] = NewArrayList[List[wrapper.Int]](NewLinkedList[wrapper.Int](1, 2, 3), NewArrayList[wrapper.Int](4, 2), NewArrayList[wrapper.Int](5, 6, 8, 8))
+
+	if list.Compare(NewArrayList[List[int]](NewArrayList(1, 2, 3), NewLinkedList(2, 2), NewArrayList(5, 6, 8, 8))) != 0 {
+
+		t.Log("compare is not 0")
+		t.Fail()
+
+	}
+	if list.Compare(NewArrayList[List[int]](NewArrayList(1, 2, 3), NewArrayList(5, 6, 8, 8))) != 1 {
+
+		t.Log("compare is not 1")
+		t.Fail()
+
+	}
+	if listWrapper.Compare(NewArrayList[List[wrapper.Int]](NewArrayList[wrapper.Int](1, 2, 3), NewArrayList[wrapper.Int](5, 2), NewArrayList[wrapper.Int](5, 6, 8, 8))) != -1 {
+
+		t.Log("compare is not -1")
+		t.Fail()
+
+	}
+	if listWrapper.Compare(NewArrayList[List[wrapper.Int]](NewArrayList[wrapper.Int](1, 2, 3), NewArrayList[wrapper.Int](5, 6, 8, 8))) != 1 {
+
+		t.Log("compare is not 1")
 		t.Fail()
 
 	}
@@ -469,7 +500,6 @@ func TestSortArrayList(t *testing.T) {
 	}
 
 }
-
 func TestComparatorSortArrayList(t *testing.T) {
 
 	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})

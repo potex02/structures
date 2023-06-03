@@ -145,7 +145,7 @@ func TestPopLinkedStack(t *testing.T) {
 	}
 
 }
-func TestEqualsLinkedStack(t *testing.T) {
+func TestEqualLinkedStack(t *testing.T) {
 
 	var stack *LinkedStack[float64] = NewLinkedStack(1.3, -2.5)
 

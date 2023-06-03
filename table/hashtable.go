@@ -282,32 +282,32 @@ func (t *HashTable[K, T]) Clear() {
 func (t *HashTable[K, T]) Equal(st any) bool {
 
 	table, ok := st.(*HashTable[K, T])
-	if ok {
+	if ok && t != nil && table != nil {
 
 		if t.Len() != table.Len() {
 
 			return false
 
 		}
-		_, ok := interface{}(*new(T)).(util.Equaler)
 		for i := range t.Keys().Iter() {
 
 			e1, _ := t.Get(i)
-			e2, found := table.Get(i)
+			other, found := table.Get(i)
 			if !found {
 
 				return false
 
 			}
+			element, ok := interface{}(e1).(util.Equaler)
 			if ok {
 
-				if !interface{}(e1).(util.Equaler).Equal(e2) {
+				if !element.Equal(other) {
 
 					return false
 
 				}
 
-			} else if !reflect.DeepEqual(e1, e2) {
+			} else if !reflect.DeepEqual(e1, other) {
 
 				return false
 
@@ -318,6 +318,40 @@ func (t *HashTable[K, T]) Equal(st any) bool {
 
 	}
 	return false
+
+}
+
+// Compare returns 0 if t and st have the same length,
+// -1 if t is shorten than st,
+// 1 if t is longer than st,
+// -2 if st is not a [HashTable] or if one between t and st is nil.
+func (t *HashTable[K, T]) Compare(st any) int {
+
+	table, ok := st.(*HashTable[K, T])
+	if ok && t != nil && table != nil {
+
+		if t.Len() < table.Len() {
+
+			return -1
+
+		}
+		if t.Len() > table.Len() {
+
+			return 1
+
+		}
+		return 0
+
+	}
+	return -2
+
+}
+
+// Hash returns the hash code of t.
+func (t *HashTable[K, T]) Hash() string {
+
+	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
+	return fmt.Sprintf("%v%v%v", check[0][1:], check[1][1:], t.Len())
 
 }
 
@@ -341,7 +375,8 @@ func (t *HashTable[K, T]) Copy() *HashTable[K, T] {
 // String returns a rapresentation of t in the form of a string
 func (t *HashTable[K, T]) String() string {
 
-	result := fmt.Sprintf("HashTable[%T, %T][", *new(K), *new(T))
+	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
+	result := fmt.Sprintf("HashTable[%T, %T][", check[0][1:], check[1][1:])
 	first := true
 	for _, i := range t.objects {
 

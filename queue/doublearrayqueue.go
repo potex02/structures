@@ -3,6 +3,7 @@ package queue
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
@@ -148,25 +149,56 @@ func (q *DoubleArrayQueue[T]) Clear() {
 func (q *DoubleArrayQueue[T]) Equal(st any) bool {
 
 	queue, ok := st.(DoubleQueue[T])
-	if ok {
+	if ok && q != nil && queue != nil {
 
-		return q.objects.Equal(list.NewArrayListFromSlice(queue.ToSlice()))
+		return q.objects.Equal(list.NewArrayListFromStructure[T](queue))
 
 	}
 	return false
 
 }
 
+// Compare returns 0 if q and st are equals,
+// -1 if q is shorten than st,
+// 1 if q is longer than st,
+// -2 if st is not a [DoubleQueue] or if one between q and st is nil.
+//
+// If q and st have the same length, the result is the comparison
+// between the first different element of the two queues if T implemets [util.Comparer],
+// otherwhise the result is 0.
+func (q *DoubleArrayQueue[T]) Compare(st any) int {
+
+	queue, ok := st.(DoubleQueue[T])
+	if ok && q != nil && queue != nil {
+
+		return q.objects.Compare(list.NewArrayListFromStructure[T](queue))
+
+	}
+	return -2
+
+}
+
+// Hash returns the hash code of q.
+func (q *DoubleArrayQueue[T]) Hash() string {
+
+	check := reflect.TypeOf(new(T)).String()
+	head, _ := q.Head()
+	tail, _ := q.Tail()
+	return fmt.Sprintf("%v%v%v", check[1:], head, tail)
+
+}
+
 // String returns a rapresentation of q in the form of a string.
 func (q *DoubleArrayQueue[T]) String() string {
 
+	check := reflect.TypeOf(new(T)).String()
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("DoubleArrayQueue[%T][%d, ]", *new(T), q.objects.Len())
+		return fmt.Sprintf("DoubleArrayQueue[%T][%d, ]", check[1:], q.objects.Len())
 
 	}
 	head, _ := q.Head()
 	tail, _ := q.Tail()
-	return fmt.Sprintf("DoubleArrayQueue[%T][%d, %v %v]", *new(T), q.objects.Len(), head, tail)
+	return fmt.Sprintf("DoubleArrayQueue[%T][%d, %v %v]", check[1:], q.objects.Len(), head, tail)
 
 }

@@ -125,7 +125,7 @@ func TestPopArrayStack(t *testing.T) {
 	}
 
 }
-func TestEqualsArrayStack(t *testing.T) {
+func TestEqualArrayStack(t *testing.T) {
 
 	var stack *ArrayStack[float64] = NewArrayStack(1.3, -2.5)
 

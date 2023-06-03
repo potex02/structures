@@ -164,7 +164,7 @@ func TestPopLinkedQueue(t *testing.T) {
 	}
 
 }
-func TestEqualsLinkedQueue(t *testing.T) {
+func TestEqualLinkedQueue(t *testing.T) {
 
 	var queue *LinkedQueue[float32] = NewLinkedQueue[float32](1.3, -2.5)
 

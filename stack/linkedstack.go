@@ -3,6 +3,7 @@ package stack
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
@@ -146,23 +147,53 @@ func (s *LinkedStack[T]) Clear() {
 func (s *LinkedStack[T]) Equal(st any) bool {
 
 	stack, ok := st.(Stack[T])
-	if ok {
+	if ok && s != nil && stack != nil {
 
-		return list.NewArrayListFromSlice(s.ToSlice()).Equal(list.NewArrayListFromSlice(stack.ToSlice()))
+		return list.NewArrayListFromStructure[T](s).Equal(list.NewArrayListFromStructure[T](stack))
 
 	}
 	return false
 
 }
 
+// Compare returns 0 if s and st are equals,
+// -1 if s is shorten than st,
+// 1 if s is longer than st,
+// -2 if st is not a [Stack] or if one between s and st is nil.
+//
+// If s and st have the same length, the result is the comparison
+// between the first different element of the two stacks if T implemets [util.Comparer],
+// otherwhise the result is 0.
+func (s *LinkedStack[T]) Compare(st any) int {
+
+	stack, ok := st.(Stack[T])
+	if ok && s != nil && stack != nil {
+
+		return list.NewArrayListFromStructure[T](s).Compare(list.NewArrayListFromStructure[T](stack))
+
+	}
+	return -2
+
+}
+
+// Hash returns the hash code of s.
+func (s *LinkedStack[T]) Hash() string {
+
+	check := reflect.TypeOf(new(T)).String()
+	top, _ := s.Top()
+	return fmt.Sprintf("%v%v", check[1:], top)
+
+}
+
 // String returns a rapresentation of s in the form of a string.
 func (s *LinkedStack[T]) String() string {
 
+	check := reflect.TypeOf(new(T)).String()
 	if s.IsEmpty() {
 
-		return fmt.Sprintf("LinkedStack[%T][%d, ]", *new(T), s.len)
+		return fmt.Sprintf("LinkedStack[%T][%d, ]", check[1:], s.len)
 
 	}
-	return fmt.Sprintf("LinkedStack[%T][%d, %v]", *new(T), s.len, s.top.Element())
+	return fmt.Sprintf("LinkedStack[%T][%d, %v]", check[1:], s.len, s.top.Element())
 
 }
