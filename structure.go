@@ -16,7 +16,7 @@ type Structure[T any] interface {
 	util.Hasher
 	// Len returns the numbers of elements in the structure.
 	Len() int
-	// IsEmpty returns a bool which indicate if the structure is empty or not.
+	// IsEmpty returns a bool which indicates if the structure is empty or not.
 	IsEmpty() bool
 	// ToSLice returns a slice which contains all elements of the structure.
 	ToSlice() []T

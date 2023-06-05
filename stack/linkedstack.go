@@ -53,7 +53,7 @@ func (s *LinkedStack[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if s is empty or not.
+// IsEmpty returns a bool which indicates if s is empty or not.
 func (s *LinkedStack[T]) IsEmpty() bool {
 
 	return s.len == 0

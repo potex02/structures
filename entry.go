@@ -12,9 +12,6 @@ type Entry[T any] struct {
 }
 
 // NewEntry returns a new [Entry].
-//
-// Element is the value of the entry.
-// Prev and next are the entries to which the entry is linked.
 func NewEntry[T any](element T, prev *Entry[T], next *Entry[T]) *Entry[T] {
 
 	return &Entry[T]{element: element, prev: prev, next: next}
@@ -43,9 +40,6 @@ func NewEntrySlice[T any](e []T) (*Entry[T], *Entry[T]) {
 }
 
 // NewEntrySingle returns a new [Entry] for a single linked structure.
-//
-// Element is the value of the entry.
-// Next is the entry to which the entry is linked.
 func NewEntrySingle[T any](element T, next *Entry[T]) *Entry[T] {
 
 	return &Entry[T]{element: element, prev: nil, next: next}

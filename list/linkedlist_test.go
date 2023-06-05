@@ -44,7 +44,7 @@ func TestNewFromSliceLinkedList(t *testing.T) {
 	}
 	if !reflect.DeepEqual(list.ToSlice(), []int{1, 2, 3, -4}) {
 
-		t.Log("list ", list)
+		t.Log("list is", list)
 		t.Fail()
 
 	}

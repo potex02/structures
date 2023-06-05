@@ -45,7 +45,7 @@ func (s *ArrayStack[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if s is empty or not.
+// IsEmpty returns a bool which indicates if s is empty or not.
 func (s *ArrayStack[T]) IsEmpty() bool {
 
 	return s.objects.IsEmpty()

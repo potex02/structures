@@ -51,7 +51,7 @@ func (l *ArrayList[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if l is empty or not.
+// IsEmpty returns a bool which indicates if l is empty or not.
 func (l *ArrayList[T]) IsEmpty() bool {
 
 	return len(l.objects) == 0

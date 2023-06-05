@@ -60,7 +60,7 @@ func (l *LinkedList[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if l is empty or not.
+// IsEmpty returns a bool which indicates if l is empty or not.
 func (l *LinkedList[T]) IsEmpty() bool {
 
 	return l.len == 0
@@ -278,7 +278,6 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 	}
 	entry := l.getElementAtIndex(index)
 	result = entry.Element()
-
 	if entry.Prev() == nil {
 
 		l.root = entry.Next()

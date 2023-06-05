@@ -63,7 +63,7 @@ func (t *HashTable[K, T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if t is empty or not.
+// IsEmpty returns a bool which indicates if t is empty or not.
 func (t *HashTable[K, T]) IsEmpty() bool {
 
 	return t.Len() == 0
@@ -372,7 +372,7 @@ func (t *HashTable[K, T]) Copy() *HashTable[K, T] {
 
 }
 
-// String returns a rapresentation of t in the form of a string
+// String returns a rapresentation of t in the form of a string.
 func (t *HashTable[K, T]) String() string {
 
 	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}

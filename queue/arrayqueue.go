@@ -44,7 +44,7 @@ func (q *ArrayQueue[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if q is empty or not.
+// IsEmpty returns a bool which indicates if q is empty or not.
 func (q *ArrayQueue[T]) IsEmpty() bool {
 
 	return q.objects.IsEmpty()

@@ -52,7 +52,7 @@ func (q *LinkedQueue[T]) Len() int {
 
 }
 
-// IsEmpty returns a bool which indicate if q is empty or not.
+// IsEmpty returns a bool which indicates if q is empty or not.
 func (q *LinkedQueue[T]) IsEmpty() bool {
 
 	return q.len == 0
