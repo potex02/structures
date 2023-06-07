@@ -57,7 +57,7 @@ func TestNewHashTableFromSlice(t *testing.T) {
 }
 func TestContainsKeyHashTable(t *testing.T) {
 
-	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table Table[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
 	if ok := table.ContainsKey("hello"); ok {
 
@@ -146,7 +146,7 @@ func TestPutHashTable(t *testing.T) {
 	}
 
 }
-func TestRemove(t *testing.T) {
+func TestRemoveHashTable(t *testing.T) {
 
 	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 
@@ -170,6 +170,12 @@ func TestRemove(t *testing.T) {
 		t.Fail()
 
 	}
+	if table.Len() != 1 {
+
+		t.Log("length is not 1")
+		t.Fail()
+
+	}
 
 }
 func TestEqualHashTable(t *testing.T) {
@@ -177,7 +183,7 @@ func TestEqualHashTable(t *testing.T) {
 	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
 
-	if !table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
+	if !table.Equal(NewTreeTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables are not equals")
 		t.Fail()
@@ -189,13 +195,13 @@ func TestEqualHashTable(t *testing.T) {
 		t.Fail()
 
 	}
-	if table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
+	if table.Equal(NewTreeTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables not equals")
 		t.Fail()
 
 	}
-	if !tableTest.Equal(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 2, n2: 2}, {n1: 0, n2: -4}})) {
+	if !tableTest.Equal(NewTreeTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 2, n2: 2}, {n1: 0, n2: -4}})) {
 
 		t.Log("tables are not equals")
 		t.Fail()
@@ -215,7 +221,7 @@ func TestEqualHashTable(t *testing.T) {
 	}
 
 }
-func TestCompareHashTabble(t *testing.T) {
+func TestCompareHashTable(t *testing.T) {
 
 	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
@@ -226,13 +232,13 @@ func TestCompareHashTabble(t *testing.T) {
 		t.Fail()
 
 	}
-	if table.Compare(NewHashTableFromSlice([]wrapper.String{"Hello"}, []float32{5.6})) != 1 {
+	if table.Compare(NewTreeTableFromSlice([]wrapper.String{"Hello"}, []float32{5.6})) != 1 {
 
 		t.Log("compare is not 1")
 		t.Fail()
 
 	}
-	if tableTest.Compare(NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{-1, 2, 3}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}, {n1: 0, n2: 0}})) != -1 {
+	if tableTest.Compare(NewTreeTableFromSlice[wrapper.Int, test]([]wrapper.Int{-1, 2, 3}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}, {n1: 0, n2: 0}})) != -1 {
 
 		t.Log("compare is not -1")
 		t.Fail()

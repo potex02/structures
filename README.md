@@ -40,7 +40,10 @@ For now, the only available structures are the:
 - Double queues:
 	- DoubleArrayQueue;
 	- DoubleLinkedQueue;
-- HashTable.
+- Tables:
+	- HashTable;
+	- TreeTable;
+- BinaryTree.
 
 To be added:
 - Sets.

@@ -42,6 +42,12 @@ func (e *Entry[K, T]) SetElement(element T) {
 // Compare returns the comparison between the key of e and o.
 func (e *Entry[K, T]) Compare(o any) int {
 
-	return e.key.Compare(o)
+	entry, ok := o.(*Entry[K, T])
+	if ok && e != nil && entry != nil {
+
+		return e.key.Compare(entry.Key())
+
+	}
+	return -2
 
 }

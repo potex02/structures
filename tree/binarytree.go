@@ -19,6 +19,7 @@ var _ structures.Structure[wrapper.Int] = NewBinaryTree[wrapper.Int]()
 // The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
 type BinaryTree[T util.Comparer] struct {
+	// contains filtered or unexported fields
 	root *Node[T]
 	len  int
 }
@@ -69,13 +70,9 @@ func (t *BinaryTree[T]) Root() *Node[T] {
 // Contains returns if e is present in t.
 func (t *BinaryTree[T]) Contains(e T) bool {
 
-	result := false
-	t.each(t.root, func(i *Node[T]) {
-		if e.Compare(i.Element()) == 0 {
-			result = true
-		}
+	return t.Any(t.root, func(i *Node[T]) bool {
+		return e.Compare(i.Element()) == 0
 	})
-	return result
 
 }
 
@@ -83,7 +80,7 @@ func (t *BinaryTree[T]) Contains(e T) bool {
 func (t *BinaryTree[T]) ToSlice() []T {
 
 	slice := make([]T, 0)
-	t.each(t.root, func(i *Node[T]) { slice = append(slice, i.Element()) })
+	t.Each(t.root, func(i *Node[T]) { slice = append(slice, i.Element()) })
 	return slice
 
 }
@@ -111,13 +108,62 @@ func (t *BinaryTree[T]) AddSlice(e []T) {
 func (t *BinaryTree[T]) Remove(e T) bool {
 
 	result := false
-	t.each(t.root, func(i *Node[T]) {
+	t.Each(t.root, func(i *Node[T]) {
 		if e.Compare(i.Element()) == 0 && !result {
 			t.remove(i)
 			result = true
 		}
 	})
 	return result
+
+}
+
+// Each executes a function for any node in a subtree.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Each(node *Node[T], fun func(i *Node[T])) {
+
+	if node == nil {
+
+		return
+
+	}
+	t.Each(node.Left(), fun)
+	fun(node)
+	t.Each(node.Right(), fun)
+
+}
+
+// All executes a function for any node in a subtree
+// and returns true if the function returns true for all nodes.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) All(node *Node[T], fun func(i *Node[T]) bool) bool {
+
+	if node == nil {
+
+		return true
+
+	}
+	return t.All(node.Left(), fun) && fun(node) && t.All(node.Right(), fun)
+
+}
+
+// Any executes a function for any node in a subtree
+// and returns true if the function returns true for at least one node.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Any(node *Node[T], fun func(i *Node[T]) bool) bool {
+
+	if node == nil {
+
+		return false
+
+	}
+	return t.Any(node.Left(), fun) || fun(node) || t.Any(node.Right(), fun)
 
 }
 
@@ -143,7 +189,7 @@ func (t *BinaryTree[T]) Equal(st any) bool {
 		}
 		others := tree.ToSlice()
 		j := 0
-		return t.all(t.root, func(i *Node[T]) bool {
+		return t.All(t.root, func(i *Node[T]) bool {
 
 			element, ok := interface{}(i).(util.Equaler)
 			j++
@@ -186,7 +232,7 @@ func (t *BinaryTree[T]) Compare(st any) int {
 		others := tree.ToSlice()
 		j := 0
 		result := 0
-		t.all(t.root, func(i *Node[T]) bool {
+		t.All(t.root, func(i *Node[T]) bool {
 
 			j++
 			result = i.Element().Compare(others[j-1])
@@ -213,7 +259,7 @@ func (t *BinaryTree[T]) String() string {
 
 	check := reflect.TypeOf(new(T)).String()
 	objects := make([]T, 0)
-	t.each(t.root, func(i *Node[T]) { objects = append(objects, i.Element()) })
+	t.Each(t.root, func(i *Node[T]) { objects = append(objects, i.Element()) })
 	return fmt.Sprintf("BinaryTree[%v]%v", check[1:], objects)
 
 }
@@ -315,29 +361,5 @@ func (t *BinaryTree[T]) remove(node *Node[T]) {
 	}
 	min.SetParent(nil)
 	t.len--
-
-}
-
-func (t *BinaryTree[T]) each(node *Node[T], fun func(i *Node[T])) {
-
-	if node == nil {
-
-		return
-
-	}
-	t.each(node.Left(), fun)
-	fun(node)
-	t.each(node.Right(), fun)
-
-}
-
-func (t *BinaryTree[T]) all(node *Node[T], fun func(i *Node[T]) bool) bool {
-
-	if node == nil {
-
-		return true
-
-	}
-	return t.all(node.Left(), fun) && fun(node) && t.all(node.Right(), fun)
 
 }

@@ -1,4 +1,3 @@
-// package table implements dynamic tables.
 package table
 
 import (
@@ -12,24 +11,17 @@ import (
 )
 
 var _ structures.Structure[int] = NewHashTable[wrapper.Int, int]()
+var _ Table[wrapper.Int, int] = NewHashTable[wrapper.Int, int]()
 
-// HashTable provides a generic table.
-// The table is implemented through hashing.
+// HashTable provides a generic table implemented through hashing.
 //
-// It implements the interface [structures.Structure].
-//
-// The check on the equality of the keys is done with the Compare method.
-//
-// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
-// otherwise it is done with [reflect.DeepEqual].
+// It implements the interface [Table].
 type HashTable[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	objects map[string]list.List[*Entry[K, T]]
 }
 
-// NewHashTable returns a new [HashTable] containing the elements c.
-//
-// if no argument is passed, it will be created an empty [HashTable].
+// NewHashTable returns a new empty [HashTable] containing the elements c.
 func NewHashTable[K util.Hasher, T any]() *HashTable[K, T] {
 
 	return &HashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
@@ -98,11 +90,20 @@ func (t *HashTable[K, T]) ContainsKey(key K) bool {
 // ContainsElement returns true if the element e is present on t.
 func (t *HashTable[K, T]) ContainsElement(e T) bool {
 
+	element, ok := interface{}(e).(util.Equaler)
 	for _, i := range t.objects {
 
 		for j := range i.Iter() {
 
-			if reflect.DeepEqual(e, j.Element()) {
+			if ok {
+
+				if element.Equal(j.Element()) {
+
+					return true
+
+				}
+
+			} else if reflect.DeepEqual(e, j.Element()) {
 
 				return true
 
@@ -132,7 +133,7 @@ func (t *HashTable[K, T]) Keys() list.List[K] {
 
 }
 
-// Keys returns a [list.List] which contains all elements of t.
+// Elements returns a [list.List] which contains all elements of t.
 func (t *HashTable[K, T]) Elements() list.List[T] {
 
 	list := list.NewArrayList[T]()
@@ -218,7 +219,7 @@ func (t *HashTable[K, T]) Put(key K, e T) (T, bool) {
 
 }
 
-// PutSlice adds the elements of e at t if not present.
+// PutSlice adds the elements of e at t.
 // it panics if key and e have different lengths.
 func (t *HashTable[K, T]) PutSlice(key []K, e []T) {
 
@@ -235,7 +236,7 @@ func (t *HashTable[K, T]) PutSlice(key []K, e []T) {
 
 }
 
-// Remove removes the key from t and return the value associated at the key.
+// Remove removes the key from t and returns the value associated at the key.
 // It returns false if the the key does not exists.
 func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 
@@ -277,11 +278,14 @@ func (t *HashTable[K, T]) Clear() {
 
 }
 
-// Equal returns true if t and st are both [HashTable] and their keys and elements are equals.
+// Equal returns true if t and st are both [Table] and their keys and elements are equals.
 // In any other case, it returns false.
+//
+// Equal does not take into account the effective type of st. This means that if st is an [TreeTable],
+// but the elements of t and the elements of st are equals, this method returns anyway true.
 func (t *HashTable[K, T]) Equal(st any) bool {
 
-	table, ok := st.(*HashTable[K, T])
+	table, ok := st.(Table[K, T])
 	if ok && t != nil && table != nil {
 
 		if t.Len() != table.Len() {
@@ -324,10 +328,10 @@ func (t *HashTable[K, T]) Equal(st any) bool {
 // Compare returns 0 if t and st have the same length,
 // -1 if t is shorten than st,
 // 1 if t is longer than st,
-// -2 if st is not a [HashTable] or if one between t and st is nil.
+// -2 if st is not a [Table] or if one between t and st is nil.
 func (t *HashTable[K, T]) Compare(st any) int {
 
-	table, ok := st.(*HashTable[K, T])
+	table, ok := st.(Table[K, T])
 	if ok && t != nil && table != nil {
 
 		if t.Len() < table.Len() {
@@ -355,8 +359,9 @@ func (t *HashTable[K, T]) Hash() string {
 
 }
 
-// Copy returns an [HashTable] containing a copy of the elements of t.
-func (t *HashTable[K, T]) Copy() *HashTable[K, T] {
+// Copy returns a table containing a copy of the elements of t.
+// The result of this method is of type [Table], but the effective table which is created is an [HashTable].
+func (t *HashTable[K, T]) Copy() Table[K, T] {
 
 	table := NewHashTable[K, T]()
 	for _, i := range t.objects {
