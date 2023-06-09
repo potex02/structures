@@ -201,10 +201,10 @@ func (t *TreeTable[K, T]) Equal(st any) bool {
 			return false
 
 		}
-		for i := range t.Keys().Iter() {
+		for i := t.Keys().Iter(); !i.End(); i = i.Next() {
 
-			e1, _ := t.Get(i)
-			other, found := table.Get(i)
+			e1, _ := t.Get(i.Element())
+			other, found := table.Get(i.Element())
 			if !found {
 
 				return false

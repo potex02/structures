@@ -49,46 +49,22 @@ type List[T any] interface {
 	// RemoveElement removes the element e from the list if it is presentt.
 	// In that case, the method returns true, otherwhise it returns false.
 	RemoveElement(e T) bool
-	// Iter returns a chan which permits to iterate a [List] with the range keyword.
+	// Iter returns a chan which permits to iterate a [List].
 	//
-	//	for i := range l.Iter() {
-	//		// code
-	//	}
-	//
-	// This method can only be used to iterate a [List] if the index is not needed.
-	// if you need to iterate a [List] with the index there are two options:
-	//
-	//	for i := 0; i < list.Len(); i++ {
-	//		element, err := list.Get(i)
+	//	for i := list.Iter(); !i.End(); i = i.Next() {
+	//		element := i.Element()
+	//		index := i.Index()
 	//		// Code
 	//	}
+	Iter() Iterator[T]
+	// Iter returns a chan which permits to iterate a [List] in reverse order.
 	//
-	//	j := 0
-	//	for i := range l.Iter() {
-	//		// code
-	//		j++
-	//	}
-	Iter() chan T
-	// IterReverse returns a chan which permits to iterate a [List] in reverse order with the range keyword.
-	//
-	//	for i := range l.IterReverse() {
-	//		// code
-	//	}
-	//
-	// This method can only be used to iterate a [List] if the index is not needed.
-	// if you need to iterate a [List] in reverse order with the index there are two options:
-	//
-	//	for i := list.Len() - 1; i >= 0; i-- {
-	//		element, err := list.Get(i)
+	//	for i := list.IterReverse(); !i.End(); i = i.Prev() {
+	//		element := i.Element()
+	//		index := i.Index()
 	//		// Code
 	//	}
-	//
-	//	j := l.Len() -1
-	//	for i := range l.Iter() {
-	//		// code
-	//		j--
-	//	}
-	IterReverse() chan T
+	IterReverse() Iterator[T]
 	// Copy returns a copy of the list.
 	Copy() List[T]
 }

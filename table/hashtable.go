@@ -70,9 +70,9 @@ func (t *HashTable[K, T]) ContainsKey(key K) bool {
 
 		if i == hash {
 
-			for j := range t.objects[i].Iter() {
+			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
 
-				if key.Compare(j.Key()) == 0 {
+				if key.Compare(j.Element().Key()) == 0 {
 
 					return true
 
@@ -93,17 +93,17 @@ func (t *HashTable[K, T]) ContainsElement(e T) bool {
 	element, ok := interface{}(e).(util.Equaler)
 	for _, i := range t.objects {
 
-		for j := range i.Iter() {
+		for j := i.Iter(); !j.End(); j = j.Next() {
 
 			if ok {
 
-				if element.Equal(j.Element()) {
+				if element.Equal(j.Element().Element()) {
 
 					return true
 
 				}
 
-			} else if reflect.DeepEqual(e, j.Element()) {
+			} else if reflect.DeepEqual(e, j.Element().Element()) {
 
 				return true
 
@@ -122,9 +122,9 @@ func (t *HashTable[K, T]) Keys() list.List[K] {
 	list := list.NewArrayList[K]()
 	for _, i := range t.objects {
 
-		for j := range i.Iter() {
+		for j := i.Iter(); !j.End(); j = j.Next() {
 
-			list.Add(j.Key())
+			list.Add(j.Element().Key())
 
 		}
 
@@ -139,9 +139,9 @@ func (t *HashTable[K, T]) Elements() list.List[T] {
 	list := list.NewArrayList[T]()
 	for _, i := range t.objects {
 
-		for j := range i.Iter() {
+		for j := i.Iter(); !j.End(); j = j.Next() {
 
-			list.Add(j.Element())
+			list.Add(j.Element().Element())
 
 		}
 
@@ -168,11 +168,11 @@ func (t *HashTable[K, T]) Get(key K) (T, bool) {
 
 		if i == hash {
 
-			for j := range t.objects[i].Iter() {
+			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
 
-				if key.Compare(j.Key()) == 0 {
+				if key.Compare(j.Element().Key()) == 0 {
 
-					return j.Element(), true
+					return j.Element().Element(), true
 
 				}
 
@@ -196,12 +196,12 @@ func (t *HashTable[K, T]) Put(key K, e T) (T, bool) {
 
 		if i == hash {
 
-			for j := range t.objects[i].Iter() {
+			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
 
-				if key.Compare(j.Key()) == 0 {
+				if key.Compare(j.Element().Key()) == 0 {
 
-					result = j.Element()
-					j.SetElement(e)
+					result = j.Element().Element()
+					j.Element().SetElement(e)
 					return result, true
 
 				}
@@ -247,12 +247,12 @@ func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 
 		if i == hash {
 
-			for j := range t.objects[i].Iter() {
+			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
 
-				if key.Compare(j.Key()) == 0 {
+				if key.Compare(j.Element().Key()) == 0 {
 
-					result = j.Element()
-					t.objects[i].RemoveElement(j)
+					result = j.Element().Element()
+					t.objects[i].RemoveElement(j.Element())
 					if t.objects[i].IsEmpty() {
 
 						delete(t.objects, i)
@@ -293,10 +293,10 @@ func (t *HashTable[K, T]) Equal(st any) bool {
 			return false
 
 		}
-		for i := range t.Keys().Iter() {
+		for i := t.Keys().Iter(); !i.End(); i = i.Next() {
 
-			e1, _ := t.Get(i)
-			other, found := table.Get(i)
+			e1, _ := t.Get(i.Element())
+			other, found := table.Get(i.Element())
 			if !found {
 
 				return false
@@ -366,9 +366,9 @@ func (t *HashTable[K, T]) Copy() Table[K, T] {
 	table := NewHashTable[K, T]()
 	for _, i := range t.objects {
 
-		for j := range i.Iter() {
+		for j := i.Iter(); !j.End(); j = j.Next() {
 
-			table.Put(j.Key(), j.Element())
+			table.Put(j.Element().Key(), j.Element().Element())
 
 		}
 
@@ -385,14 +385,14 @@ func (t *HashTable[K, T]) String() string {
 	first := true
 	for _, i := range t.objects {
 
-		for j := range i.Iter() {
+		for j := i.Iter(); !j.End(); j = j.Next() {
 
 			if !first {
 
 				result += ", "
 
 			}
-			result += fmt.Sprintf("%v: %v", j.Key(), j.Element())
+			result += fmt.Sprintf("%v: %v", j.Element().Key(), j.Element().Element())
 			first = false
 
 		}

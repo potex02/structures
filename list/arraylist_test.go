@@ -335,7 +335,7 @@ func TestIterArrayList(t *testing.T) {
 	var list *ArrayList[int] = NewArrayList(1, -2, 3, 5)
 	var j int = 0
 
-	for i := range list.Iter() {
+	for i := list.Iter(); !i.End(); i = i.Next() {
 
 		value, err := list.Get(j)
 
@@ -345,9 +345,15 @@ func TestIterArrayList(t *testing.T) {
 			t.Fail()
 
 		}
-		if value != i {
+		if j != i.Index() {
 
-			t.Log("element is", i)
+			t.Log("index is", i.Index())
+			t.Fail()
+
+		}
+		if value != i.Element() {
+
+			t.Log("element is", i.Element())
 			t.Fail()
 
 		}
@@ -355,7 +361,7 @@ func TestIterArrayList(t *testing.T) {
 
 	}
 	j = list.Len() - 1
-	for i := range list.IterReverse() {
+	for i := list.IterReverse(); !i.End(); i = i.Prev() {
 
 		value, err := list.Get(j)
 
@@ -365,9 +371,15 @@ func TestIterArrayList(t *testing.T) {
 			t.Fail()
 
 		}
-		if value != i {
+		if j != i.Index() {
 
-			t.Log("element is", i)
+			t.Log("index is", i.Index())
+			t.Fail()
+
+		}
+		if value != i.Element() {
+
+			t.Log("element is", i.Element())
 			t.Fail()
 
 		}

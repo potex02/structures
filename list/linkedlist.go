@@ -278,25 +278,7 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 	}
 	entry := l.getElementAtIndex(index)
 	result = entry.Element()
-	if entry.Prev() == nil {
-
-		l.root = entry.Next()
-
-	} else {
-
-		entry.Prev().SetNext(entry.Next())
-
-	}
-	if entry.Next() == nil {
-
-		l.tail = entry.Prev()
-
-	} else {
-
-		entry.Next().SetPrev(entry.Prev())
-
-	}
-	l.len--
+	l.removeEntry(entry)
 	return result, nil
 
 }
@@ -338,79 +320,29 @@ func (l *LinkedList[T]) Clear() {
 
 }
 
-// Iter returns a chan which permits to iterate a [LinkedList] with the range keyword.
+// Iter returns a chan which permits to iterate a [LinkedList].
 //
-//	for i := range l.Iter() {
-//		// code
-//	}
-//
-// This method can only be used to iterate a [LinkedList] if the index is not needed.
-// if you need to iterate a [LinkedList] with the index there are two options:
-//
-//	for i := 0; i < list.Len(); i++ {
-//		element, err := list.Get(i)
+//	for i := l.Iter(); !i.End(); i = i.Next() {
+//		element := i.Element()
+//		index := i.Index()
 //		// Code
 //	}
-//
-// The code above should not be used, because can be very expensive.
-//
-//	j := 0
-//	for i := range l.Iter() {
-//		// code
-//		j++
-//	}
-func (l *LinkedList[T]) Iter() chan T {
+func (l *LinkedList[T]) Iter() Iterator[T] {
 
-	obj := make(chan T)
-	go func() {
-
-		defer close(obj)
-		for i := l.root; i != nil; i = i.Next() {
-
-			obj <- i.Element()
-
-		}
-
-	}()
-	return obj
+	return NewLinkedListIterator(l)
 
 }
 
-// IterReverse returns a chan which permits to iterate a [LinkedList] in reverse order with the range keyword.
+// Iter returns a chan which permits to iterate a [LinkedList] in reverse order.
 //
-//	for i := range l.IterReverse() {
-//		// code
-//	}
-//
-// This method can only be used to iterate a [LinkedList] if the index is not needed.
-// if you need to iterate a [LinkedList] in reverse order with the index there are two options:
-//
-//	for i := list.Len() - 1; i >= 0; i-- {
-//		element, err := list.Get(i)
+//	for i := l.IterReverse(); !i.End(); i = i.Prev() {
+//		element := i.Element()
+//		index := i.Index()
 //		// Code
 //	}
-//
-// The code above should not be used, because can be very expensive.
-//
-//	j := l.Len() -1
-//	for i := range l.Iter() {
-//		// code
-//		j--
-//	}
-func (l *LinkedList[T]) IterReverse() chan T {
+func (l *LinkedList[T]) IterReverse() Iterator[T] {
 
-	obj := make(chan T)
-	go func() {
-
-		defer close(obj)
-		for i := l.tail; i != nil; i = i.Prev() {
-
-			obj <- i.Element()
-
-		}
-
-	}()
-	return obj
+	return NewLinkedListReverseIterator(l)
 
 }
 
@@ -429,24 +361,24 @@ func (l *LinkedList[T]) Equal(st any) bool {
 			return false
 
 		}
-		channel := list.Iter()
+		other := list.Iter()
 		for i := l.root; i != nil; i = i.Next() {
 
 			element, ok := interface{}(i.Element()).(util.Equaler)
-			other := <-channel
 			if ok {
 
-				if !element.Equal(other) {
+				if !element.Equal(other.Element()) {
 
 					return false
 
 				}
 
-			} else if !reflect.DeepEqual(i.Element(), other) {
+			} else if !reflect.DeepEqual(i.Element(), other.Element()) {
 
 				return false
 
 			}
+			other = other.Next()
 
 		}
 		return true
@@ -479,21 +411,21 @@ func (l *LinkedList[T]) Compare(st any) int {
 			return 1
 
 		}
-		channel := list.Iter()
+		other := list.Iter()
 		for i := l.root; i != nil; i = i.Next() {
 
 			element, ok := interface{}(i.Element()).(util.Comparer)
-			other := <-channel
 			if !ok {
 
 				return 0
 
 			}
-			if result := element.Compare(other); result != 0 {
+			if result := element.Compare(other.Element()); result != 0 {
 
 				return result
 
 			}
+			other = other.Next()
 
 		}
 		return 0
@@ -526,6 +458,7 @@ func (l *LinkedList[T]) String() string {
 	return fmt.Sprintf("ArrayList[%v]%v", check[1:], l.ToSlice())
 
 }
+
 func (l *LinkedList[T]) getElementAtIndex(index int) *structures.Entry[T] {
 
 	if index <= l.len/2 {
@@ -556,5 +489,29 @@ func (l *LinkedList[T]) getElementAtIndex(index int) *structures.Entry[T] {
 
 	}
 	return result
+
+}
+
+func (l *LinkedList[T]) removeEntry(entry *structures.Entry[T]) {
+
+	if entry.Prev() == nil {
+
+		l.root = entry.Next()
+
+	} else {
+
+		entry.Prev().SetNext(entry.Next())
+
+	}
+	if entry.Next() == nil {
+
+		l.tail = entry.Prev()
+
+	} else {
+
+		entry.Next().SetPrev(entry.Prev())
+
+	}
+	l.len--
 
 }

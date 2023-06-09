@@ -260,75 +260,29 @@ func (l *ArrayList[T]) Clear() {
 
 }
 
-// Iter returns a chan which permits to iterate an [ArrayList] with the range keyword.
+// Iter returns a chan which permits to iterate an [ArrayList].
 //
-//	for i := range l.Iter() {
-//		// code
-//	}
-//
-// This method can only be used to iterate an [ArrayList] if the index is not needed.
-// if you need to iterate an [ArrayList] with the index there are two options:
-//
-//	for i := 0; i < list.Len(); i++ {
-//		element, err := list.Get(i)
+//	for i := l.Iter(); !i.End(); i = i.Next() {
+//		element := i.Element()
+//		index := i.Index()
 //		// Code
 //	}
-//
-//	j := 0
-//	for i := range l.Iter() {
-//		// code
-//		j++
-//	}
-func (l *ArrayList[T]) Iter() chan T {
+func (l *ArrayList[T]) Iter() Iterator[T] {
 
-	obj := make(chan T)
-	go func() {
-
-		defer close(obj)
-		for _, i := range l.objects {
-
-			obj <- i
-
-		}
-
-	}()
-	return obj
+	return NewArrayListIterator(l)
 
 }
 
-// IterReverse returns a chan which permits to iterate an [ArrayList] in reverse order with the range keyword.
+// Iter returns a chan which permits to iterate an [ArrayList] in reverse order.
 //
-//	for i := range l.IterReverse() {
-//		// code
-//	}
-//
-// This method can only be used to iterate an [ArrayList] if the index is not needed.
-// if you need to iterate an [ArrayList] in reverse order with the index there are two options:
-//
-//	for i := list.Len() - 1; i >= 0; i-- {
-//		element, err := list.Get(i)
+//	for i := l.IterReverse(); !i.End(); i = i.Prev() {
+//		element := i.Element()
+//		index := i.Index()
 //		// Code
 //	}
-//
-//	j := l.Len() -1
-//	for i := range l.Iter() {
-//		// code
-//		j--
-//	}
-func (l *ArrayList[T]) IterReverse() chan T {
+func (l *ArrayList[T]) IterReverse() Iterator[T] {
 
-	obj := make(chan T)
-	go func() {
-
-		defer close(obj)
-		for i := len(l.objects) - 1; i >= 0; i-- {
-
-			obj <- l.objects[i]
-
-		}
-
-	}()
-	return obj
+	return NewArrayListReverseIterator(l)
 
 }
 
@@ -347,24 +301,24 @@ func (l *ArrayList[T]) Equal(st any) bool {
 			return false
 
 		}
-		channel := list.Iter()
+		other := list.Iter()
 		for _, i := range l.objects {
 
 			element, ok := interface{}(i).(util.Equaler)
-			other := <-channel
 			if ok {
 
-				if !element.Equal(other) {
+				if !element.Equal(other.Element()) {
 
 					return false
 
 				}
 
-			} else if !reflect.DeepEqual(i, other) {
+			} else if !reflect.DeepEqual(i, other.Element()) {
 
 				return false
 
 			}
+			other = other.Next()
 
 		}
 		return true
@@ -397,21 +351,21 @@ func (l *ArrayList[T]) Compare(st any) int {
 			return 1
 
 		}
-		channel := list.Iter()
+		other := list.Iter()
 		for _, i := range l.objects {
 
 			element, ok := interface{}(i).(util.Comparer)
-			other := <-channel
 			if !ok {
 
 				return 0
 
 			}
-			if result := element.Compare(other); result != 0 {
+			if result := element.Compare(other.Element()); result != 0 {
 
 				return result
 
 			}
+			other = other.Next()
 
 		}
 		return 0
