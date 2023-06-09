@@ -14,7 +14,7 @@ import (
 //
 // The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
-type Table[K util.Hasher, T any] interface {
+type Table[K util.Comparer, T any] interface {
 	structures.Structure[T]
 	// ContainsKey returns true if the key is present in the table.
 	ContainsKey(key K) bool

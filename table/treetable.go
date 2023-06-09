@@ -15,17 +15,17 @@ import (
 var _ structures.Structure[int] = NewTreeTable[wrapper.Int, int]()
 var _ Table[wrapper.Int, int] = NewTreeTable[wrapper.Int, int]()
 
-// HashTable provides a generic table implemented through a [tree.BinaryTree].
-// which maintains the order of the keys.
+// TreeTable provides a generic table implemented through a [tree.BinaryTree].
+// It maintains the order of the keys.
 //
 // It implements the interface [Table].
-type TreeTable[K util.Hasher, T any] struct {
+type TreeTable[K util.Comparer, T any] struct {
 	// contains filtered or unexported fields
 	objects *tree.BinaryTree[*Entry[K, T]]
 }
 
 // NewTreeTable returns a new empty [TreeTable] containing the elements c.
-func NewTreeTable[K util.Hasher, T any]() *TreeTable[K, T] {
+func NewTreeTable[K util.Comparer, T any]() *TreeTable[K, T] {
 
 	return &TreeTable[K, T]{objects: tree.NewBinaryTree[*Entry[K, T]]()}
 
@@ -33,7 +33,7 @@ func NewTreeTable[K util.Hasher, T any]() *TreeTable[K, T] {
 
 // NewTreeTableFromSlice returns a new [TreeTable] containing the elements of slice c.
 // it panics if key and c have different lengths.
-func NewTreeTableFromSlice[K util.Hasher, T any](key []K, c []T) *TreeTable[K, T] {
+func NewTreeTableFromSlice[K util.Comparer, T any](key []K, c []T) *TreeTable[K, T] {
 
 	table := NewTreeTable[K, T]()
 	if len(c) != 0 {

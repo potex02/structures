@@ -43,7 +43,7 @@ For now, the only available structures are the:
 - Tables:
 	- HashTable;
 	- TreeTable;
+- Sets:
+	- HashSet;
+	- TreeSet;
 - BinaryTree.
-
-To be added:
-- Sets.

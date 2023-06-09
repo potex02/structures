@@ -5,14 +5,14 @@ import (
 )
 
 // Entry is a component of a hash structure.
-type Entry[K util.Hasher, T any] struct {
+type Entry[K util.Comparer, T any] struct {
 	// contains filtered or unexported fields
 	key     K
 	element T
 }
 
 // NewEntry returns a new [Entry].
-func NewEntry[K util.Hasher, T any](Key K, element T) *Entry[K, T] {
+func NewEntry[K util.Comparer, T any](Key K, element T) *Entry[K, T] {
 
 	return &Entry[K, T]{key: Key, element: element}
 
