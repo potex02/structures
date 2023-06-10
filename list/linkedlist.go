@@ -320,7 +320,7 @@ func (l *LinkedList[T]) Clear() {
 
 }
 
-// Iter returns a chan which permits to iterate a [LinkedList].
+// Iter returns an [Iterator] which permits to iterate a [LinkedList].
 //
 //	for i := l.Iter(); !i.End(); i = i.Next() {
 //		element := i.Element()
@@ -333,7 +333,7 @@ func (l *LinkedList[T]) Iter() Iterator[T] {
 
 }
 
-// Iter returns a chan which permits to iterate a [LinkedList] in reverse order.
+// Iter returns an [Iterator] which permits to iterate a [LinkedList] in reverse order.
 //
 //	for i := l.IterReverse(); !i.End(); i = i.Prev() {
 //		element := i.Element()

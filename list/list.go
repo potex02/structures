@@ -49,7 +49,7 @@ type List[T any] interface {
 	// RemoveElement removes the element e from the list if it is presentt.
 	// In that case, the method returns true, otherwhise it returns false.
 	RemoveElement(e T) bool
-	// Iter returns a chan which permits to iterate a [List].
+	// Iter returns an [Iterator] which permits to iterate a [List].
 	//
 	//	for i := list.Iter(); !i.End(); i = i.Next() {
 	//		element := i.Element()
@@ -57,7 +57,7 @@ type List[T any] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[T]
-	// Iter returns a chan which permits to iterate a [List] in reverse order.
+	// Iter returns an [Iterator] which permits to iterate a [List] in reverse order.
 	//
 	//	for i := list.IterReverse(); !i.End(); i = i.Prev() {
 	//		element := i.Element()

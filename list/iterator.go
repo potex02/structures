@@ -187,7 +187,7 @@ func NewLinkedListIterator[T any](list *LinkedList[T]) Iterator[T] {
 
 }
 
-// NewLinkedListIterator returns a new reverse [LinkedListIterator] associated at the list parameter.
+// NewLinkedListReverseIterator returns a new reverse [LinkedListIterator] associated at the list parameter.
 func NewLinkedListReverseIterator[T any](list *LinkedList[T]) Iterator[T] {
 
 	if list.IsEmpty() {
