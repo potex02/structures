@@ -15,6 +15,31 @@ type Iterator[T any] interface {
 	// Index returns the index of the element the iterator.
 	Index() int
 	// Remove removes the element from the list and returns the iterator of the next element.
+	//
+	// The result of this method must be assigned in most cases to himself.
+	//
+	// i = i.Remove()
+	//
+	// An example of the use of the method is the following:
+	//
+	//	for i := list.Iter(); !i.End(); i = i.Next() {
+	//		// Code
+	//		if /*some condition*/ {
+	//			i = i.Remove()
+	//		}
+	//		// Code
+	//	}
+	//
+	// The following code, instead, can lead to undefined program behavior:
+	//
+	//	for i := list.Iter(); !i.End(); i = i.Next() {
+	//		// Code
+	//		if /*some condition*/ {
+	//			i.Remove()
+	//		}
+	//		// Code
+	//	}
+	//
 	Remove() Iterator[T]
 	// Prev returns the iterator of the previous element.
 	Prev() Iterator[T]
@@ -35,8 +60,8 @@ type ArrayListIterator[T any] struct {
 // NewArrayListIterator returns a new [ArrayListIterator] associated at the list parameter.
 func NewArrayListIterator[T any](list *ArrayList[T]) Iterator[T] {
 
-	element, ok := list.Get(0)
-	if ok != nil {
+	element, err := list.Get(0)
+	if err != nil {
 
 		return &endIterator[T]{}
 
@@ -48,8 +73,8 @@ func NewArrayListIterator[T any](list *ArrayList[T]) Iterator[T] {
 // NewArrayListReverseIterator returns a new reverse [ArrayListIterator] associated at the list parameter.
 func NewArrayListReverseIterator[T any](list *ArrayList[T]) Iterator[T] {
 
-	element, ok := list.Get(list.Len() - 1)
-	if ok != nil {
+	element, err := list.Get(list.Len() - 1)
+	if err != nil {
 
 		return &endIterator[T]{}
 
@@ -73,6 +98,30 @@ func (i *ArrayListIterator[T]) Index() int {
 }
 
 // Remove removes the element from the list and returns the iterator of the next element.
+//
+// The result of this method must be assigned in most cases to himself.
+//
+// i = i.Remove()
+//
+// An example of the use of the method is the following:
+//
+//	for i := list.Iter(); !i.End(); i = i.Next() {
+//		// Code
+//		if /*some condition*/ {
+//			i = i.Remove()
+//		}
+//		// Code
+//	}
+//
+// The following code, instead, can lead to undefined program behavior:
+//
+//	for i := list.Iter(); !i.End(); i = i.Next() {
+//		// Code
+//		if /*some condition*/ {
+//			i.Remove()
+//		}
+//		// Code
+//	}
 func (i *ArrayListIterator[T]) Remove() Iterator[T] {
 
 	i.list.Remove(i.index)
@@ -85,13 +134,14 @@ func (i *ArrayListIterator[T]) Remove() Iterator[T] {
 func (i *ArrayListIterator[T]) Prev() Iterator[T] {
 
 	i.index--
-	element, ok := i.list.Get(i.index)
-	if ok != nil {
+	element, err := i.list.Get(i.index)
+	if err != nil {
 
 		return &endIterator[T]{}
 
 	}
-	return &ArrayListIterator[T]{list: i.list, element: element, index: i.index}
+	i.element = element
+	return i
 
 }
 
@@ -99,13 +149,14 @@ func (i *ArrayListIterator[T]) Prev() Iterator[T] {
 func (i *ArrayListIterator[T]) Next() Iterator[T] {
 
 	i.index++
-	element, ok := i.list.Get(i.index)
-	if ok != nil {
+	element, err := i.list.Get(i.index)
+	if err != nil {
 
 		return &endIterator[T]{}
 
 	}
-	return &ArrayListIterator[T]{list: i.list, element: element, index: i.index}
+	i.element = element
+	return i
 
 }
 
@@ -163,6 +214,30 @@ func (i *LinkedListIterator[T]) Index() int {
 }
 
 // Remove removes the element from the list and returns the iterator of the next element.
+//
+// The result of this method must be assigned in most cases to himself.
+//
+// i = i.Remove()
+//
+// An example of the use of the method is the following:
+//
+//	for i := list.Iter(); !i.End(); i = i.Next() {
+//		// Code
+//		if /*some condition*/ {
+//			i = i.Remove()
+//		}
+//		// Code
+//	}
+//
+// The following code, instead, can lead to undefined program behavior:
+//
+//	for i := list.Iter(); !i.End(); i = i.Next() {
+//		// Code
+//		if /*some condition*/ {
+//			i.Remove()
+//		}
+//		// Code
+//	}
 func (i *LinkedListIterator[T]) Remove() Iterator[T] {
 
 	i.index--
@@ -180,7 +255,8 @@ func (i *LinkedListIterator[T]) Prev() Iterator[T] {
 
 	}
 	i.index--
-	return &LinkedListIterator[T]{list: i.list, entry: i.entry.Prev(), index: i.index}
+	i.entry = i.entry.Prev()
+	return i
 
 }
 
@@ -193,8 +269,8 @@ func (i *LinkedListIterator[T]) Next() Iterator[T] {
 
 	}
 	i.index++
-	return &LinkedListIterator[T]{list: i.list, entry: i.entry.Next(), index: i.index}
-
+	i.entry = i.entry.Next()
+	return i
 }
 
 // End checks if the iteration is finished.
