@@ -116,6 +116,26 @@ func TestRemoveBinaryTree(t *testing.T) {
 
 }
 
+func TestIterBinaryTree(t *testing.T) {
+
+	var tree *BinaryTree[wrapper.Float32] = NewBinaryTree[wrapper.Float32](12.5, 7, -7.6, 3.4, 9, 0.9, 50, -120)
+
+	slice := tree.ToSlice()
+	j := 0
+	for i := tree.Iter(); !i.End() && j != tree.Len(); i = i.Next() {
+
+		if !i.Element().Equal(slice[j]) {
+
+			t.Log("element is", i.Element())
+			t.Fail()
+
+		}
+		j++
+
+	}
+
+}
+
 func TestEqualBinaryTree(t *testing.T) {
 
 	var tree *BinaryTree[wrapper.Int] = NewBinaryTree[wrapper.Int](-3, 1, 5, 8)

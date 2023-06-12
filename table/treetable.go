@@ -186,6 +186,19 @@ func (t *TreeTable[K, T]) Clear() {
 
 }
 
+// Iter returns an [Iterator] which permits to iterate a [TreeTable].
+//
+//	for i := t.Iter(); !i.End(); i = i.Next() {
+//		key := i.Key()
+//		element := i.Element()
+//		// Code
+//	}
+func (t *TreeTable[K, T]) Iter() Iterator[K, T] {
+
+	return NewTreeTableIterator(t)
+
+}
+
 // Equal returns true if t and st are both [Table] and their keys and elements are equals.
 // In any other case, it returns false.
 //

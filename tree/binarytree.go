@@ -107,14 +107,13 @@ func (t *BinaryTree[T]) AddSlice(e []T) {
 // In that case, the method returns true.
 func (t *BinaryTree[T]) Remove(e T) bool {
 
-	result := false
-	t.Each(t.root, func(i *Node[T]) {
-		if e.Compare(i.Element()) == 0 && !result {
+	return t.Any(t.root, func(i *Node[T]) bool {
+		if e.Compare(i.Element()) == 0 {
 			t.remove(i)
-			result = true
+			return true
 		}
+		return false
 	})
-	return result
 
 }
 
@@ -172,6 +171,18 @@ func (t *BinaryTree[T]) Clear() {
 
 	t.root = nil
 	t.len = 0
+
+}
+
+// Iter returns an [Iterator] which permits to iterate a [BinaryTree].
+//
+//	for i := t.Iter(); !i.End(); i = i.Next() {
+//		element := i.Element()
+//		// Code
+//	}
+func (t *BinaryTree[T]) Iter() Iterator[T] {
+
+	return NewBinaryTreeIterator[T](t)
 
 }
 
@@ -330,11 +341,11 @@ func (t *BinaryTree[T]) remove(node *Node[T]) {
 
 			if node == node.Parent().Left() {
 
-				node.Parent().SetLeft(nil)
+				node.Parent().SetLeft(node.Left())
 
 			} else {
 
-				node.Parent().SetRight(nil)
+				node.Parent().SetRight(node.Left())
 
 			}
 
@@ -349,14 +360,24 @@ func (t *BinaryTree[T]) remove(node *Node[T]) {
 
 	}
 	min := node.Right().Min()
-	node.SetElement(min.element)
+	node.SetElement(min.Element())
 	if min == min.Parent().Left() {
 
-		min.Parent().SetLeft(nil)
+		min.Parent().SetLeft(min.Right())
+		if min.Right() != nil {
+
+			min.Right().SetParent(min.Parent())
+
+		}
 
 	} else {
 
-		min.Parent().SetRight(nil)
+		min.Parent().SetRight(min.Right())
+		if min.Right() != nil {
+
+			min.Right().SetParent(min.Parent())
+
+		}
 
 	}
 	min.SetParent(nil)

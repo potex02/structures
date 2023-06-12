@@ -74,6 +74,19 @@ func (n *Node[T]) SetRight(right *Node[T]) {
 
 }
 
+// Max returns the node with the max element in the subtree
+// with node as root.
+func (n *Node[T]) Max() *Node[T] {
+
+	if n.right == nil {
+
+		return n
+
+	}
+	return n.Right().Max()
+
+}
+
 // Min returns the node with the min element in the subtree
 // with node as root.
 func (n *Node[T]) Min() *Node[T] {
@@ -83,6 +96,6 @@ func (n *Node[T]) Min() *Node[T] {
 		return n
 
 	}
-	return n.left.Min()
+	return n.Left().Min()
 
 }

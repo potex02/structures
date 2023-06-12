@@ -36,6 +36,14 @@ type Table[K util.Comparer, T any] interface {
 	// Remove removes the key from the table and returns the value associated at the key.
 	// It returns false if the the key does not exists.
 	Remove(key K) (T, bool)
+	// Iter returns an [Iterator] which permits to iterate a [Table].
+	//
+	//	for i := table.Iter(); !i.End(); i = i.Next() {
+	//		key := i.Key()
+	//		element := i.Element()
+	//		// Code
+	//	}
+	Iter() Iterator[K, T]
 	// Copy returns a table containing a copy of the elements of the table.
 	Copy() Table[K, T]
 }

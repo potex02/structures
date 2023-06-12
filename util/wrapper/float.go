@@ -48,7 +48,7 @@ func (f Float32) Compare(o any) int {
 // Hash returns the hash code of f.
 func (f Float32) Hash() string {
 
-	return fmt.Sprintf("%v", math.Abs(float64(f)))
+	return fmt.Sprintf("%v", math.Floor(float64(f)))
 
 }
 
@@ -99,7 +99,7 @@ func (f Float64) Compare(o any) int {
 // Hash returns the hash code of f.
 func (f Float64) Hash() string {
 
-	return fmt.Sprintf("%v", math.Abs(float64(f)))
+	return fmt.Sprintf("%v", math.Floor(float64(f)))
 
 }
 
