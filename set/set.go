@@ -22,4 +22,11 @@ type Set[T util.Comparer] interface {
 	// Remove removes the element e from the set if it is present.
 	// In that case, the method returns true, otherwhise it returns false.
 	Remove(e T) bool
+	// Iter returns an [Iterator] which permits to iterate a [Set].
+	//
+	//	for i := set.Iter(); !i.End(); i = i.Next() {
+	//		element := i.Element()
+	//		// Code
+	//	}
+	Iter() Iterator[T]
 }

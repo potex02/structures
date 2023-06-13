@@ -103,6 +103,18 @@ func (s *HashSet[T]) Clear() {
 
 }
 
+// Iter returns an [Iterator] which permits to iterate a [HashSet].
+//
+//	for i := s.Iter(); !i.End(); i = i.Next() {
+//		element := i.Element()
+//		// Code
+//	}
+func (s *HashSet[T]) Iter() Iterator[T] {
+
+	return NewHashSetIterator(s)
+
+}
+
 // Equal returns true if s and st are both sets and have the same length.
 // In any other case, it returns false.
 //

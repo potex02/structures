@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/potex02/structures"
 	"github.com/potex02/structures/tree"
 	"github.com/potex02/structures/util"
+	"github.com/potex02/structures/util/wrapper"
 )
 
-//var _ structures.Structure[wrapper.Int] = NewHashSet[wrapper.Int]()
-//var _ Set[wrapper.Int] = NewHashSet[wrapper.Int]()
+var _ structures.Structure[wrapper.Int] = NewHashSet[wrapper.Int]()
+var _ Set[wrapper.Int] = NewTreeSet[wrapper.Int]()
 
 // TreeSet provides a generic set implemented through a [tree.BinaryTree].
 // It maintains the order of the elements.
@@ -100,6 +102,18 @@ func (s *TreeSet[T]) Remove(e T) bool {
 func (s *TreeSet[T]) Clear() {
 
 	s.objects.Clear()
+
+}
+
+// Iter returns an [Iterator] which permits to iterate a [TreeSet].
+//
+//	for i := s.Iter(); !i.End(); i = i.Next() {
+//		element := i.Element()
+//		// Code
+//	}
+func (s *TreeSet[T]) Iter() Iterator[T] {
+
+	return NewTreeSetIterator(s)
 
 }
 
