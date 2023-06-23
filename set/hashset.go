@@ -96,6 +96,24 @@ func (s *HashSet[T]) Remove(e T) bool {
 
 }
 
+// Each executes fun for all elements of s.
+func (s *HashSet[T]) Each(fun func(element T)) {
+
+	for i := s.objects.Iter(); !i.End(); i = i.Next() {
+
+		fun(i.Key())
+
+	}
+
+}
+
+// Stream returns a [Stream] rapresenting s.
+func (s *HashSet[T]) Stream() *Stream[T] {
+
+	return NewStream[T](s, reflect.ValueOf(NewHashSet[T]))
+
+}
+
 // Clear removes all element from s.
 func (s *HashSet[T]) Clear() {
 
@@ -115,7 +133,7 @@ func (s *HashSet[T]) Iter() Iterator[T] {
 
 }
 
-// Equal returns true if s and st are both sets and have the same length.
+// Equal returns true if s and st are both sets and have the same lengtha nd contains the same elements.
 // In any other case, it returns false.
 //
 // Equal does not take into account the effective type of st.
@@ -127,6 +145,15 @@ func (s *HashSet[T]) Equal(st any) bool {
 		if s.Len() != set.Len() {
 
 			return false
+
+		}
+		for i := s.objects.Iter(); !i.End(); i = i.Next() {
+
+			if !set.Contains(i.Key()) {
+
+				return false
+
+			}
 
 		}
 		return true
@@ -167,6 +194,14 @@ func (s *HashSet[T]) Hash() string {
 
 	check := reflect.TypeOf(new(T)).String()
 	return fmt.Sprintf("%v%v", check[1:], s.Len())
+
+}
+
+// Copy returns a set containing a copy of the elements of s.
+// The result of this method is of type [Set], but the effective table which is created is an [HashSet].
+func (s *HashSet[T]) Copy() Set[T] {
+
+	return NewHashSetFromSlice(s.ToSlice())
 
 }
 

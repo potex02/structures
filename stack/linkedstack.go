@@ -191,9 +191,9 @@ func (s *LinkedStack[T]) String() string {
 	check := reflect.TypeOf(new(T)).String()
 	if s.IsEmpty() {
 
-		return fmt.Sprintf("LinkedStack[%T][%d, ]", check[1:], s.len)
+		return fmt.Sprintf("LinkedStack[%v][%d, ]", check[1:], s.len)
 
 	}
-	return fmt.Sprintf("LinkedStack[%T][%d, %v]", check[1:], s.len, s.top.Element())
+	return fmt.Sprintf("LinkedStack[%v][%d, %v]", check[1:], s.len, s.top.Element())
 
 }

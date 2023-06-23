@@ -179,6 +179,22 @@ func (t *TreeTable[K, T]) Remove(key K) (T, bool) {
 
 }
 
+// Each executes fun for all elements of t.
+func (t *TreeTable[K, T]) Each(fun func(Key K, element T)) {
+
+	t.objects.Each(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) {
+		fun(i.Element().Key(), i.Element().Element())
+	})
+
+}
+
+// Stream returns a [Stream] rapresenting t.
+func (t *TreeTable[K, T]) Stream() *Stream[K, T] {
+
+	return NewStream[K, T](t, reflect.ValueOf(NewTreeTable[K, T]))
+
+}
+
 // Clear removes all element from t.
 func (t *TreeTable[K, T]) Clear() {
 
@@ -302,7 +318,7 @@ func (t *TreeTable[K, T]) Copy() Table[K, T] {
 func (t *TreeTable[K, T]) String() string {
 
 	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
-	result := fmt.Sprintf("TreeTable[%T, %T][", check[0][1:], check[1][1:])
+	result := fmt.Sprintf("TreeTable[%v, %v][", check[0][1:], check[1][1:])
 	first := true
 	t.objects.Each(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) {
 		if !first {

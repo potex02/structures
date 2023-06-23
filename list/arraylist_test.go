@@ -330,6 +330,29 @@ func TestRemoveArrayList(t *testing.T) {
 	}
 
 }
+func TestSortArrayList(t *testing.T) {
+
+	var list List[wrapper.Int] = NewArrayList[wrapper.Int](1, -2, 5, -3)
+	var arrayList *ArrayList[int] = NewArrayList[int](1, -2, 5, -3)
+
+	list.Sort()
+	if !list.Equal(NewArrayList[wrapper.Int](-3, -2, 1, 5)) {
+
+		t.Log("list is", list)
+		t.Fail()
+
+	}
+	arrayList.SortFunc(func(i, j int) bool {
+		return i < j
+	})
+	if !arrayList.Equal(NewArrayList[int](-3, -2, 1, 5)) {
+
+		t.Log("list is", list)
+		t.Fail()
+
+	}
+
+}
 func TestIterArrayList(t *testing.T) {
 
 	var list *ArrayList[int] = NewArrayList(1, -2, 3, 5)
@@ -476,49 +499,6 @@ func TestCopyArrayList(t *testing.T) {
 	if !reflect.DeepEqual(arrayList.Copy(), NewArrayList(1, -2, 5, -3)) {
 
 		t.Log("list is", arrayList.Copy())
-		t.Fail()
-
-	}
-
-}
-func TestSortArrayList(t *testing.T) {
-
-	var list List[int] = NewArrayList(1, -2, 5, -3)
-	var arrayList *ArrayList[int] = NewArrayList(1, -2, 5, -3)
-
-	if !reflect.DeepEqual(SortOrdered(list), NewArrayList(-3, -2, 1, 5)) {
-
-		t.Log("list is", SortOrdered(list))
-		t.Fail()
-
-	}
-	if !reflect.DeepEqual(SortOrdered[int](arrayList), NewArrayList(-3, -2, 1, 5)) {
-
-		t.Log("list is", SortOrdered[int](arrayList))
-		t.Fail()
-
-	}
-	if !reflect.DeepEqual(SortCustom(list, func(i int, j int) bool { return i > j }), NewArrayList(5, 1, -2, -3)) {
-
-		t.Log("list is", SortCustom(list, func(i int, j int) bool { return i > j }))
-		t.Fail()
-
-	}
-	if !reflect.DeepEqual(SortCustom[int](arrayList, func(i int, j int) bool { return i > j }), NewArrayList(5, 1, -2, -3)) {
-
-		t.Log("list is", SortCustom[int](arrayList, func(i int, j int) bool { return i > j }))
-		t.Fail()
-
-	}
-
-}
-func TestComparatorSortArrayList(t *testing.T) {
-
-	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})
-
-	if !reflect.DeepEqual(Sort(list), NewArrayList(test{-1, 19}, test{1, 2}, test{4, 5}, test{7, -5})) {
-
-		t.Log("list is", Sort(list))
 		t.Fail()
 
 	}

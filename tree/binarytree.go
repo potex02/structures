@@ -117,7 +117,7 @@ func (t *BinaryTree[T]) Remove(e T) bool {
 
 }
 
-// Each executes a function for any node in a subtree.
+// Each executes fun for all elements of a subtree.
 //
 // node is the root node of the subtree,
 // fun is the function to be executed.
@@ -134,8 +134,68 @@ func (t *BinaryTree[T]) Each(node *Node[T], fun func(i *Node[T])) {
 
 }
 
-// All executes a function for any node in a subtree
-// and returns true if the function returns true for all nodes.
+// Map executes fun for all elements of a subtree and returns a [BinaryTree] containing the resulting elements.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Map(node *Node[T], fun func(i *Node[T]) T) *BinaryTree[T] {
+
+	result := NewBinaryTree[T]()
+	t.Each(t.root, func(i *Node[T]) {
+		result.add(fun(i))
+	})
+	return result
+
+}
+
+// Filter returns a [BinaryTree] containing the elements of a subtree that satisfy fun.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Filter(node *Node[T], fun func(i *Node[T]) bool) *BinaryTree[T] {
+
+	result := NewBinaryTree[T]()
+	t.Each(t.root, func(i *Node[T]) {
+		if fun(i) {
+			result.add(i.element)
+		}
+	})
+	return result
+
+}
+
+// FilterMap executes fun for all elements of a subtree and returns a [BinaryTree] containing the resulting elements that satisfy fun.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) FilterMap(node *Node[T], fun func(i *Node[T]) (T, bool)) *BinaryTree[T] {
+
+	result := NewBinaryTree[T]()
+	t.Each(t.root, func(i *Node[T]) {
+		if element, ok := fun(i); ok {
+			result.add(element)
+		}
+	})
+	return result
+
+}
+
+// Any returns true if at least one element of a subtree satisfies fun.
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Any(node *Node[T], fun func(i *Node[T]) bool) bool {
+
+	if node == nil {
+
+		return false
+
+	}
+	return t.Any(node.Left(), fun) || fun(node) || t.Any(node.Right(), fun)
+
+}
+
+// / All returns true if all elements of a subtree table satisfy fun.
 //
 // node is the root node of the subtree,
 // fun is the function to be executed.
@@ -150,19 +210,39 @@ func (t *BinaryTree[T]) All(node *Node[T], fun func(i *Node[T]) bool) bool {
 
 }
 
-// Any executes a function for any node in a subtree
-// and returns true if the function returns true for at least one node.
+// None returns true if none of the elements of a subtree table satisfies fun.
 //
 // node is the root node of the subtree,
 // fun is the function to be executed.
-func (t *BinaryTree[T]) Any(node *Node[T], fun func(i *Node[T]) bool) bool {
+func (t *BinaryTree[T]) None(node *Node[T], fun func(i *Node[T]) bool) bool {
 
 	if node == nil {
 
-		return false
+		return true
 
 	}
-	return t.Any(node.Left(), fun) || fun(node) || t.Any(node.Right(), fun)
+	return t.None(node.Left(), fun) && !fun(node) && t.None(node.Right(), fun)
+
+}
+
+// Count returns the number of elements of a subtree that satisfy fun..
+//
+// node is the root node of the subtree,
+// fun is the function to be executed.
+func (t *BinaryTree[T]) Count(node *Node[T], fun func(i *Node[T]) bool) int {
+
+	result := 0
+	if node == nil {
+
+		return result
+
+	}
+	if fun(node) {
+
+		result = 1
+
+	}
+	return t.Count(node.Left(), fun) + result + t.Count(node.Right(), fun)
 
 }
 

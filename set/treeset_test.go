@@ -105,3 +105,46 @@ func TestRemoveTreeSet(t *testing.T) {
 	}
 
 }
+func TestEqualTreeSet(t *testing.T) {
+
+	var list Set[wrapper.Int] = NewTreeSet[wrapper.Int](1, 2, 3, 5)
+	var listTest Set[test] = NewTreeSet[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
+
+	if !list.Equal(NewTreeSetFromSlice([]wrapper.Int{1, 2, 3, 5})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if list.Equal(NewTreeSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+	if !list.Equal(NewHashSetFromSlice([]wrapper.Int{2, 1, 3, 5})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if list.Equal(NewHashSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+	if !listTest.Equal(NewTreeSet[test](test{n1: 2, n2: 1}, test{n1: 0, n2: -6})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if listTest.Equal(NewHashSet[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+
+}

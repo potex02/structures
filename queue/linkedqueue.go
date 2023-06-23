@@ -221,9 +221,9 @@ func (q *LinkedQueue[T]) String() string {
 	check := reflect.TypeOf(new(T)).String()
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("LinkedQueue[%T][%d, ]", check[1:], q.len)
+		return fmt.Sprintf("LinkedQueue[%v][%d, ]", check[1:], q.len)
 
 	}
-	return fmt.Sprintf("LinkedQueue[%T][%d, %v %v]", check[1:], q.len, q.head.Element(), q.tail.Element())
+	return fmt.Sprintf("LinkedQueue[%v][%d, %v %v]", check[1:], q.len, q.head.Element(), q.tail.Element())
 
 }

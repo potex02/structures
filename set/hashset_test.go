@@ -105,3 +105,68 @@ func TestRemoveHashSet(t *testing.T) {
 	}
 
 }
+func TestEqualHashSet(t *testing.T) {
+
+	var list Set[wrapper.Int] = NewHashSet[wrapper.Int](1, 2, 3, 5)
+	var listTest Set[test] = NewHashSet[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
+
+	if !list.Equal(NewHashSetFromSlice([]wrapper.Int{1, 2, 3, 5})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if list.Equal(NewHashSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+	if !list.Equal(NewTreeSetFromSlice([]wrapper.Int{2, 1, 3, 5})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if list.Equal(NewTreeSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+	if !listTest.Equal(NewHashSet[test](test{n1: 2, n2: 1}, test{n1: 0, n2: -6})) {
+
+		t.Log("sets are not equals")
+		t.Fail()
+
+	}
+	if listTest.Equal(NewTreeSet[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
+
+		t.Log("sets are equals")
+		t.Fail()
+
+	}
+
+}
+
+type test struct {
+	n1, n2 int
+}
+
+func (t test) Compare(o any) int {
+
+	value, ok := o.(test)
+	if !ok {
+
+		return -2
+
+	}
+	return wrapper.Int(t.n1 + t.n2).Compare(wrapper.Int(value.n1 + value.n2))
+
+}
+
+func (t test) Hash() string {
+
+	return wrapper.Int(t.n1 + t.n2).Hash()
+
+}

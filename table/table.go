@@ -36,6 +36,10 @@ type Table[K util.Comparer, T any] interface {
 	// Remove removes the key from the table and returns the value associated at the key.
 	// It returns false if the the key does not exists.
 	Remove(key K) (T, bool)
+	// Each executes fun for all elements of the table.
+	Each(fun func(Key K, element T))
+	// Stream returns a [Stream] rapresenting the table.
+	Stream() *Stream[K, T]
 	// Iter returns an [Iterator] which permits to iterate a [Table].
 	//
 	//	for i := table.Iter(); !i.End(); i = i.Next() {

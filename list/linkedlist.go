@@ -311,6 +311,87 @@ func (l *LinkedList[T]) RemoveElement(e T) bool {
 
 }
 
+// Each executes fun for all elements of l.
+func (l *LinkedList[T]) Each(fun func(index int, element T)) {
+
+	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
+
+		fun(i, j.Element())
+
+	}
+
+}
+
+// Stream returns a [Stream] rapresenting l.
+func (l *LinkedList[T]) Stream() *Stream[T] {
+
+	return NewStream[T](l, reflect.ValueOf(NewLinkedList[T]))
+
+}
+
+// Sort sorts the elements of l.
+//
+// This method panics if T does not implement [util.Comparer]
+func (l *LinkedList[T]) Sort() {
+
+	var check T
+
+	if _, ok := interface{}(check).(util.Comparer); !ok {
+
+		panic("List cannot be sorted")
+
+	}
+	other := l.tail.Next()
+	for swapped := true; swapped; {
+
+		swapped = false
+		element := l.root
+		for element.Next() != other {
+
+			if interface{}(element.Element()).(util.Comparer).Compare(element.Next().Element()) > 0 {
+
+				t := element.Element()
+				element.SetElement(element.Next().Element())
+				element.Next().SetElement(t)
+				swapped = true
+
+			}
+			element = element.Next()
+
+		}
+		other = element
+
+	}
+
+}
+
+// SortFunc sorts the elements of l as determined by the less function.
+func (l *LinkedList[T]) SortFunc(less func(i T, j T) bool) {
+
+	other := l.tail.Next()
+	for swapped := true; swapped; {
+
+		swapped = false
+		element := l.root
+		for element.Next() != other {
+
+			if !less(element.Element(), element.Next().Element()) {
+
+				t := element.Element()
+				element.SetElement(element.Next().Element())
+				element.Next().SetElement(t)
+				swapped = true
+
+			}
+			element = element.Next()
+
+		}
+		other = element
+
+	}
+
+}
+
 // Clear removes all element from l.
 func (l *LinkedList[T]) Clear() {
 
@@ -333,7 +414,7 @@ func (l *LinkedList[T]) Iter() Iterator[T] {
 
 }
 
-// Iter returns an [Iterator] which permits to iterate a [LinkedList] in reverse order.
+// IterReverse returns an [Iterator] which permits to iterate a [LinkedList] in reverse order.
 //
 //	for i := l.IterReverse(); !i.End(); i = i.Prev() {
 //		element := i.Element()
@@ -455,7 +536,7 @@ func (l *LinkedList[T]) Copy() List[T] {
 func (l *LinkedList[T]) String() string {
 
 	check := reflect.TypeOf(new(T)).String()
-	return fmt.Sprintf("ArrayList[%v]%v", check[1:], l.ToSlice())
+	return fmt.Sprintf("LinkedList[%v]%v", check[1:], l.ToSlice())
 
 }
 

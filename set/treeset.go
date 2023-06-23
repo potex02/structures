@@ -98,6 +98,22 @@ func (s *TreeSet[T]) Remove(e T) bool {
 
 }
 
+// Each executes fun for all elements of s.
+func (s *TreeSet[T]) Each(fun func(element T)) {
+
+	s.objects.Each(s.objects.Root(), func(i *tree.Node[T]) {
+		fun(i.Element())
+	})
+
+}
+
+// Stream returns a [Stream] rapresenting s.
+func (s *TreeSet[T]) Stream() *Stream[T] {
+
+	return NewStream[T](s, reflect.ValueOf(NewTreeSet[T]))
+
+}
+
 // Clear removes all element from s.
 func (s *TreeSet[T]) Clear() {
 
@@ -117,7 +133,7 @@ func (s *TreeSet[T]) Iter() Iterator[T] {
 
 }
 
-// Equal returns true if s and st are both sets and have the same length.
+// Equal returns true if s and st are both sets and have the same length and contains the same elements.
 // In any other case, it returns false.
 //
 // Equal does not take into account the effective type of st.
@@ -129,6 +145,15 @@ func (s *TreeSet[T]) Equal(st any) bool {
 		if s.Len() != set.Len() {
 
 			return false
+
+		}
+		for i := s.objects.Iter(); !i.End(); i = i.Next() {
+
+			if !set.Contains(i.Element()) {
+
+				return false
+
+			}
 
 		}
 		return true
@@ -169,6 +194,14 @@ func (s *TreeSet[T]) Hash() string {
 
 	check := reflect.TypeOf(new(T)).String()
 	return fmt.Sprintf("%v%v", check[1:], s.Len())
+
+}
+
+// Copy returns a set containing a copy of the elements of s.
+// The result of this method is of type [Set], but the effective table which is created is an [TreeSet].
+func (s *TreeSet[T]) Copy() Set[T] {
+
+	return NewTreeSetFromSlice(s.ToSlice())
 
 }
 

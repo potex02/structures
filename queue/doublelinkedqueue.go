@@ -194,11 +194,11 @@ func (q *DoubleLinkedQueue[T]) String() string {
 	check := reflect.TypeOf(new(T)).String()
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("DoubleLinkedQueue[%T][%d, ]", check[1:], q.Len())
+		return fmt.Sprintf("DoubleLinkedQueue[%v][%d, ]", check[1:], q.Len())
 
 	}
 	head, _ := q.Head()
 	tail, _ := q.Tail()
-	return fmt.Sprintf("DoubleLinkedQueue[%T][%d, %v %v]", check[1:], q.Len(), head, tail)
+	return fmt.Sprintf("DoubleLinkedQueue[%v][%d, %v %v]", check[1:], q.Len(), head, tail)
 
 }

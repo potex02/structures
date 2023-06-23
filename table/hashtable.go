@@ -271,6 +271,28 @@ func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 
 }
 
+// Each executes fun for all elements of t.
+func (t *HashTable[K, T]) Each(fun func(Key K, element T)) {
+
+	for _, i := range t.objects {
+
+		for j := i.Iter(); !j.End(); j = j.Next() {
+
+			fun(j.Element().Key(), j.Element().Element())
+
+		}
+
+	}
+
+}
+
+// Stream returns a [Stream] rapresenting t.
+func (t *HashTable[K, T]) Stream() *Stream[K, T] {
+
+	return NewStream[K, T](t, reflect.ValueOf(NewHashTable[K, T]))
+
+}
+
 // Clear removes all element from t.
 func (t *HashTable[K, T]) Clear() {
 
@@ -394,7 +416,7 @@ func (t *HashTable[K, T]) Copy() Table[K, T] {
 func (t *HashTable[K, T]) String() string {
 
 	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
-	result := fmt.Sprintf("HashTable[%T, %T][", check[0][1:], check[1][1:])
+	result := fmt.Sprintf("HashTable[%v, %v][", check[0][1:], check[1][1:])
 	first := true
 	for _, i := range t.objects {
 

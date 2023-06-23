@@ -8,6 +8,7 @@ import (
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/util"
+	"golang.org/x/exp/slices"
 )
 
 var _ structures.Structure[int] = NewArrayList[int]()
@@ -253,6 +254,51 @@ func (l *ArrayList[T]) RemoveElement(e T) bool {
 
 }
 
+// Each executes fun for all elements of l.
+func (l *ArrayList[T]) Each(fun func(index int, element T)) {
+
+	for i := range l.objects {
+
+		fun(i, l.objects[i])
+
+	}
+
+}
+
+// Stream returns a [Stream] rapresenting l.
+func (l *ArrayList[T]) Stream() *Stream[T] {
+
+	return NewStream[T](l, reflect.ValueOf(NewArrayList[T]))
+
+}
+
+// Sort sorts the elements of l.
+//
+// This method panics if T does not implement [util.Comparer]
+func (l *ArrayList[T]) Sort() {
+
+	var check T
+
+	if _, ok := interface{}(check).(util.Comparer); !ok {
+
+		panic("List cannot be sorted")
+
+	}
+	slices.SortFunc(l.objects, func(i T, j T) bool {
+
+		return interface{}(i).(util.Comparer).Compare(j) < 0
+
+	})
+
+}
+
+// SortFunc sorts the elements of l as determined by the less function.
+func (l *ArrayList[T]) SortFunc(less func(i T, j T) bool) {
+
+	slices.SortFunc(l.objects, less)
+
+}
+
 // Clear removes all element from l.
 func (l *ArrayList[T]) Clear() {
 
@@ -273,7 +319,7 @@ func (l *ArrayList[T]) Iter() Iterator[T] {
 
 }
 
-// Iter returns an [Iterator] which permits to iterate an [ArrayList] in reverse order.
+// IterReverse returns an [Iterator] which permits to iterate an [ArrayList] in reverse order.
 //
 //	for i := l.IterReverse(); !i.End(); i = i.Prev() {
 //		element := i.Element()

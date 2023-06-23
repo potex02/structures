@@ -153,10 +153,10 @@ func (s *ArrayStack[T]) String() string {
 	check := reflect.TypeOf(new(T)).String()
 	if s.IsEmpty() {
 
-		return fmt.Sprintf("ArrayStack[%T][%d, ]", check[1:], s.objects.Len())
+		return fmt.Sprintf("ArrayStack[%v][%d, ]", check[1:], s.objects.Len())
 
 	}
 	element, _ := s.Top()
-	return fmt.Sprintf("ArrayStack[%T][%d, %v]", check[1:], s.objects.Len(), element)
+	return fmt.Sprintf("ArrayStack[%v][%d, %v]", check[1:], s.objects.Len(), element)
 
 }

@@ -9,8 +9,7 @@ import (
 // Set provides all methods to use a generic dynamic set.
 // A set contains all the methods of [structures.Structure].
 //
-// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
-// otherwise it is done with [reflect.DeepEqual].
+// The check on the equality of the elements is done with the Compare method.
 type Set[T util.Comparer] interface {
 	structures.Structure[T]
 	// Contains returns if e is present in the set.
@@ -22,6 +21,10 @@ type Set[T util.Comparer] interface {
 	// Remove removes the element e from the set if it is present.
 	// In that case, the method returns true, otherwhise it returns false.
 	Remove(e T) bool
+	// Each executes fun for all elements of the set.
+	Each(fun func(element T))
+	// Stream returns a [Stream] rapresenting the set.
+	Stream() *Stream[T]
 	// Iter returns an [Iterator] which permits to iterate a [Set].
 	//
 	//	for i := set.Iter(); !i.End(); i = i.Next() {
@@ -29,4 +32,6 @@ type Set[T util.Comparer] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[T]
+	// Copy returns a copy of the set.
+	Copy() Set[T]
 }

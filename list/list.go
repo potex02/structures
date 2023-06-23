@@ -2,12 +2,7 @@
 package list
 
 import (
-	"sort"
-
 	"github.com/potex02/structures"
-	"github.com/potex02/structures/util"
-	"golang.org/x/exp/constraints"
-	"golang.org/x/exp/slices"
 )
 
 // List provides all methods to use a generic dynamic list.
@@ -49,6 +44,16 @@ type List[T any] interface {
 	// RemoveElement removes the element e from the list if it is presentt.
 	// In that case, the method returns true, otherwhise it returns false.
 	RemoveElement(e T) bool
+	// Each executes fun for all elements of the list.
+	Each(fun func(index int, element T))
+	// Stream returns a [Stream] rapresenting the list.
+	Stream() *Stream[T]
+	// Sort sorts the elements of the list.
+	//
+	// This method panics if T does not implement [util.Comparer]
+	Sort()
+	//  SortFunc sorts the elements of the list as determined by the less function.
+	SortFunc(less func(i T, j T) bool)
 	// Iter returns an [Iterator] which permits to iterate a [List].
 	//
 	//	for i := list.Iter(); !i.End(); i = i.Next() {
@@ -57,7 +62,7 @@ type List[T any] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[T]
-	// Iter returns an [Iterator] which permits to iterate a [List] in reverse order.
+	// IterReverse returns an [Iterator] which permits to iterate a [List] in reverse order.
 	//
 	//	for i := list.IterReverse(); !i.End(); i = i.Prev() {
 	//		element := i.Element()
@@ -69,68 +74,6 @@ type List[T any] interface {
 	Copy() List[T]
 }
 
-// Sort returns a [List] which contains all elements of l that have been sorted.
-//
-// This function can be used only with types which implements the [util.Comparer] interface.
-func Sort[T util.Comparer](l List[T]) List[T] {
-
-	slice := l.ToSlice()
-	sort.Slice(slice, func(i, j int) bool {
-
-		return slice[i].Compare(slice[j]) < 0
-
-	})
-	switch l.(type) {
-
-	case *ArrayList[T]:
-		return NewArrayListFromSlice(slice)
-	case *LinkedList[T]:
-		return NewLinkedListFromSlice(slice)
-
-	}
-	return nil
-
-}
-
-// SortOrdered returns a [List] which contains all elements of l that have been sorted.
-//
-// This function can be used only with types which implements the [constraints.Ordered] interface.
-func SortOrdered[T constraints.Ordered](l List[T]) List[T] {
-
-	slice := l.ToSlice()
-	slices.Sort(slice)
-	switch l.(type) {
-
-	case *ArrayList[T]:
-		return NewArrayListFromSlice(slice)
-	case *LinkedList[T]:
-		return NewLinkedListFromSlice(slice)
-
-	}
-	return nil
-
-}
-
-// SortCustom returns a [List] which contains all elements of l that have been sorted.
-//
-// This function can be used to with any list and require a function to make the sorting.
-// If the result of comparator is false, the the element in position i is placed before that in position j,
-// otherwhise the opposite happens.
-func SortCustom[T any](l List[T], comparator func(i T, j T) bool) List[T] {
-
-	slice := l.ToSlice()
-	slices.SortFunc(slice, comparator)
-	switch l.(type) {
-
-	case *ArrayList[T]:
-		return NewArrayListFromSlice(slice)
-	case *LinkedList[T]:
-		return NewLinkedListFromSlice(slice)
-
-	}
-	return nil
-
-}
 func rangeCheck[T any](list List[T], index int) bool {
 
 	return index >= 0 && index < list.Len()

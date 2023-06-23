@@ -330,6 +330,29 @@ func TestRemoveLinkedList(t *testing.T) {
 	}
 
 }
+func TestSortLinkedList(t *testing.T) {
+
+	var list List[wrapper.Int] = NewLinkedList[wrapper.Int](1, -2, 5, -3)
+	var arrayList *LinkedList[int] = NewLinkedList[int](1, -2, 5, -3)
+
+	list.Sort()
+	if !list.Equal(NewArrayList[wrapper.Int](-3, -2, 1, 5)) {
+
+		t.Log("list is", list)
+		t.Fail()
+
+	}
+	arrayList.SortFunc(func(i, j int) bool {
+		return i < j
+	})
+	if !arrayList.Equal(NewArrayList[int](-3, -2, 1, 5)) {
+
+		t.Log("list is", list)
+		t.Fail()
+
+	}
+
+}
 func TestIterLinkedList(t *testing.T) {
 
 	var list *LinkedList[int] = NewLinkedList(1, -2, 3, 5)
@@ -476,50 +499,6 @@ func TestCopyLinkedList(t *testing.T) {
 	if !reflect.DeepEqual(linkedList.Copy(), NewLinkedList(1, -2, 5, -3)) {
 
 		t.Log("list is", linkedList.Copy())
-		t.Fail()
-
-	}
-
-}
-func TestSortLinkedList(t *testing.T) {
-
-	var list List[int] = NewLinkedList(1, -2, 5, -3)
-	var linkedList *LinkedList[int] = NewLinkedList(1, -2, 5, -3)
-
-	if !reflect.DeepEqual(SortOrdered(list), NewLinkedList(-3, -2, 1, 5)) {
-
-		t.Log("list is", SortOrdered(list))
-		t.Fail()
-
-	}
-	if !reflect.DeepEqual(SortOrdered[int](linkedList), NewLinkedList(-3, -2, 1, 5)) {
-
-		t.Log("list is", SortOrdered[int](linkedList))
-		t.Fail()
-
-	}
-
-	if !reflect.DeepEqual(SortCustom(list, func(i int, j int) bool { return i > j }), NewLinkedList(5, 1, -2, -3)) {
-
-		t.Log("list is", SortCustom(list, func(i int, j int) bool { return i > j }))
-		t.Fail()
-
-	}
-	if !reflect.DeepEqual(SortCustom[int](linkedList, func(i int, j int) bool { return i > j }), NewLinkedList(5, 1, -2, -3)) {
-
-		t.Log("list is", SortCustom[int](linkedList, func(i int, j int) bool { return i > j }))
-		t.Fail()
-
-	}
-
-}
-func TestComparatorSortLinkedList(t *testing.T) {
-
-	var list List[test] = NewArrayList(test{1, 2}, test{4, 5}, test{7, -5}, test{-1, 19})
-
-	if !reflect.DeepEqual(Sort(list), NewArrayList(test{-1, 19}, test{1, 2}, test{4, 5}, test{7, -5})) {
-
-		t.Log("list is", Sort(list))
 		t.Fail()
 
 	}

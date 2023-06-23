@@ -194,11 +194,11 @@ func (q *DoubleArrayQueue[T]) String() string {
 	check := reflect.TypeOf(new(T)).String()
 	if q.IsEmpty() {
 
-		return fmt.Sprintf("DoubleArrayQueue[%T][%d, ]", check[1:], q.objects.Len())
+		return fmt.Sprintf("DoubleArrayQueue[%v][%d, ]", check[1:], q.objects.Len())
 
 	}
 	head, _ := q.Head()
 	tail, _ := q.Tail()
-	return fmt.Sprintf("DoubleArrayQueue[%T][%d, %v %v]", check[1:], q.objects.Len(), head, tail)
+	return fmt.Sprintf("DoubleArrayQueue[%v][%d, %v %v]", check[1:], q.objects.Len(), head, tail)
 
 }
