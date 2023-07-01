@@ -1,4 +1,3 @@
-// package tree implements dynamic trees.
 package tree
 
 import (
@@ -11,6 +10,7 @@ import (
 )
 
 var _ structures.Structure[wrapper.Int] = NewBinaryTree[wrapper.Int]()
+var _ Tree[wrapper.Int] = NewBinaryTree[wrapper.Int]()
 
 // BinaryTree provides a generic binary tree.
 //
@@ -60,7 +60,7 @@ func (t *BinaryTree[T]) IsEmpty() bool {
 
 }
 
-// Root returns the root node of t.
+// Root returns the root [Mode] of t.
 func (t *BinaryTree[T]) Root() *Node[T] {
 
 	return t.root
@@ -103,7 +103,7 @@ func (t *BinaryTree[T]) AddSlice(e []T) {
 
 }
 
-// Remove removes the element if present.
+// Remove removes the element e if present.
 // In that case, the method returns true.
 func (t *BinaryTree[T]) Remove(e T) bool {
 
@@ -262,7 +262,7 @@ func (t *BinaryTree[T]) Clear() {
 //	}
 func (t *BinaryTree[T]) Iter() Iterator[T] {
 
-	return NewBinaryTreeIterator[T](t)
+	return NewTreeIterator[T](t)
 
 }
 
@@ -303,7 +303,7 @@ func (t *BinaryTree[T]) Equal(st any) bool {
 // -2 if st is not a [BinaryTree] or if one between t and st is nil.
 //
 // If t and st have the same length, the result is the comparison
-// between the first different element of the two tree.
+// between the first different element of the two trees.
 // If they are all equals, the result is 0.
 func (t *BinaryTree[T]) Compare(st any) int {
 
@@ -411,6 +411,7 @@ func (t *BinaryTree[T]) checkNext(parent *Node[T], e T) {
 
 func (t *BinaryTree[T]) remove(node *Node[T]) {
 
+	t.len--
 	if node.Right() == nil {
 
 		if node == t.root {
@@ -435,7 +436,6 @@ func (t *BinaryTree[T]) remove(node *Node[T]) {
 			node.Left().SetParent(node.Parent())
 
 		}
-		t.len--
 		return
 
 	}
@@ -461,6 +461,5 @@ func (t *BinaryTree[T]) remove(node *Node[T]) {
 
 	}
 	min.SetParent(nil)
-	t.len--
 
 }

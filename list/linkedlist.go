@@ -334,13 +334,6 @@ func (l *LinkedList[T]) Stream() *Stream[T] {
 // This method panics if T does not implement [util.Comparer]
 func (l *LinkedList[T]) Sort() {
 
-	var check T
-
-	if _, ok := interface{}(check).(util.Comparer); !ok {
-
-		panic("List cannot be sorted")
-
-	}
 	other := l.tail.Next()
 	for swapped := true; swapped; {
 

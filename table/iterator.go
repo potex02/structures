@@ -21,7 +21,7 @@ type Iterator[K util.Comparer, T any] interface {
 	//
 	// The result of this method must be assigned in most cases to himself.
 	//
-	// i = i.Remove()
+	//	i = i.Remove()
 	//
 	// An example of the use of the method is the following:
 	//
@@ -96,7 +96,7 @@ func (i *HashTableIterator[K, T]) Key() K {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //
@@ -174,7 +174,7 @@ func NewTreeTableIterator[K util.Comparer, T any](table *TreeTable[K, T]) Iterat
 		return &endIterator[K, T]{}
 
 	}
-	return &TreeTableIterator[K, T]{table: table, iterator: tree.NewBinaryTreeIterator(table.objects)}
+	return &TreeTableIterator[K, T]{table: table, iterator: tree.NewTreeIterator[*Entry[K, T]](table.objects)}
 
 }
 
@@ -196,7 +196,7 @@ func (i *TreeTableIterator[K, T]) Key() K {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //

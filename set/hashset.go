@@ -164,8 +164,8 @@ func (s *HashSet[T]) Equal(st any) bool {
 }
 
 // Compare returns 0 if s and st have the same length,
-// -1 if l is shorten than st,
-// 1 if l is longer than st,
+// -1 if s is shorten than st,
+// 1 if s is longer than st,
 // -2 if st is not a [Set] or if one between s and st is nil.
 func (s *HashSet[T]) Compare(st any) int {
 

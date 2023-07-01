@@ -277,13 +277,6 @@ func (l *ArrayList[T]) Stream() *Stream[T] {
 // This method panics if T does not implement [util.Comparer]
 func (l *ArrayList[T]) Sort() {
 
-	var check T
-
-	if _, ok := interface{}(check).(util.Comparer); !ok {
-
-		panic("List cannot be sorted")
-
-	}
 	slices.SortFunc(l.objects, func(i T, j T) bool {
 
 		return interface{}(i).(util.Comparer).Compare(j) < 0

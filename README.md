@@ -46,4 +46,10 @@ For now, the only available structures are the:
 - Sets:
 	- HashSet;
 	- TreeSet;
-- BinaryTree.
+- Trees:
+	- BinaryTree;
+	- N-aryTtree
+
+- To be added:
+	- MultiTables;
+	- MultiSets.

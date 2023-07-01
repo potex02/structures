@@ -19,7 +19,7 @@ type Iterator[T util.Comparer] interface {
 	//
 	// The result of this method must be assigned in most cases to himself.
 	//
-	// i = i.Remove()
+	//	i = i.Remove()
 	//
 	// An example of the use of the method is the following:
 	//
@@ -77,7 +77,7 @@ func (i *HashSetIterator[T]) Element() T {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //
@@ -144,7 +144,7 @@ func NewTreeSetIterator[T util.Comparer](set *TreeSet[T]) Iterator[T] {
 		return &endIterator[T]{}
 
 	}
-	return &TreeSetIterator[T]{iterator: tree.NewBinaryTreeIterator(set.objects)}
+	return &TreeSetIterator[T]{iterator: tree.NewTreeIterator[T](set.objects)}
 
 }
 
@@ -159,7 +159,7 @@ func (i *TreeSetIterator[T]) Element() T {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //

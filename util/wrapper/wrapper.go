@@ -146,6 +146,19 @@ func (b WrapperBuilder[T]) Wrap(value T) Wrapper[T] {
 
 }
 
+// WrapSlice returns a slice of [Wrapper] that wraps the slice values.
+func (b WrapperBuilder[T]) WrapSlice(values []T) []Wrapper[T] {
+
+	result := make([]Wrapper[T], len(values))
+	for i, j := range values {
+
+		result[i] = b.Wrap(j)
+
+	}
+	return result
+
+}
+
 type wrapperResult[T any] struct {
 	value   T
 	equal   func(r Wrapper[T], o any) bool

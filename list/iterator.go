@@ -18,7 +18,7 @@ type Iterator[T any] interface {
 	//
 	// The result of this method must be assigned in most cases to himself.
 	//
-	// i = i.Remove()
+	//	i = i.Remove()
 	//
 	// An example of the use of the method is the following:
 	//
@@ -101,7 +101,7 @@ func (i *ArrayListIterator[T]) Index() int {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //
@@ -217,7 +217,7 @@ func (i *LinkedListIterator[T]) Index() int {
 //
 // The result of this method must be assigned in most cases to himself.
 //
-// i = i.Remove()
+//	i = i.Remove()
 //
 // An example of the use of the method is the following:
 //

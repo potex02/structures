@@ -52,7 +52,7 @@ func TestNewBinaryTreeFromSlice(t *testing.T) {
 }
 func TestContainsBinaryTree(t *testing.T) {
 
-	var tree *BinaryTree[wrapper.Int] = NewBinaryTree[wrapper.Int](1, 8, -3, 5)
+	var tree Tree[wrapper.Int] = NewBinaryTree[wrapper.Int](1, 8, -3, 5)
 
 	if tree.Contains(-1) {
 
@@ -115,7 +115,6 @@ func TestRemoveBinaryTree(t *testing.T) {
 	}
 
 }
-
 func TestIterBinaryTree(t *testing.T) {
 
 	var tree *BinaryTree[wrapper.Float32] = NewBinaryTree[wrapper.Float32](12.5, 7, -7.6, 3.4, 9, 0.9, 50, -120)
@@ -135,7 +134,6 @@ func TestIterBinaryTree(t *testing.T) {
 	}
 
 }
-
 func TestEqualBinaryTree(t *testing.T) {
 
 	var tree *BinaryTree[wrapper.Int] = NewBinaryTree[wrapper.Int](-3, 1, 5, 8)
