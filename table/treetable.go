@@ -24,7 +24,7 @@ type TreeTable[K util.Comparer, T any] struct {
 	objects *tree.BinaryTree[*Entry[K, T]]
 }
 
-// NewTreeTable returns a new empty [TreeTable] containing the elements c.
+// NewTreeTable returns a new empty [TreeTable].
 func NewTreeTable[K util.Comparer, T any]() *TreeTable[K, T] {
 
 	return &TreeTable[K, T]{objects: tree.NewBinaryTree[*Entry[K, T]]()}
@@ -32,7 +32,7 @@ func NewTreeTable[K util.Comparer, T any]() *TreeTable[K, T] {
 }
 
 // NewTreeTableFromSlice returns a new [TreeTable] containing the elements of slice c.
-// it panics if key and c have different lengths.
+// It panics if key and c have different lengths.
 func NewTreeTableFromSlice[K util.Comparer, T any](key []K, c []T) *TreeTable[K, T] {
 
 	table := NewTreeTable[K, T]()
@@ -69,13 +69,10 @@ func (t *TreeTable[K, T]) ContainsKey(key K) bool {
 // ContainsElement returns true if the element e is present on t.
 func (t *TreeTable[K, T]) ContainsElement(e T) bool {
 
-	element, ok := interface{}(e).(util.Equaler)
-	if ok {
-
-		return t.objects.Any(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) bool { return element.Equal(i.Element().Element()) })
-
-	}
-	return t.objects.Any(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) bool { return reflect.DeepEqual(e, i.Element().Element()) })
+	fun := util.EqualFunction(e)
+	return t.objects.Any(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) bool {
+		return fun(i.Element().Element())
+	})
 
 }
 
@@ -97,7 +94,7 @@ func (t *TreeTable[K, T]) Elements() list.List[T] {
 
 }
 
-// ToSLice returns a slice which contains all elements of t.
+// ToSlice returns a slice which contains all elements of t.
 func (t *TreeTable[K, T]) ToSlice() []T {
 
 	slice := make([]T, t.Len())
@@ -113,7 +110,7 @@ func (t *TreeTable[K, T]) Get(key K) (T, bool) {
 	var result T
 
 	return result, t.objects.Any(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) bool {
-		if check := key.Compare(i.Element().Key()); check == 0 {
+		if key.Compare(i.Element().Key()) == 0 {
 			result = i.Element().Element()
 			return true
 		}
@@ -146,7 +143,7 @@ func (t *TreeTable[K, T]) Put(key K, e T) (T, bool) {
 }
 
 // PutSlice adds the elements of e at t.
-// it panics if key and e have different lengths.
+// It panics if key and e have different lengths.
 func (t *TreeTable[K, T]) PutSlice(key []K, e []T) {
 
 	if len(key) != len(e) {
@@ -180,7 +177,9 @@ func (t *TreeTable[K, T]) Remove(key K) (T, bool) {
 }
 
 // Each executes fun for all elements of t.
-func (t *TreeTable[K, T]) Each(fun func(Key K, element T)) {
+//
+// This method should be used to remove elements. Use Iter insted.
+func (t *TreeTable[K, T]) Each(fun func(key K, element T)) {
 
 	t.objects.Each(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) {
 		fun(i.Element().Key(), i.Element().Element())
@@ -239,16 +238,7 @@ func (t *TreeTable[K, T]) Equal(st any) bool {
 				return false
 
 			}
-			element, ok := interface{}(e1).(util.Equaler)
-			if ok {
-
-				if !element.Equal(other) {
-
-					return false
-
-				}
-
-			} else if !reflect.DeepEqual(e1, other) {
+			if !util.EqualFunction(e1)(other) {
 
 				return false
 

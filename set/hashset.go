@@ -62,7 +62,7 @@ func (s *HashSet[T]) Contains(e T) bool {
 
 }
 
-// ToSLice returns a slice which contains all elements of s.
+// ToSlice returns a slice which contains all elements of s.
 func (s *HashSet[T]) ToSlice() []T {
 
 	return s.objects.Keys().ToSlice()
@@ -97,6 +97,8 @@ func (s *HashSet[T]) Remove(e T) bool {
 }
 
 // Each executes fun for all elements of s.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (s *HashSet[T]) Each(fun func(element T)) {
 
 	for i := s.objects.Iter(); !i.End(); i = i.Next() {

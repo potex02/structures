@@ -12,9 +12,9 @@ type Entry[K util.Comparer, T any] struct {
 }
 
 // NewEntry returns a new [Entry].
-func NewEntry[K util.Comparer, T any](Key K, element T) *Entry[K, T] {
+func NewEntry[K util.Comparer, T any](key K, element T) *Entry[K, T] {
 
-	return &Entry[K, T]{key: Key, element: element}
+	return &Entry[K, T]{key: key, element: element}
 
 }
 

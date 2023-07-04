@@ -78,18 +78,10 @@ func (l *LinkedList[T]) Contains(e T) bool {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) IndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
-		if ok {
-
-			if element.Equal(j.Element()) {
-
-				return i
-
-			}
-
-		} else if reflect.DeepEqual(j.Element(), e) {
+		if fun(j.Element()) {
 
 			return i
 
@@ -104,18 +96,10 @@ func (l *LinkedList[T]) IndexOf(e T) int {
 // If e is not present, the result is -1.
 func (l *LinkedList[T]) LastIndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i, j := l.len-1, l.tail; j != nil; i, j = i-1, j.Prev() {
 
-		if ok {
-
-			if element.Equal(j.Element()) {
-
-				return i
-
-			}
-
-		} else if reflect.DeepEqual(j.Element(), e) {
+		if fun(j.Element()) {
 
 			return i
 
@@ -126,7 +110,7 @@ func (l *LinkedList[T]) LastIndexOf(e T) int {
 
 }
 
-// ToSLice returns a slice which contains all elements of l.
+// ToSlice returns a slice which contains all elements of l.
 func (l *LinkedList[T]) ToSlice() []T {
 
 	slice := make([]T, l.len)
@@ -287,19 +271,10 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 // In that case, the method returns true, otherwhise it returns false.
 func (l *LinkedList[T]) RemoveElement(e T) bool {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
 
-		if ok {
-
-			if element.Equal(j.Element()) {
-
-				l.Remove(i)
-				return true
-
-			}
-
-		} else if reflect.DeepEqual(j.Element(), e) {
+		if fun(j.Element()) {
 
 			l.Remove(i)
 			return true
@@ -312,6 +287,8 @@ func (l *LinkedList[T]) RemoveElement(e T) bool {
 }
 
 // Each executes fun for all elements of l.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (l *LinkedList[T]) Each(fun func(index int, element T)) {
 
 	for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
@@ -438,16 +415,7 @@ func (l *LinkedList[T]) Equal(st any) bool {
 		other := list.Iter()
 		for i := l.root; i != nil; i = i.Next() {
 
-			element, ok := interface{}(i.Element()).(util.Equaler)
-			if ok {
-
-				if !element.Equal(other.Element()) {
-
-					return false
-
-				}
-
-			} else if !reflect.DeepEqual(i.Element(), other.Element()) {
+			if !util.EqualFunction(i.Element())(other.Element()) {
 
 				return false
 

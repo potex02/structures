@@ -12,12 +12,11 @@ import (
 var _ structures.Structure[wrapper.Int] = NewBinaryTree[wrapper.Int]()
 var _ Tree[wrapper.Int] = NewBinaryTree[wrapper.Int]()
 
-// BinaryTree provides a generic binary tree.
+// BinaryTree provides a generic binary search tree.
 //
 // the type T of the tree must implement [util.Comparer].
 //
-// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
-// otherwise it is done with [reflect.DeepEqual].
+// It implements the interface [Tree].
 type BinaryTree[T util.Comparer] struct {
 	// contains filtered or unexported fields
 	root *Node[T]
@@ -76,7 +75,7 @@ func (t *BinaryTree[T]) Contains(e T) bool {
 
 }
 
-// ToSLice returns a slice which contains all elements of t.
+// ToSlice returns a slice which contains all elements of t.
 func (t *BinaryTree[T]) ToSlice() []T {
 
 	slice := make([]T, 0)
@@ -117,10 +116,26 @@ func (t *BinaryTree[T]) Remove(e T) bool {
 
 }
 
+// Remove removes the first element that satisfies fun, if present.
+// In that case, the method returns true.
+func (t *BinaryTree[T]) RemoveFunc(e T, fun func(i T, other *Node[T]) bool) bool {
+
+	return t.Any(t.root, func(i *Node[T]) bool {
+		if fun(e, i) {
+			t.remove(i)
+			return true
+		}
+		return false
+	})
+
+}
+
 // Each executes fun for all elements of a subtree.
 //
 // node is the root node of the subtree,
 // fun is the function to be executed.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (t *BinaryTree[T]) Each(node *Node[T], fun func(i *Node[T])) {
 
 	if node == nil {
@@ -282,14 +297,8 @@ func (t *BinaryTree[T]) Equal(st any) bool {
 		j := 0
 		return t.All(t.root, func(i *Node[T]) bool {
 
-			element, ok := interface{}(i).(util.Equaler)
 			j++
-			if ok {
-
-				return element.Equal(others[j-1])
-
-			}
-			return reflect.DeepEqual(i.element, others[j-1])
+			return util.EqualFunction(i.element)(others[j-1])
 
 		})
 

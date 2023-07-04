@@ -195,7 +195,7 @@ func TestEqualTreeTable(t *testing.T) {
 		t.Fail()
 
 	}
-	if table.Equal(NewTreeTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
+	if table.Equal(NewHashTableFromSlice([]wrapper.String{"Hello", "ciao"}, []float32{1.2, 5.6})) {
 
 		t.Log("tables not equals")
 		t.Fail()

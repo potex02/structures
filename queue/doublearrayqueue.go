@@ -79,7 +79,7 @@ func (q *DoubleArrayQueue[T]) Tail() (T, error) {
 
 }
 
-// ToSLice returns a slice which contains all elements of q.
+// ToSlice returns a slice which contains all elements of q.
 func (q *DoubleArrayQueue[T]) ToSlice() []T {
 
 	return q.objects.ToSlice()

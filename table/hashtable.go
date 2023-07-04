@@ -21,7 +21,7 @@ type HashTable[K util.Hasher, T any] struct {
 	objects map[string]list.List[*Entry[K, T]]
 }
 
-// NewHashTable returns a new empty [HashTable] containing the elements c.
+// NewHashTable returns a new empty [HashTable].
 func NewHashTable[K util.Hasher, T any]() *HashTable[K, T] {
 
 	return &HashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
@@ -29,7 +29,7 @@ func NewHashTable[K util.Hasher, T any]() *HashTable[K, T] {
 }
 
 // NewHashTableFromSlice returns a new [HashTable] containing the elements of slice c.
-// it panics if key and c have different lengths.
+// It panics if key and c have different lengths.
 func NewHashTableFromSlice[K util.Hasher, T any](key []K, c []T) *HashTable[K, T] {
 
 	table := NewHashTable[K, T]()
@@ -65,20 +65,17 @@ func (t *HashTable[K, T]) IsEmpty() bool {
 // ContainsKey returns true if the key is present on t.
 func (t *HashTable[K, T]) ContainsKey(key K) bool {
 
-	hash := key.Hash()
-	for i := range t.objects {
+	hash := t.objects[key.Hash()]
+	if hash == nil {
 
-		if i == hash {
+		return false
 
-			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
+	}
+	for i := hash.Iter(); !i.End(); i = i.Next() {
 
-				if key.Compare(j.Element().Key()) == 0 {
+		if key.Compare(i.Element().Key()) == 0 {
 
-					return true
-
-				}
-
-			}
+			return true
 
 		}
 
@@ -90,20 +87,12 @@ func (t *HashTable[K, T]) ContainsKey(key K) bool {
 // ContainsElement returns true if the element e is present on t.
 func (t *HashTable[K, T]) ContainsElement(e T) bool {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for _, i := range t.objects {
 
 		for j := i.Iter(); !j.End(); j = j.Next() {
 
-			if ok {
-
-				if element.Equal(j.Element().Element()) {
-
-					return true
-
-				}
-
-			} else if reflect.DeepEqual(e, j.Element().Element()) {
+			if fun(j.Element().Element()) {
 
 				return true
 
@@ -150,7 +139,7 @@ func (t *HashTable[K, T]) Elements() list.List[T] {
 
 }
 
-// ToSLice returns a slice which contains all elements of t.
+// ToSlice returns a slice which contains all elements of t.
 func (t *HashTable[K, T]) ToSlice() []T {
 
 	return t.Elements().ToSlice()
@@ -163,20 +152,17 @@ func (t *HashTable[K, T]) Get(key K) (T, bool) {
 
 	var result T
 
-	hash := key.Hash()
-	for i := range t.objects {
+	hash := t.objects[key.Hash()]
+	if hash == nil {
 
-		if i == hash {
+		return result, false
 
-			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
+	}
+	for i := hash.Iter(); !i.End(); i = i.Next() {
 
-				if key.Compare(j.Element().Key()) == 0 {
+		if key.Compare(i.Element().Key()) == 0 {
 
-					return j.Element().Element(), true
-
-				}
-
-			}
+			return i.Element().Element(), true
 
 		}
 
@@ -191,36 +177,32 @@ func (t *HashTable[K, T]) Put(key K, e T) (T, bool) {
 
 	var result T
 
-	hash := key.Hash()
-	for i := range t.objects {
+	hash := t.objects[key.Hash()]
+	if hash == nil {
 
-		if i == hash {
+		list := list.NewLinkedList(NewEntry(key, e))
+		t.objects[key.Hash()] = list
+		return result, false
 
-			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
+	}
+	for i := hash.Iter(); !i.End(); i = i.Next() {
 
-				if key.Compare(j.Element().Key()) == 0 {
+		if key.Compare(i.Element().Key()) == 0 {
 
-					result = j.Element().Element()
-					j.Element().SetElement(e)
-					return result, true
-
-				}
-
-			}
-			t.objects[i].Add(NewEntry(key, e))
-			return result, false
+			result = i.Element().Element()
+			i.Element().SetElement(e)
+			return result, true
 
 		}
 
 	}
-	list := list.NewLinkedList(NewEntry(key, e))
-	t.objects[hash] = list
+	hash.Add(NewEntry(key, e))
 	return result, false
 
 }
 
 // PutSlice adds the elements of e at t.
-// it panics if key and e have different lengths.
+// It panics if key and e have different lengths.
 func (t *HashTable[K, T]) PutSlice(key []K, e []T) {
 
 	if len(key) != len(e) {
@@ -242,27 +224,24 @@ func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 
 	var result T
 
-	hash := key.Hash()
-	for i := range t.objects {
+	hash := t.objects[key.Hash()]
+	if hash == nil {
 
-		if i == hash {
+		return result, false
 
-			for j := t.objects[i].Iter(); !j.End(); j = j.Next() {
+	}
+	for i := hash.Iter(); !i.End(); i = i.Next() {
 
-				if key.Compare(j.Element().Key()) == 0 {
+		if key.Compare(i.Element().Key()) == 0 {
 
-					result = j.Element().Element()
-					t.objects[i].RemoveElement(j.Element())
-					if t.objects[i].IsEmpty() {
+			result = i.Element().Element()
+			hash.RemoveElement(i.Element())
+			if hash.IsEmpty() {
 
-						delete(t.objects, i)
-
-					}
-					return result, true
-
-				}
+				delete(t.objects, key.Hash())
 
 			}
+			return result, true
 
 		}
 
@@ -272,7 +251,9 @@ func (t *HashTable[K, T]) Remove(key K) (T, bool) {
 }
 
 // Each executes fun for all elements of t.
-func (t *HashTable[K, T]) Each(fun func(Key K, element T)) {
+//
+// This method should be used to remove elements. Use Iter insted.
+func (t *HashTable[K, T]) Each(fun func(key K, element T)) {
 
 	for _, i := range t.objects {
 
@@ -332,21 +313,7 @@ func (t *HashTable[K, T]) Equal(st any) bool {
 
 			e1, _ := t.Get(i.Element())
 			other, found := table.Get(i.Element())
-			if !found {
-
-				return false
-
-			}
-			element, ok := interface{}(e1).(util.Equaler)
-			if ok {
-
-				if !element.Equal(other) {
-
-					return false
-
-				}
-
-			} else if !reflect.DeepEqual(e1, other) {
+			if !found || !util.EqualFunction(e1)(other) {
 
 				return false
 

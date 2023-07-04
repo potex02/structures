@@ -22,6 +22,8 @@ type Set[T util.Comparer] interface {
 	// In that case, the method returns true, otherwhise it returns false.
 	Remove(e T) bool
 	// Each executes fun for all elements of the set.
+	//
+	// This method should be used to remove elements. Use Iter insted.
 	Each(fun func(element T))
 	// Stream returns a [Stream] rapresenting the set.
 	Stream() *Stream[T]

@@ -45,6 +45,8 @@ type List[T any] interface {
 	// In that case, the method returns true, otherwhise it returns false.
 	RemoveElement(e T) bool
 	// Each executes fun for all elements of the list.
+	//
+	// This method should be used to remove elements. Use Iter insted.
 	Each(fun func(index int, element T))
 	// Stream returns a [Stream] rapresenting the list.
 	Stream() *Stream[T]

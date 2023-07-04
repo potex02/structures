@@ -70,18 +70,10 @@ func (l *ArrayList[T]) Contains(e T) bool {
 // If e is not present, the result is -1.
 func (l *ArrayList[T]) IndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i := range l.objects {
 
-		if ok {
-
-			if element.Equal(l.objects[i]) {
-
-				return i
-
-			}
-
-		} else if reflect.DeepEqual(l.objects[i], e) {
+		if fun(l.objects[i]) {
 
 			return i
 
@@ -96,18 +88,10 @@ func (l *ArrayList[T]) IndexOf(e T) int {
 // If e is not present, the result is -1.
 func (l *ArrayList[T]) LastIndexOf(e T) int {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i := len(l.objects) - 1; i != -1; i-- {
 
-		if ok {
-
-			if element.Equal(l.objects[i]) {
-
-				return i
-
-			}
-
-		} else if reflect.DeepEqual(l.objects[i], e) {
+		if fun(l.objects[i]) {
 
 			return i
 
@@ -118,7 +102,7 @@ func (l *ArrayList[T]) LastIndexOf(e T) int {
 
 }
 
-// ToSLice returns a slice which contains all elements of l.
+// ToSlice returns a slice which contains all elements of l.
 func (l *ArrayList[T]) ToSlice() []T {
 
 	slice := make([]T, len(l.objects))
@@ -230,19 +214,10 @@ func (l *ArrayList[T]) Remove(index int) (T, error) {
 // In that case, the method returns true, otherwhise it returns false.
 func (l *ArrayList[T]) RemoveElement(e T) bool {
 
-	element, ok := interface{}(e).(util.Equaler)
+	fun := util.EqualFunction(e)
 	for i := 0; i != len(l.objects); i++ {
 
-		if ok {
-
-			if element.Equal(l.objects[i]) {
-
-				l.Remove(i)
-				return true
-
-			}
-
-		} else if reflect.DeepEqual(l.objects[i], e) {
+		if fun(l.objects[i]) {
 
 			l.Remove(i)
 			return true
@@ -255,6 +230,8 @@ func (l *ArrayList[T]) RemoveElement(e T) bool {
 }
 
 // Each executes fun for all elements of l.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (l *ArrayList[T]) Each(fun func(index int, element T)) {
 
 	for i := range l.objects {
@@ -343,16 +320,7 @@ func (l *ArrayList[T]) Equal(st any) bool {
 		other := list.Iter()
 		for _, i := range l.objects {
 
-			element, ok := interface{}(i).(util.Equaler)
-			if ok {
-
-				if !element.Equal(other.Element()) {
-
-					return false
-
-				}
-
-			} else if !reflect.DeepEqual(i, other.Element()) {
+			if !util.EqualFunction(i)(other.Element()) {
 
 				return false
 

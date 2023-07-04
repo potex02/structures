@@ -1,6 +1,8 @@
 // package utils provides interfaces to peform equality, comparion and hashing operations.
 package util
 
+import "reflect"
+
 // Equaler defines a method to check the equality between two variables.
 type Equaler interface {
 	// Equal returns true if the receiver and o are equals.
@@ -22,4 +24,25 @@ type Hasher interface {
 	Comparer
 	// Hash returns a string that is used to perform the hashing.
 	Hash() string
+}
+
+// EqualFunction generate a function that can be used to check the equality of e and other.
+//
+// if T implements [Equaler], the resulting function use the Equal method,
+// otherwhise it use [reflect.DeepEqual].
+func EqualFunction(e any) func(other any) bool {
+
+	if element, ok := interface{}(e).(Equaler); ok {
+
+		return func(other any) bool {
+			return element.Equal(other)
+		}
+
+	}
+	return func(other any) bool {
+
+		return reflect.DeepEqual(e, other)
+
+	}
+
 }

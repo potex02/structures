@@ -61,7 +61,7 @@ func (s *TreeSet[T]) Contains(e T) bool {
 
 }
 
-// ToSLice returns a slice which contains all elements of s.
+// ToSlice returns a slice which contains all elements of s.
 func (s *TreeSet[T]) ToSlice() []T {
 
 	return s.objects.ToSlice()
@@ -99,6 +99,8 @@ func (s *TreeSet[T]) Remove(e T) bool {
 }
 
 // Each executes fun for all elements of s.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (s *TreeSet[T]) Each(fun func(element T)) {
 
 	s.objects.Each(s.objects.Root(), func(i *tree.Node[T]) {

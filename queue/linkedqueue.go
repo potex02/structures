@@ -89,7 +89,7 @@ func (q *LinkedQueue[T]) Tail() (T, error) {
 
 }
 
-// ToSLice returns a slice which contains all elements of q.
+// ToSlice returns a slice which contains all elements of q.
 func (q *LinkedQueue[T]) ToSlice() []T {
 
 	slice := make([]T, q.len)

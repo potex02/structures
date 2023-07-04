@@ -16,6 +16,8 @@ var _ Tree[int] = NewNAryTree[int](3)
 //
 // The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
+//
+// It implements the interface [Tree].
 type NAryTree[T any] struct {
 	// contains filtered or unexported fields
 	n    int
@@ -104,7 +106,7 @@ func (t *NAryTree[T]) Contains(e T) bool {
 
 }
 
-// ToSLice returns a slice which contains all elements of t.
+// ToSlice returns a slice which contains all elements of t.
 func (t *NAryTree[T]) ToSlice() []T {
 
 	slice := make([]T, 0)
@@ -159,6 +161,8 @@ func (t *NAryTree[T]) Remove(e T) bool {
 //
 // node is the root node of the subtree,
 // fun is the function to be executed.
+//
+// This method should be used to remove elements. Use Iter insted.
 func (t *NAryTree[T]) Each(node *Node[T], fun func(i *Node[T])) {
 
 	if node == nil {

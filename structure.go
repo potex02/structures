@@ -18,7 +18,7 @@ type Structure[T any] interface {
 	Len() int
 	// IsEmpty returns a bool which indicates if the structure is empty or not.
 	IsEmpty() bool
-	// ToSLice returns a slice which contains all elements of the structure.
+	// ToSlice returns a slice which contains all elements of the structure.
 	ToSlice() []T
 	// Clear removes all element from the structure.
 	Clear()

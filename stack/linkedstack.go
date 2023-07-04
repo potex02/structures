@@ -75,7 +75,7 @@ func (s *LinkedStack[T]) Top() (T, error) {
 
 }
 
-// ToSLice returns a slice which contains all elements of s.
+// ToSlice returns a slice which contains all elements of s.
 func (s *LinkedStack[T]) ToSlice() []T {
 
 	slice := make([]T, s.len)

@@ -79,7 +79,7 @@ func (q *ArrayQueue[T]) Tail() (T, error) {
 
 }
 
-// ToSLice returns a slice which contains all elements of q.
+// ToSlice returns a slice which contains all elements of q.
 func (q *ArrayQueue[T]) ToSlice() []T {
 
 	return q.objects.ToSlice()

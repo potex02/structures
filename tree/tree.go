@@ -4,10 +4,13 @@ package tree
 import "github.com/potex02/structures"
 
 // Tree provides all methods to use a generic dynamic tree.
+// A tree contains all the methods of [structures.Structure].
 //
 // A tree is implemented through the [Node] type.
 //
-// A tree contains all the methods of [structures.Structure].
+// The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
+// otherwise it is done with [reflect.DeepEqual].
+//
 type Tree[T any] interface {
 	structures.Structure[T]
 	// Root returns the root [Node] of the tree.
@@ -25,6 +28,8 @@ type Tree[T any] interface {
 	//
 	// node is the root node of the subtree,
 	// fun is the function to be executed.
+	//
+	// This method should be used to remove elements. Use Iter insted.
 	Each(node *Node[T], fun func(i *Node[T]))
 	// Iter returns an [Iterator] which permits to iterate a [Tree].
 	//

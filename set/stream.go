@@ -19,8 +19,6 @@ type Stream[T util.Comparer] struct {
 // This function must have no parameters or must be a variadic function and must returns a Set[T].
 func NewStream[T util.Comparer](set Set[T], constructor reflect.Value) *Stream[T] {
 
-	result := set.Copy()
-	result.Clear()
 	objects := make([]T, 0)
 	for i := set.Iter(); !i.End(); i = i.Next() {
 

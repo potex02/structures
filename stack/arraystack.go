@@ -66,7 +66,7 @@ func (s *ArrayStack[T]) Top() (T, error) {
 
 }
 
-// ToSLice returns a slice which contains all elements of s.
+// ToSlice returns a slice which contains all elements of s.
 func (s *ArrayStack[T]) ToSlice() []T {
 
 	return s.objects.ToSlice()
