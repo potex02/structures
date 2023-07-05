@@ -88,6 +88,57 @@ func (s *Stream[T]) FilterMap(fun func(element T) (T, bool)) *Stream[T] {
 
 }
 
+// Union returns a [Stream] that is the result of the union between s and set.
+//
+// The result of a union of two sets is a set which contains all elements of both sets.
+func (s *Stream[T]) Union(set Set[T]) *Stream[T] {
+
+	s.objects = append(s.objects, set.ToSlice()...)
+	return s
+
+}
+
+// Intersection returns a [Stream] that is the result of the intersection between s and set.
+//
+// The result of a union of two sets is a set which contains only the elements present in both sets.
+func (s *Stream[T]) Intersection(set Set[T]) *Stream[T] {
+
+	result := make([]T, 0)
+	for _, i := range s.objects {
+
+		if set.Contains(i) {
+
+			result = append(result, i)
+
+		}
+
+	}
+	s.objects = result
+	return s
+
+}
+
+// Difference returns a [Stream] that is the result of the difference between s and set.
+//
+// The result of a union of two sets is a set which contains only the elements present the first set
+// that are not present in the second set.
+func (s *Stream[T]) Difference(set Set[T]) *Stream[T] {
+
+	result := make([]T, 0)
+	for _, i := range s.objects {
+
+		if !set.Contains(i) {
+
+			result = append(result, i)
+
+		}
+
+	}
+	s.objects = result
+	return s
+
+}
+
 // Any returns true if at least one element of s satisfies fun.
 func (s *Stream[T]) Any(fun func(element T) bool) bool {
 

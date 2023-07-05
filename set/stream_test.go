@@ -85,6 +85,45 @@ func TestFilterMap(t *testing.T) {
 	}
 
 }
+func TestUnion(t *testing.T) {
+
+	var stream *Stream[wrapper.Int] = NewTreeSet[wrapper.Int](1, 2, -10, 20, 30, -2, 12).Stream()
+
+	stream.Union(NewTreeSet[wrapper.Int](-10, -20, 100, -50))
+	if !stream.Collect().Equal(NewTreeSet[wrapper.Int](-10, 20, 1, 2, 30, -2, -20, 100, 12, -50)) {
+
+		t.Log("result is", stream.Collect())
+		t.Fail()
+
+	}
+
+}
+func TestIntersection(t *testing.T) {
+
+	var stream *Stream[wrapper.Int] = NewHashSet[wrapper.Int](1, 2, -10, 20, 30, -2, 12).Stream()
+
+	stream.Intersection(NewTreeSet[wrapper.Int](-10, -20, -2, 100, 30, -50))
+	if !stream.Collect().Equal(NewHashSet[wrapper.Int](-10, 30, -2)) {
+
+		t.Log("result is", stream.Collect())
+		t.Fail()
+
+	}
+
+}
+func TestDifference(t *testing.T) {
+
+	var stream *Stream[wrapper.Int] = NewTreeSet[wrapper.Int](1, 2, -10, 20, 30, -2, 12).Stream()
+
+	stream.Difference(NewTreeSet[wrapper.Int](-10, -20, -2, 100, 30, -50))
+	if !stream.Collect().Equal(NewHashSet[wrapper.Int](1, 2, 20, 12)) {
+
+		t.Log("result is", stream.Collect())
+		t.Fail()
+
+	}
+
+}
 func TestAny(t *testing.T) {
 
 	var stream *Stream[wrapper.Int] = NewHashSet[wrapper.Int](1, 2, -10, 20, 30, -2, 12).Stream()
