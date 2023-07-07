@@ -27,7 +27,7 @@ func TestNewHashSet(t *testing.T) {
 }
 func TestNewHashSetFromSlice(t *testing.T) {
 
-	var set *HashSet[wrapper.Int] = NewHashSetFromSlice[wrapper.Int]([]wrapper.Int{1, 4, -5, 2, 1})
+	var set BaseSet[wrapper.Int] = NewHashSetFromSlice[wrapper.Int]([]wrapper.Int{1, 4, -5, 2, 1})
 
 	if set == nil {
 
@@ -85,19 +85,19 @@ func TestRemoveHashSet(t *testing.T) {
 
 	var set *HashSet[wrapper.Int] = NewHashSet[wrapper.Int](4, -5, 2, 1)
 
-	if ok := set.Remove(4); !ok {
+	if !set.Remove(4) {
 
 		t.Log("not found 4 is set")
 		t.Fail()
 
 	}
-	if ok := set.Remove(4); ok {
+	if set.Remove(4) {
 
 		t.Log("found 4 is set")
 		t.Fail()
 
 	}
-	if ok := set.Remove(10); ok {
+	if set.Remove(10) {
 
 		t.Log("found 10 is set")
 		t.Fail()
@@ -107,40 +107,40 @@ func TestRemoveHashSet(t *testing.T) {
 }
 func TestEqualHashSet(t *testing.T) {
 
-	var list Set[wrapper.Int] = NewHashSet[wrapper.Int](1, 2, 3, 5)
-	var listTest Set[test] = NewHashSet[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
+	var set Set[wrapper.Int] = NewHashSet[wrapper.Int](1, 2, 3, 5)
+	var setTest Set[test] = NewHashSet[test](test{n1: 1, n2: 2}, test{n1: -2, n2: -4})
 
-	if !list.Equal(NewHashSetFromSlice([]wrapper.Int{1, 2, 3, 5})) {
+	if !set.Equal(NewHashSetFromSlice([]wrapper.Int{1, 2, 3, 5})) {
 
 		t.Log("sets are not equals")
 		t.Fail()
 
 	}
-	if list.Equal(NewHashSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+	if set.Equal(NewHashSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
 
 		t.Log("sets are equals")
 		t.Fail()
 
 	}
-	if !list.Equal(NewTreeSetFromSlice([]wrapper.Int{2, 1, 3, 5})) {
+	if !set.Equal(NewTreeSetFromSlice([]wrapper.Int{2, 1, 3, 5})) {
 
 		t.Log("sets are not equals")
 		t.Fail()
 
 	}
-	if list.Equal(NewTreeSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
+	if set.Equal(NewTreeSetFromSlice([]wrapper.Int{-1, 2, 3, 5})) {
 
 		t.Log("sets are equals")
 		t.Fail()
 
 	}
-	if !listTest.Equal(NewHashSet[test](test{n1: 2, n2: 1}, test{n1: 0, n2: -6})) {
+	if !setTest.Equal(NewHashSet[test](test{n1: 2, n2: 1}, test{n1: 0, n2: -6})) {
 
 		t.Log("sets are not equals")
 		t.Fail()
 
 	}
-	if listTest.Equal(NewTreeSet[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
+	if setTest.Equal(NewTreeSet[test](test{n1: 1, n2: 1}, test{n1: -2, n2: -4})) {
 
 		t.Log("sets are equals")
 		t.Fail()

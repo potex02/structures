@@ -11,6 +11,7 @@ import (
 )
 
 var _ structures.Structure[int] = NewHashTable[wrapper.Int, int]()
+var _ BaseTable[wrapper.Int, int] = NewHashTable[wrapper.Int, int]()
 var _ Table[wrapper.Int, int] = NewHashTable[wrapper.Int, int]()
 
 // HashTable provides a generic table implemented through hashing.
@@ -109,15 +110,9 @@ func (t *HashTable[K, T]) ContainsElement(e T) bool {
 func (t *HashTable[K, T]) Keys() list.List[K] {
 
 	list := list.NewArrayList[K]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			list.Add(j.Element().Key())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		list.Add(key)
+	})
 	return list
 
 }
@@ -126,15 +121,9 @@ func (t *HashTable[K, T]) Keys() list.List[K] {
 func (t *HashTable[K, T]) Elements() list.List[T] {
 
 	list := list.NewArrayList[T]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			list.Add(j.Element().Element())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		list.Add(element)
+	})
 	return list
 
 }
@@ -257,11 +246,11 @@ func (t *HashTable[K, T]) Each(fun func(key K, element T)) {
 
 	for _, i := range t.objects {
 
-		for j := i.Iter(); !j.End(); j = j.Next() {
+		i.Each(func(index int, element *Entry[K, T]) {
 
-			fun(j.Element().Key(), j.Element().Element())
+			fun(element.Key(), element.Element())
 
-		}
+		})
 
 	}
 
@@ -366,15 +355,9 @@ func (t *HashTable[K, T]) Hash() string {
 func (t *HashTable[K, T]) Copy() Table[K, T] {
 
 	table := NewHashTable[K, T]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			table.Put(j.Element().Key(), j.Element().Element())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		table.Put(key, element)
+	})
 	return table
 
 }
@@ -385,21 +368,13 @@ func (t *HashTable[K, T]) String() string {
 	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
 	result := fmt.Sprintf("HashTable[%v, %v][", check[0][1:], check[1][1:])
 	first := true
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			if !first {
-
-				result += ", "
-
-			}
-			result += fmt.Sprintf("%v: %v", j.Element().Key(), j.Element().Element())
-			first = false
-
+	t.Each(func(key K, element T) {
+		if !first {
+			result += ", "
 		}
-
-	}
+		result += fmt.Sprintf("%v: %v", key, element)
+		first = false
+	})
 	result += "]"
 	return result
 

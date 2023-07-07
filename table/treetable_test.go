@@ -180,7 +180,7 @@ func TestRemoveTreeTable(t *testing.T) {
 }
 func TestEqualTreeTable(t *testing.T) {
 
-	var table *TreeTable[wrapper.String, float32] = NewTreeTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table BaseTable[wrapper.String, float32] = NewTreeTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 	var tableTest *TreeTable[wrapper.Int, test] = NewTreeTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
 
 	if !table.Equal(NewTreeTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {

@@ -69,9 +69,10 @@ func (t *BinaryTree[T]) Root() *Node[T] {
 // Contains returns if e is present in t.
 func (t *BinaryTree[T]) Contains(e T) bool {
 
-	return t.Any(t.root, func(i *Node[T]) bool {
-		return e.Compare(i.Element()) == 0
-	})
+	//return t.Any(t.root, func(i *Node[T]) bool {
+	//	return e.Compare(i.Element()) == 0
+	//})
+	return t.contains(t.root, e)
 
 }
 
@@ -361,6 +362,28 @@ func (t *BinaryTree[T]) String() string {
 	objects := make([]T, 0)
 	t.Each(t.root, func(i *Node[T]) { objects = append(objects, i.Element()) })
 	return fmt.Sprintf("BinaryTree[%v]%v", check[1:], objects)
+
+}
+
+func (t *BinaryTree[T]) contains(node *Node[T], e T) bool {
+
+	if node == nil {
+
+		return false
+
+	}
+	check := e.Compare(node.Element())
+	if check == 0 {
+
+		return true
+
+	}
+	if check < 0 {
+
+		return t.contains(node.Left(), e)
+
+	}
+	return t.contains(node.Right(), e)
 
 }
 

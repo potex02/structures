@@ -180,7 +180,7 @@ func TestRemoveHashTable(t *testing.T) {
 }
 func TestEqualHashTable(t *testing.T) {
 
-	var table *HashTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
+	var table BaseTable[wrapper.String, float32] = NewHashTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})
 	var tableTest *HashTable[wrapper.Int, test] = NewHashTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, 2}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}})
 
 	if !table.Equal(NewTreeTableFromSlice([]wrapper.String{"Hello", "Ciao"}, []float32{1.2, 5.6})) {

@@ -13,6 +13,7 @@ import (
 )
 
 var _ structures.Structure[int] = NewMultiTreeTable[wrapper.Int, int]()
+var _ BaseTable[wrapper.Int, int] = NewMultiTreeTable[wrapper.Int, int]()
 var _ MultiTable[wrapper.Int, int] = NewMultiTreeTable[wrapper.Int, int]()
 
 // MultiTreeTable provides a generic table with duplicate keys implemented through a [tree.BinaryTree].
@@ -209,9 +210,10 @@ func (t *MultiTreeTable[K, T]) RemoveKey(key K) []T {
 	for i := t.objects.Iter(); !i.End(); i = i.Next() {
 
 		check := key.Compare(i.Element().Key())
-		if check == 0 {
+		for !i.End() && check == 0 {
 			result = append(result, i.Element().Element())
-			t.objects.Remove(i.Element())
+			i = i.Remove()
+			check = key.Compare(i.Element().Key())
 		}
 		if check == -1 {
 
@@ -236,9 +238,9 @@ func (t *MultiTreeTable[K, T]) Each(fun func(key K, element T)) {
 }
 
 // Stream returns a [MultiStream] rapresenting t.
-func (t *MultiTreeTable[K, T]) Stream() *MultiStream[K, T] {
+func (t *MultiTreeTable[K, T]) Stream() *Stream[K, T] {
 
-	return NewMultiStream[K, T](t, reflect.ValueOf(NewMultiTreeTable[K, T]))
+	return NewStream[K, T](t, reflect.ValueOf(NewMultiTreeTable[K, T]))
 
 }
 
@@ -262,7 +264,7 @@ func (t *MultiTreeTable[K, T]) Iter() Iterator[K, T] {
 
 }
 
-// Equal returns true if t and st are both [MultiTable] and their keys and elements are equals.
+// Equal returns true if t and st are both multitables and their keys and elements are equals.
 // In any other case, it returns false.
 //
 // Equal does not take into account the effective type of st. This means that if st is an [MultiHashTable],

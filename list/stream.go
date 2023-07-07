@@ -18,11 +18,9 @@ type Stream[T any] struct {
 func NewStream[T any](list List[T], constructor reflect.Value) *Stream[T] {
 
 	objects := make([]T, 0)
-	for i := list.Iter(); !i.End(); i = i.Next() {
-
-		objects = append(objects, i.Element())
-
-	}
+	list.Each(func(index int, element T) {
+		objects = append(objects, element)
+	})
 	return &Stream[T]{objects: objects, constructor: constructor}
 
 }
@@ -155,7 +153,7 @@ func (s *Stream[T]) Count(fun func(index int, element T) bool) int {
 //
 // the effective type of the result is the same the constructor.
 //
-// This methods panics if constructor have wrong parameters or not returns a List[T].
+// This method panics if constructor have wrong parameters or not returns a List[T].
 func (s *Stream[T]) Collect() List[T] {
 
 	result := s.constructor.Call([]reflect.Value{})[0].Interface().(List[T])

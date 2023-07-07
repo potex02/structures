@@ -11,7 +11,7 @@ var _ Iterator[wrapper.Int] = NewHashSetIterator[wrapper.Int](NewHashSet[wrapper
 var _ Iterator[wrapper.Int] = NewTreeSetIterator[wrapper.Int](NewTreeSet[wrapper.Int]())
 var _ Iterator[wrapper.Int] = &endIterator[wrapper.Int]{}
 
-// Iterator provides the methods to iterate over a [Set].
+// Iterator provides the methods to iterate over a [Set] or a [MultiSet].
 type Iterator[T util.Comparer] interface {
 	// Elements returns the element of the iterator.
 	Element() T
@@ -48,13 +48,13 @@ type Iterator[T util.Comparer] interface {
 	End() bool
 }
 
-// HashSetIterator is an iterator of an [HashSet].
+// HashSetIterator is an iterator of an [HashSet] or [MultiHashSet].
 type HashSetIterator[T util.Hasher] struct {
 	// contains filtered or unexported fields
 	iterator table.Iterator[T, uint8]
 }
 
-// NewHashSetIterator returns a new [HashSetIterator] associated at the set parameter.
+// NewHashSetIterator returns a new [HashSetIterator] for an [HashSet] associated at the set parameter.
 func NewHashSetIterator[T util.Hasher](set *HashSet[T]) Iterator[T] {
 
 	if set.IsEmpty() {
@@ -66,6 +66,18 @@ func NewHashSetIterator[T util.Hasher](set *HashSet[T]) Iterator[T] {
 
 }
 
+// NewMultiHashSetIterator returns a new [HashSetIterator] for a [MultiHashSet] associated at the set parameter.
+func NewMultiHashSetIterator[T util.Hasher](set *MultiHashSet[T]) Iterator[T] {
+
+	if set.IsEmpty() {
+
+		return &endIterator[T]{}
+
+	}
+	return &HashSetIterator[T]{iterator: table.NewMultiHashTableIterator(set.objects.(*table.MultiHashTable[T, uint8]))}
+
+}
+
 // Elements returns the element of the iterator.
 func (i *HashSetIterator[T]) Element() T {
 
@@ -73,7 +85,7 @@ func (i *HashSetIterator[T]) Element() T {
 
 }
 
-// Remove removes the element from the table and returns the iterator of the next element.
+// Remove removes the element from the set and returns the iterator of the next element.
 //
 // The result of this method must be assigned in most cases to himself.
 //
@@ -130,14 +142,26 @@ func (i *HashSetIterator[T]) End() bool {
 
 }
 
-// TreeSetIterator is an iterator of an [TreeSet].
+// TreeSetIterator is an iterator of a [TreeSet] or a [MultiTreeSet].
 type TreeSetIterator[T util.Comparer] struct {
 	// contains filtered or unexported fields
 	iterator tree.Iterator[T]
 }
 
-// NewTreeSetIterator returns a new [TreeSetIterator] associated at the set parameter.
+// NewTreeSetIterator returns a new [TreeSetIterator] for a [TreeSet] associated at the set parameter.
 func NewTreeSetIterator[T util.Comparer](set *TreeSet[T]) Iterator[T] {
+
+	if set.IsEmpty() {
+
+		return &endIterator[T]{}
+
+	}
+	return &TreeSetIterator[T]{iterator: tree.NewTreeIterator[T](set.objects)}
+
+}
+
+// NewTreeSetIterator returns a new [TreeSetIterator] for a [MultiTreeSet] associated at the set parameter.
+func NewMultiTreeSetIterator[T util.Comparer](set *MultiTreeSet[T]) Iterator[T] {
 
 	if set.IsEmpty() {
 
@@ -155,7 +179,7 @@ func (i *TreeSetIterator[T]) Element() T {
 
 }
 
-// Remove removes the element from the table and returns the iterator of the next element.
+// Remove removes the element from the set and returns the iterator of the next element.
 //
 // The result of this method must be assigned in most cases to himself.
 //

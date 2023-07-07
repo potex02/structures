@@ -6,11 +6,11 @@ import (
 	"github.com/potex02/structures/util"
 )
 
-// Set provides all methods to use a generic dynamic set.
-// A set contains all the methods of [structures.Structure].
+// BaseSet is the base interface for both [Set] and [MultiSet].
+// A baseset contains all the methods of [structures.Structure].
 //
-// The check on the equality of the elements is done with the Compare method.
-type Set[T util.Comparer] interface {
+// It provides methods for a generic dynamic table can have unique or duplicate keys.
+type BaseSet[T util.Comparer] interface {
 	structures.Structure[T]
 	// Contains returns if e is present in the set.
 	Contains(e T) bool
@@ -34,6 +34,32 @@ type Set[T util.Comparer] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[T]
+}
+
+// Set provides all methods to use a generic dynamic set.
+// A set contains all the methods of [BaseSet].
+//
+// The check on the equality of the elements is done with the Compare method.
+type Set[T util.Comparer] interface {
+	BaseSet[T]
 	// Copy returns a copy of the set.
 	Copy() Set[T]
 }
+
+// MultiSet provides all methods to use a generic dynamic set with duplicate elements.
+// A multiset contains all the methods of [BaseSet].
+//
+// The check on the equality of the elements is done with the Compare method.
+type MultiSet[T util.Comparer] interface {
+	BaseSet[T]
+	// RemoveAll removes all occurrences of e from the set.
+	RemoveAll(e T)
+	// Count returns the number of occurrences of e in the set.
+	Count(e T) int
+	// ToSet returns a [Set] containing the elements of the multiset.
+	ToSet() Set[T]
+	// Copy returns a copy of the set.
+	Copy() MultiSet[T]
+}
+
+const obj uint8 = 0

@@ -11,6 +11,7 @@ import (
 )
 
 var _ structures.Structure[int] = NewMultiHashTable[wrapper.Int, int]()
+var _ BaseTable[wrapper.Int, int] = NewMultiHashTable[wrapper.Int, int]()
 var _ MultiTable[wrapper.Int, int] = NewMultiHashTable[wrapper.Int, int]()
 
 // MultiHashTable provides a generic table with duplicate keys implemented through hashing.
@@ -132,15 +133,9 @@ func (t *MultiHashTable[K, T]) ContainsElement(e T) bool {
 func (t *MultiHashTable[K, T]) Keys() list.List[K] {
 
 	list := list.NewArrayList[K]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			list.Add(j.Element().Key())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		list.Add(key)
+	})
 	return list
 
 }
@@ -149,15 +144,9 @@ func (t *MultiHashTable[K, T]) Keys() list.List[K] {
 func (t *MultiHashTable[K, T]) Elements() list.List[T] {
 
 	list := list.NewArrayList[T]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			list.Add(j.Element().Element())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		list.Add(element)
+	})
 	return list
 
 }
@@ -179,15 +168,11 @@ func (t *MultiHashTable[K, T]) Get(key K) []T {
 		return result
 
 	}
-	for i := hash.Iter(); !i.End(); i = i.Next() {
-
-		if key.Compare(i.Element().Key()) == 0 {
-
-			result = append(result, i.Element().Element())
-
+	hash.Each(func(index int, element *Entry[K, T]) {
+		if key.Compare(element.Key()) == 0 {
+			result = append(result, element.Element())
 		}
-
-	}
+	})
 	return result
 
 }
@@ -303,10 +288,10 @@ func (t *MultiHashTable[K, T]) RemoveKey(key K) []T {
 	}
 	for i := hash.Iter(); !i.End(); i = i.Next() {
 
-		if key.Compare(i.Element().Key()) == 0 {
+		for !i.End() && key.Compare(i.Element().Key()) == 0 {
 
 			result = append(result, i.Element().Element())
-			hash.RemoveElement(i.Element())
+			i = i.Remove()
 
 		}
 
@@ -327,20 +312,20 @@ func (t *MultiHashTable[K, T]) Each(fun func(key K, element T)) {
 
 	for _, i := range t.objects {
 
-		for j := i.Iter(); !j.End(); j = j.Next() {
+		i.Each(func(index int, element *Entry[K, T]) {
 
-			fun(j.Element().Key(), j.Element().Element())
+			fun(element.Key(), element.Element())
 
-		}
+		})
 
 	}
 
 }
 
 // Stream returns a [MultiStream] rapresenting t.
-func (t *MultiHashTable[K, T]) Stream() *MultiStream[K, T] {
+func (t *MultiHashTable[K, T]) Stream() *Stream[K, T] {
 
-	return NewMultiStream[K, T](t, reflect.ValueOf(NewMultiHashTable[K, T]))
+	return NewStream[K, T](t, reflect.ValueOf(NewMultiHashTable[K, T]))
 
 }
 
@@ -364,7 +349,7 @@ func (t *MultiHashTable[K, T]) Iter() Iterator[K, T] {
 
 }
 
-// Equal returns true if t and st are both [MultiTable] and their keys and elements are equals.
+// Equal returns true if t and st are both multitables and their keys and elements are equals.
 // In any other case, it returns false.
 //
 // Equal does not take into account the effective type of st. This means that if st is an [MultiTreeTable],
@@ -437,15 +422,9 @@ func (t *MultiHashTable[K, T]) Hash() string {
 func (t *MultiHashTable[K, T]) Copy() MultiTable[K, T] {
 
 	table := NewMultiHashTable[K, T]()
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			table.Put(j.Element().Key(), j.Element().Element())
-
-		}
-
-	}
+	t.Each(func(key K, element T) {
+		table.Put(key, element)
+	})
 	return table
 
 }
@@ -456,21 +435,13 @@ func (t *MultiHashTable[K, T]) String() string {
 	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
 	result := fmt.Sprintf("MultiHashTable[%v, %v][", check[0][1:], check[1][1:])
 	first := true
-	for _, i := range t.objects {
-
-		for j := i.Iter(); !j.End(); j = j.Next() {
-
-			if !first {
-
-				result += ", "
-
-			}
-			result += fmt.Sprintf("%v: %v", j.Element().Key(), j.Element().Element())
-			first = false
-
+	t.Each(func(key K, element T) {
+		if !first {
+			result += ", "
 		}
-
-	}
+		result += fmt.Sprintf("%v: %v", key, element)
+		first = false
+	})
 	result += "]"
 	return result
 

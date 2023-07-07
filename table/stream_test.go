@@ -171,7 +171,7 @@ func TestCount(t *testing.T) {
 func TestNewMultiStream(t *testing.T) {
 
 	var table MultiTable[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1})
-	var stream *MultiStream[wrapper.Int, int] = NewMultiStream[wrapper.Int, int](table, reflect.ValueOf(NewMultiHashTable[wrapper.Int, int]))
+	var stream *Stream[wrapper.Int, int] = NewStream[wrapper.Int, int](table, reflect.ValueOf(NewMultiHashTable[wrapper.Int, int]))
 
 	if stream == nil {
 
@@ -179,21 +179,21 @@ func TestNewMultiStream(t *testing.T) {
 		t.Fail()
 
 	}
-	if _, ok := stream.Collect().(*MultiHashTable[wrapper.Int, int]); !ok {
+	if _, ok := stream.CollectMulti().(*MultiHashTable[wrapper.Int, int]); !ok {
 
-		t.Log("result is not an MultiHashTable")
+		t.Log("result is not a MultiHashTable")
 		t.Fail()
 
 	}
 	table = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1})
-	stream = NewMultiStream[wrapper.Int, int](table, reflect.ValueOf(NewMultiTreeTable[wrapper.Int, int]))
+	stream = NewStream[wrapper.Int, int](table, reflect.ValueOf(NewMultiTreeTable[wrapper.Int, int]))
 	if stream == nil {
 
 		t.Log("s is nil")
 		t.Fail()
 
 	}
-	if _, ok := stream.Collect().(*MultiTreeTable[wrapper.Int, int]); !ok {
+	if _, ok := stream.CollectMulti().(*MultiTreeTable[wrapper.Int, int]); !ok {
 
 		t.Log("result is not a MultiTreeTable")
 		t.Fail()
@@ -203,14 +203,14 @@ func TestNewMultiStream(t *testing.T) {
 }
 func TestMapMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	stream.Map(func(key wrapper.Int, element int) int {
 		return element + key.ToValue()
 	})
-	if !stream.Collect().Equal(NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{13, 0, 20, 40, 20, 3, -9})) {
+	if !stream.CollectMulti().Equal(NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{13, 0, 20, 40, 20, 3, -9})) {
 
-		t.Log("result is", stream.Collect())
+		t.Log("result is", stream.CollectMulti())
 		t.Fail()
 
 	}
@@ -218,14 +218,14 @@ func TestMapMulti(t *testing.T) {
 }
 func TestFilterMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	stream.Filter(func(key wrapper.Int, element int) bool {
 		return element > 0
 	})
-	if !stream.Collect().Equal(NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, -10, 20, 1, -10}, []int{12, 30, 20, 2, 1})) {
+	if !stream.CollectMulti().Equal(NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, -10, 20, 1, -10}, []int{12, 30, 20, 2, 1})) {
 
-		t.Log("result is", stream.Collect())
+		t.Log("result is", stream.CollectMulti())
 		t.Fail()
 
 	}
@@ -233,14 +233,14 @@ func TestFilterMulti(t *testing.T) {
 }
 func TestFilterMapMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	stream.FilterMap(func(key wrapper.Int, element int) (int, bool) {
 		return element + 10, key > 0
 	})
-	if !stream.Collect().Equal(NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, 20, 30, 1}, []int{22, 8, 30, 0, 12})) {
+	if !stream.CollectMulti().Equal(NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, 20, 30, 1}, []int{22, 8, 30, 0, 12})) {
 
-		t.Log("result is", stream.Collect())
+		t.Log("result is", stream.CollectMulti())
 		t.Fail()
 
 	}
@@ -248,7 +248,7 @@ func TestFilterMapMulti(t *testing.T) {
 }
 func TestAnyMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	if !stream.Any(func(key wrapper.Int, element int) bool {
 		return element < 0
@@ -271,7 +271,7 @@ func TestAnyMulti(t *testing.T) {
 }
 func TestAllMutli(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, 1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	if stream.All(func(key wrapper.Int, element int) bool {
 		return element > 0
@@ -294,7 +294,7 @@ func TestAllMutli(t *testing.T) {
 }
 func TestNoneMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, -2, 12}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiHashTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, -2, 12}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	if stream.None(func(key wrapper.Int, element int) bool {
 		return element < 0
@@ -317,7 +317,7 @@ func TestNoneMulti(t *testing.T) {
 }
 func TestCountMulti(t *testing.T) {
 
-	var stream *MultiStream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, -1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
+	var stream *Stream[wrapper.Int, int] = NewMultiTreeTableFromSlice[wrapper.Int, int]([]wrapper.Int{1, 2, -10, 20, 30, -1, -10}, []int{12, -2, 30, 20, -10, 2, 1}).Stream()
 
 	if stream.Count(func(key wrapper.Int, element int) bool {
 		return key < 0

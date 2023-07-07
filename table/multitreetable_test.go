@@ -263,7 +263,7 @@ func TestRemoveKeyMultiTreeTable(t *testing.T) {
 }
 func TestEqualMultiTreeTable(t *testing.T) {
 
-	var table *MultiTreeTable[wrapper.String, float32] = NewMultiTreeTableFromSlice[wrapper.String, float32]([]wrapper.String{"Hello", "Ciao", "a", "Ciao"}, []float32{1.2, 5.6, -1, 0})
+	var table BaseTable[wrapper.String, float32] = NewMultiTreeTableFromSlice[wrapper.String, float32]([]wrapper.String{"Hello", "Ciao", "a", "Ciao"}, []float32{1.2, 5.6, -1, 0})
 	var tableTest *MultiTreeTable[wrapper.Int, test] = NewMultiTreeTableFromSlice[wrapper.Int, test]([]wrapper.Int{1, -2, -2, 3}, []test{{n1: 1, n2: 2}, {n1: -2, n2: -4}, {n1: 1, n2: 2}, {n1: 12, n2: -3}})
 
 	if !table.Equal(NewMultiTreeTableFromSlice[wrapper.String, float32]([]wrapper.String{"Hello", "Ciao", "a", "Ciao"}, []float32{1.2, 5.6, -1, 0})) {

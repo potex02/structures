@@ -49,10 +49,12 @@ For now, the only available structures are the:
 - Sets:
 	- HashSet;
 	- TreeSet;
+- MultiSets:
+	- MultiHashSet;
+	- MultiTreeSet;
 - Trees:
 	- BinaryTree;
 	- N-aryTtree.
 
 - To be added:
-	- MultiSets;
 	- PriorityQueue.

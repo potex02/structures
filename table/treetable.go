@@ -13,6 +13,7 @@ import (
 )
 
 var _ structures.Structure[int] = NewTreeTable[wrapper.Int, int]()
+var _ BaseTable[wrapper.Int, int] = NewTreeTable[wrapper.Int, int]()
 var _ Table[wrapper.Int, int] = NewTreeTable[wrapper.Int, int]()
 
 // TreeTable provides a generic table implemented through a [tree.BinaryTree].

@@ -10,9 +10,8 @@ import (
 	"github.com/potex02/structures/util/wrapper"
 )
 
-const obj uint8 = 0
-
 var _ structures.Structure[wrapper.Int] = NewHashSet[wrapper.Int]()
+var _ BaseSet[wrapper.Int] = NewHashSet[wrapper.Int]()
 var _ Set[wrapper.Int] = NewHashSet[wrapper.Int]()
 
 // HashSet provides a generic set implemented through a [table.HashTable].
@@ -36,7 +35,11 @@ func NewHashSet[T util.Hasher](c ...T) *HashSet[T] {
 func NewHashSetFromSlice[T util.Hasher](c []T) *HashSet[T] {
 
 	set := &HashSet[T]{objects: table.NewHashTable[T, uint8]()}
-	set.AddSlice(c)
+	if len(c) != 0 {
+
+		set.AddSlice(c)
+
+	}
 	return set
 
 }
@@ -101,11 +104,9 @@ func (s *HashSet[T]) Remove(e T) bool {
 // This method should be used to remove elements. Use Iter insted.
 func (s *HashSet[T]) Each(fun func(element T)) {
 
-	for i := s.objects.Iter(); !i.End(); i = i.Next() {
-
-		fun(i.Key())
-
-	}
+	s.objects.Each(func(key T, element uint8) {
+		fun(key)
+	})
 
 }
 
@@ -138,7 +139,8 @@ func (s *HashSet[T]) Iter() Iterator[T] {
 // Equal returns true if s and st are both sets and have the same lengtha nd contains the same elements.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st.
+// Equal does not take into account the effective type of st. This means that if st is a [TreeSet],
+// but the elements of s and the elements of st are equals, this method returns anyway true.
 func (s *HashSet[T]) Equal(st any) bool {
 
 	set, ok := st.(Set[T])

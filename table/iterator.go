@@ -12,7 +12,7 @@ var _ Iterator[wrapper.Int, int] = NewTreeTableIterator[wrapper.Int, int](NewTre
 var _ Iterator[wrapper.Int, int] = NewMultiHashTableIterator[wrapper.Int, int](NewMultiHashTable[wrapper.Int, int]())
 var _ Iterator[wrapper.Int, int] = &endIterator[wrapper.Int, int]{}
 
-// Iterator provides the methods to iterate over a [Table].
+// Iterator provides the methods to iterate over a [Table] or a [MultiTable].
 type Iterator[K util.Comparer, T any] interface {
 	// Elements returns the element of the iterator.
 	Element() T
@@ -160,7 +160,7 @@ func (i *HashTableIterator[K, T]) nextKey() Iterator[K, T] {
 
 }
 
-// TreeTableIterator is an iterator of an [TreeTable].
+// TreeTableIterator is an iterator of a [TreeTable].
 type TreeTableIterator[K util.Comparer, T any] struct {
 	// contains filtered or unexported fields
 	table    *TreeTable[K, T]
@@ -250,7 +250,7 @@ func (i *TreeTableIterator[K, T]) End() bool {
 
 }
 
-// MultiHashTableIterator is an iterator of an [MultiHashTable].
+// MultiHashTableIterator is an iterator of a [MultiHashTable].
 type MultiHashTableIterator[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	table    *MultiHashTable[K, T]
@@ -360,7 +360,7 @@ func (i *MultiHashTableIterator[K, T]) nextKey() Iterator[K, T] {
 
 }
 
-// MultiTreeTableIterator is an iterator of an [MultiTreeTable].
+// MultiTreeTableIterator is an iterator of a [MultiTreeTable].
 type MultiTreeTableIterator[K util.Comparer, T any] struct {
 	// contains filtered or unexported fields
 	table    *MultiTreeTable[K, T]

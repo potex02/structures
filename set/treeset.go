@@ -2,6 +2,7 @@ package set
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
 
 	"github.com/potex02/structures"
@@ -11,6 +12,7 @@ import (
 )
 
 var _ structures.Structure[wrapper.Int] = NewHashSet[wrapper.Int]()
+var _ BaseSet[wrapper.Int] = NewTreeSet[wrapper.Int]()
 var _ Set[wrapper.Int] = NewTreeSet[wrapper.Int]()
 
 // TreeSet provides a generic set implemented through a [tree.BinaryTree].
@@ -35,7 +37,11 @@ func NewTreeSet[T util.Comparer](c ...T) *TreeSet[T] {
 func NewTreeSetFromSlice[T util.Comparer](c []T) *TreeSet[T] {
 
 	set := &TreeSet[T]{objects: tree.NewBinaryTree[T]()}
-	set.AddSlice(c)
+	if len(c) != 0 {
+
+		set.AddSlice(c)
+
+	}
 	return set
 
 }
@@ -80,8 +86,7 @@ func (s *TreeSet[T]) AddSlice(e []T) {
 
 	for _, i := range e {
 
-		found := s.objects.Any(s.objects.Root(), func(j *tree.Node[T]) bool { return i.Compare(j.Element()) == 0 })
-		if !found {
+		if !s.Contains(i) {
 			s.objects.Add(i)
 		}
 
@@ -138,7 +143,8 @@ func (s *TreeSet[T]) Iter() Iterator[T] {
 // Equal returns true if s and st are both sets and have the same length and contains the same elements.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st.
+// Equal does not take into account the effective type of st. This means that if st is a [HashSet],
+// but the elements of s and the elements of st are equals, this method returns anyway true.
 func (s *TreeSet[T]) Equal(st any) bool {
 
 	set, ok := st.(Set[T])
@@ -203,7 +209,9 @@ func (s *TreeSet[T]) Hash() string {
 // The result of this method is of type [Set], but the effective table which is created is an [TreeSet].
 func (s *TreeSet[T]) Copy() Set[T] {
 
-	return NewTreeSetFromSlice(s.ToSlice())
+	slice := s.ToSlice()
+	rand.Shuffle(len(slice), func(i, j int) { slice[i], slice[j] = slice[j], slice[i] })
+	return NewTreeSetFromSlice(slice)
 
 }
 
