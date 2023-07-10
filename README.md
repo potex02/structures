@@ -37,6 +37,7 @@ For now, the only available structures are the:
 - Queues:
 	- ArrayQueue;
 	- LinkedQueue;
+	- PriorityQueue.
 - Double queues:
 	- DoubleArrayQueue;
 	- DoubleLinkedQueue;
@@ -55,6 +56,3 @@ For now, the only available structures are the:
 - Trees:
 	- BinaryTree;
 	- N-aryTtree.
-
-- To be added:
-	- PriorityQueue.
