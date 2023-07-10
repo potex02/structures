@@ -1,7 +1,6 @@
 package stack
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -61,17 +60,17 @@ func (s *LinkedStack[T]) IsEmpty() bool {
 }
 
 // Top returns the top element of s.
-// If s is empty, the method returns an error.
-func (s *LinkedStack[T]) Top() (T, error) {
+// The method returns false if s is empty.
+func (s *LinkedStack[T]) Top() (T, bool) {
 
 	if s.IsEmpty() {
 
 		var result T
 
-		return result, errors.New("Empty stack")
+		return result, false
 
 	}
-	return s.top.Element(), nil
+	return s.top.Element(), true
 
 }
 
@@ -106,14 +105,14 @@ func (s *LinkedStack[T]) Push(e ...T) {
 }
 
 // Pop removes an element from the top of s and returns the removed element.
-// If s is empty, the method returns an error.
-func (s *LinkedStack[T]) Pop() (T, error) {
+// The method returns false if s is empty.
+func (s *LinkedStack[T]) Pop() (T, bool) {
 
 	var result T
 
 	if s.IsEmpty() {
 
-		return result, errors.New("Empty stack")
+		return result, false
 
 	}
 	result = s.top.Element()
@@ -127,7 +126,7 @@ func (s *LinkedStack[T]) Pop() (T, error) {
 		s.Clear()
 
 	}
-	return result, nil
+	return result, true
 
 }
 

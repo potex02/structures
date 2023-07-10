@@ -1,7 +1,6 @@
 package stack
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -53,16 +52,16 @@ func (s *ArrayStack[T]) IsEmpty() bool {
 }
 
 // Top returns the top element of s.
-// If s is empty, the method returns an error.
-func (s *ArrayStack[T]) Top() (T, error) {
+// The method returns false if s is empty.
+func (s *ArrayStack[T]) Top() (T, bool) {
 
 	result, err := s.objects.Get(s.Len() - 1)
 	if err != nil {
 
-		return result, errors.New("Empty stack")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
@@ -81,16 +80,16 @@ func (s *ArrayStack[T]) Push(e ...T) {
 }
 
 // Pop removes an element from the top of s and returns the removed element.
-// If s is empty, the method returns an error.
-func (s *ArrayStack[T]) Pop() (T, error) {
+// The method returns false if s is empty.
+func (s *ArrayStack[T]) Pop() (T, bool) {
 
 	result, err := s.objects.Remove(s.Len() - 1)
 	if err != nil {
 
-		return result, errors.New("Empty stack")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 

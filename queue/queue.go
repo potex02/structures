@@ -11,16 +11,16 @@ import "github.com/potex02/structures"
 type Queue[T any] interface {
 	structures.Structure[T]
 	// Head returns the head element of the queue.
-	// If the queue is empty, the method returns an error.
-	Head() (T, error)
+	// The method returns false if the queue is empty.
+	Head() (T, bool)
 	// Tail returns the tail element of the queue.
-	// If the queue is empty, the method returns an error.
-	Tail() (T, error)
+	// The method returns false if the queue is empty.
+	Tail() (T, bool)
 	// Push adds the elements e at the tail of the queue.
 	Push(e ...T)
 	// Pop removes an element from the head of the queue and returns the removed element.
-	// If the queue is empty, the method returns an error.
-	Pop() (T, error)
+	// The method returns false if the queue is empty.
+	Pop() (T, bool)
 }
 
 // DoubleQueue provides all methods to use a generic double queue.
@@ -31,19 +31,19 @@ type Queue[T any] interface {
 type DoubleQueue[T any] interface {
 	structures.Structure[T]
 	// Head returns the head element of the queue.
-	// If the queue is empty, the method returns an error.
-	Head() (T, error)
+	// The method returns false if the queue is empty.
+	Head() (T, bool)
 	// Tail returns the tail element of the queue.
-	// If the queue is empty, the method returns an error.
-	Tail() (T, error)
+	// The method returns false if the queue is empty.
+	Tail() (T, bool)
 	// PushHead adds the elements e at the head of the queue.
 	PushHead(e ...T)
 	// PushTail adds the elements e at the tail of the queue.
 	PushTail(e ...T)
 	// PopHead removes an element from the head of the queue and returns the removed element.
-	// If the queue is empty, the method returns an error.
-	PopHead() (T, error)
+	// The method returns false if the queue is empty.
+	PopHead() (T, bool)
 	// PopTail removes an element from the tail of the queue and returns the removed element.
-	// If the queue is empty, the method returns an error.
-	PopTail() (T, error)
+	// The method returns false if the queue is empty.
+	PopTail() (T, bool)
 }

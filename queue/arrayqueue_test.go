@@ -53,42 +53,42 @@ func TestHeadTailArrayQueue(t *testing.T) {
 
 	var queue *ArrayQueue[float32] = NewArrayQueue[float32]()
 
-	if _, err := queue.Head(); err == nil {
+	if _, ok := queue.Head(); ok {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	if _, err := queue.Tail(); err == nil {
+	if _, ok := queue.Tail(); ok {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
 	queue = NewArrayQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
-	head, err := queue.Head()
+	head, ok := queue.Head()
 	if head != 1.3 {
 
-		t.Log("Head is", head)
+		t.Log("head is", head)
 		t.Fail()
 
 	}
-	if err != nil {
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
-	tail, err := queue.Tail()
+	tail, ok := queue.Tail()
 	if tail != -4.0 {
 
-		t.Log("Tail is", tail)
+		t.Log("tail is", tail)
 		t.Fail()
 
 	}
-	if err != nil {
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -98,10 +98,10 @@ func TestPopArrayQueue(t *testing.T) {
 
 	var queue Queue[float32] = NewArrayQueue[float32](1.3, -2.5)
 
-	e, err := queue.Pop()
-	if err != nil {
+	e, ok := queue.Pop()
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -113,14 +113,14 @@ func TestPopArrayQueue(t *testing.T) {
 	}
 	if queue.Len() != 1 {
 
-		t.Log("Size is not 1")
+		t.Log("length is not 1")
 		t.Fail()
 
 	}
-	e, err = queue.Pop()
-	if err != nil {
+	e, ok = queue.Pop()
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -132,13 +132,13 @@ func TestPopArrayQueue(t *testing.T) {
 	}
 	if !queue.IsEmpty() {
 
-		t.Log("queue not empty")
+		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	if _, err := queue.Pop(); err == nil {
+	if _, ok := queue.Pop(); ok {
 
-		t.Log("err is nil")
+		t.Log("the queue is not empty")
 		t.Fail()
 
 	}

@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -60,32 +59,32 @@ func (q *LinkedQueue[T]) IsEmpty() bool {
 }
 
 // Head returns the head element of q.
-// If q is empty, the method returns an error.
-func (q *LinkedQueue[T]) Head() (T, error) {
+// The method returns false if q is empty.
+func (q *LinkedQueue[T]) Head() (T, bool) {
 
 	if q.IsEmpty() {
 
 		var result T
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return q.head.Element(), nil
+	return q.head.Element(), true
 
 }
 
 // Tail returns the tail element element of q.
-// If q is empty, the method returns an error.
-func (q *LinkedQueue[T]) Tail() (T, error) {
+// The method returns false if q is empty.
+func (q *LinkedQueue[T]) Tail() (T, bool) {
 
 	if q.IsEmpty() {
 
 		var result T
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return q.tail.Element(), nil
+	return q.tail.Element(), true
 
 }
 
@@ -134,14 +133,14 @@ func (q *LinkedQueue[T]) Push(e ...T) {
 }
 
 // Pop removes an element from the head of q and returns the removed element.
-// If q is empty, the method returns an error.
-func (q *LinkedQueue[T]) Pop() (T, error) {
+// The method returns false if q is empty.
+func (q *LinkedQueue[T]) Pop() (T, bool) {
 
 	var result T
 
 	if q.IsEmpty() {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
 	result = q.head.Element()
@@ -155,7 +154,7 @@ func (q *LinkedQueue[T]) Pop() (T, error) {
 		q.Clear()
 
 	}
-	return result, nil
+	return result, true
 
 }
 
@@ -171,7 +170,7 @@ func (q *LinkedQueue[T]) Clear() {
 // Equal returns true if q and st are both queues and their elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue],
+// Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue] or a [PriorityQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
 func (q *LinkedQueue[T]) Equal(st any) bool {
 

@@ -53,42 +53,42 @@ func TestHeadTailDoubleLinkedQueue(t *testing.T) {
 
 	var queue *DoubleLinkedQueue[float32] = NewDoubleLinkedQueue[float32]()
 
-	if _, err := queue.Head(); err == nil {
+	if _, ok := queue.Head(); ok {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
-	if _, err := queue.Tail(); err == nil {
+	if _, ok := queue.Tail(); ok {
 
 		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
 	queue = NewDoubleLinkedQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
-	head, err := queue.Head()
+	head, ok := queue.Head()
 	if head != 1.3 {
 
 		t.Log("Head is", head)
 		t.Fail()
 
 	}
-	if err != nil {
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
-	tail, err := queue.Tail()
+	tail, ok := queue.Tail()
 	if tail != -4.0 {
 
 		t.Log("Tail is", tail)
 		t.Fail()
 
 	}
-	if err != nil {
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -132,10 +132,10 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 
 	var queue DoubleQueue[float32] = NewDoubleLinkedQueue[float32](1.3, 3, -2.5)
 
-	e, err := queue.PopHead()
-	if err != nil {
+	e, ok := queue.PopHead()
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -147,14 +147,14 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 	}
 	if queue.Len() != 2 {
 
-		t.Log("Size is not 2")
+		t.Log("length is not 2")
 		t.Fail()
 
 	}
-	e, err = queue.PopTail()
-	if err != nil {
+	e, ok = queue.PopTail()
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -166,14 +166,14 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 	}
 	if queue.Len() != 1 {
 
-		t.Log("Size is not 1")
+		t.Log("length is not 1")
 		t.Fail()
 
 	}
-	e, err = queue.PopTail()
-	if err != nil {
+	e, ok = queue.PopTail()
+	if !ok {
 
-		t.Log("err is", err)
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
@@ -185,20 +185,20 @@ func TestPopDoubleLinkedyQueue(t *testing.T) {
 	}
 	if !queue.IsEmpty() {
 
-		t.Log("queue not empty")
+		t.Log("the queue is not empty")
 		t.Fail()
 
 	}
 	queue = NewDoubleLinkedQueue[float32]()
-	if _, err := queue.PopHead(); err == nil {
+	if _, ok := queue.PopHead(); ok {
 
-		t.Log("err is nil")
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}
-	if _, err := queue.PopTail(); err == nil {
+	if _, ok := queue.PopTail(); ok {
 
-		t.Log("err is nil")
+		t.Log("the queue is empty")
 		t.Fail()
 
 	}

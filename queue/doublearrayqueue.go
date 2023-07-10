@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -52,30 +51,30 @@ func (q *DoubleArrayQueue[T]) IsEmpty() bool {
 }
 
 // Head returns the head element of q.
-// If q is empty, the method returns an error.
-func (q *DoubleArrayQueue[T]) Head() (T, error) {
+// The method returns false if q is empty.
+func (q *DoubleArrayQueue[T]) Head() (T, bool) {
 
 	result, err := q.objects.Get(0)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
 // Tail returns the tail element element of q.
-// If q is empty, the method returns an error.
-func (q *DoubleArrayQueue[T]) Tail() (T, error) {
+// The method returns false if q is empty.
+func (q *DoubleArrayQueue[T]) Tail() (T, bool) {
 
 	result, err := q.objects.Get(q.Len() - 1)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
@@ -107,30 +106,30 @@ func (q *DoubleArrayQueue[T]) PushTail(e ...T) {
 }
 
 // PopHead removes an element from the head of q and returns the removed element.
-// If q is empty, the method returns an error.
-func (q *DoubleArrayQueue[T]) PopHead() (T, error) {
+// The method returns false if q is empty.
+func (q *DoubleArrayQueue[T]) PopHead() (T, bool) {
 
 	result, err := q.objects.Remove(0)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
 // PopTail removes an element from the tail of q and returns the removed element.
-// If q is empty, the method returns an error.
-func (q *DoubleArrayQueue[T]) PopTail() (T, error) {
+// The method returns false if q is empty.
+func (q *DoubleArrayQueue[T]) PopTail() (T, bool) {
 
 	result, err := q.objects.Remove(q.Len() - 1)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 

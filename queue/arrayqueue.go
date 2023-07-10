@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -52,30 +51,30 @@ func (q *ArrayQueue[T]) IsEmpty() bool {
 }
 
 // Head returns the head element of q.
-// If q is empty, the method returns an error.
-func (q *ArrayQueue[T]) Head() (T, error) {
+// The method returns false if q is empty.
+func (q *ArrayQueue[T]) Head() (T, bool) {
 
 	result, err := q.objects.Get(0)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
 // Tail returns the tail element element of q.
-// If q is empty, the method returns an error.
-func (q *ArrayQueue[T]) Tail() (T, error) {
+// The method returns false if q is empty.
+func (q *ArrayQueue[T]) Tail() (T, bool) {
 
 	result, err := q.objects.Get(q.Len() - 1)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
@@ -94,16 +93,16 @@ func (q *ArrayQueue[T]) Push(e ...T) {
 }
 
 // Pop removes an element from the head of q and returns the removed element.
-// If q is empty, the method returns an error.
-func (q *ArrayQueue[T]) Pop() (T, error) {
+// The method returns false if q is empty.
+func (q *ArrayQueue[T]) Pop() (T, bool) {
 
 	result, err := q.objects.Remove(0)
 	if err != nil {
 
-		return result, errors.New("Empty queue")
+		return result, false
 
 	}
-	return result, err
+	return result, true
 
 }
 
@@ -117,7 +116,7 @@ func (q *ArrayQueue[T]) Clear() {
 // Equal returns true if q and st are both queues and their elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is a [LinkedQueue],
+// Equal does not take into account the effective type of st. This means that if st is a [LinkedQueue] or a [PriorityQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
 func (q *ArrayQueue[T]) Equal(st any) bool {
 
