@@ -118,7 +118,7 @@ func (s *MultiHashSet[T]) RemoveAll(e T) {
 // This method should be used to remove elements. Use Iter insted.
 func (s *MultiHashSet[T]) Each(fun func(element T)) {
 
-	s.objects.Each(func(key T, element uint8) {
+	s.objects.Each(func(key T, _ uint8) {
 		fun(key)
 	})
 
@@ -128,7 +128,7 @@ func (s *MultiHashSet[T]) Each(fun func(element T)) {
 func (s *MultiHashSet[T]) Count(e T) int {
 
 	result := 0
-	s.objects.Each(func(key T, element uint8) {
+	s.objects.Each(func(key T, _ uint8) {
 		if e.Compare(key) == 0 {
 			result++
 		}
@@ -237,9 +237,15 @@ func (s *MultiHashSet[T]) Hash() string {
 
 // Copy returns a set containing a copy of the elements of s.
 // The result of this method is of type [Set], but the effective table which is created is an [MultiHashSet].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (s *MultiHashSet[T]) Copy() MultiSet[T] {
 
-	return NewMultiHashSetFromSlice(s.ToSlice())
+	result := NewMultiHashSet[T]()
+	s.Each(func(element T) {
+		result.Add(util.Copy(element))
+	})
+	return result
 
 }
 

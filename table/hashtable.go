@@ -110,7 +110,7 @@ func (t *HashTable[K, T]) ContainsElement(e T) bool {
 func (t *HashTable[K, T]) Keys() list.List[K] {
 
 	list := list.NewArrayList[K]()
-	t.Each(func(key K, element T) {
+	t.Each(func(key K, _ T) {
 		list.Add(key)
 	})
 	return list
@@ -121,7 +121,7 @@ func (t *HashTable[K, T]) Keys() list.List[K] {
 func (t *HashTable[K, T]) Elements() list.List[T] {
 
 	list := list.NewArrayList[T]()
-	t.Each(func(key K, element T) {
+	t.Each(func(_ K, element T) {
 		list.Add(element)
 	})
 	return list
@@ -246,7 +246,7 @@ func (t *HashTable[K, T]) Each(fun func(key K, element T)) {
 
 	for _, i := range t.objects {
 
-		i.Each(func(index int, element *Entry[K, T]) {
+		i.Each(func(_ int, element *Entry[K, T]) {
 
 			fun(element.Key(), element.Element())
 
@@ -352,11 +352,13 @@ func (t *HashTable[K, T]) Hash() string {
 
 // Copy returns a table containing a copy of the elements of t.
 // The result of this method is of type [Table], but the effective table which is created is an [HashTable].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (t *HashTable[K, T]) Copy() Table[K, T] {
 
 	table := NewHashTable[K, T]()
 	t.Each(func(key K, element T) {
-		table.Put(key, element)
+		table.Put(key, util.Copy(element))
 	})
 	return table
 

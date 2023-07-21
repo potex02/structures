@@ -18,7 +18,7 @@ type Stream[T any] struct {
 func NewStream[T any](list List[T], constructor reflect.Value) *Stream[T] {
 
 	objects := make([]T, 0)
-	list.Each(func(index int, element T) {
+	list.Each(func(_ int, element T) {
 		objects = append(objects, element)
 	})
 	return &Stream[T]{objects: objects, constructor: constructor}

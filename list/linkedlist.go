@@ -487,9 +487,15 @@ func (l *LinkedList[T]) Hash() string {
 
 // Copy returns a list containing a copy of the elements of l.
 // The result of this method is of type [List], but the effective list which is created is a [LinkedList].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (l *LinkedList[T]) Copy() List[T] {
 
-	return NewLinkedListFromSlice(l.ToSlice())
+	result := NewLinkedList[T]()
+	l.Each(func(_ int, element T) {
+		result.Add(util.Copy(element))
+	})
+	return result
 
 }
 

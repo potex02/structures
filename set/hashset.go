@@ -104,7 +104,7 @@ func (s *HashSet[T]) Remove(e T) bool {
 // This method should be used to remove elements. Use Iter insted.
 func (s *HashSet[T]) Each(fun func(element T)) {
 
-	s.objects.Each(func(key T, element uint8) {
+	s.objects.Each(func(key T, _ uint8) {
 		fun(key)
 	})
 
@@ -203,9 +203,15 @@ func (s *HashSet[T]) Hash() string {
 
 // Copy returns a set containing a copy of the elements of s.
 // The result of this method is of type [Set], but the effective table which is created is an [HashSet].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (s *HashSet[T]) Copy() Set[T] {
 
-	return NewHashSetFromSlice(s.ToSlice())
+	result := NewHashSet[T]()
+	s.Each(func(element T) {
+		result.Add(util.Copy(element))
+	})
+	return result
 
 }
 

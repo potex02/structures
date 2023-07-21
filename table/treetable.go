@@ -289,19 +289,19 @@ func (t *TreeTable[K, T]) Hash() string {
 
 // Copy returns a table containing a copy of the elements of t.
 // The result of this method is of type [Table], but the effective table which is created is an [TreeTable].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (t *TreeTable[K, T]) Copy() Table[K, T] {
 
 	slice := t.objects.ToSlice()
 	rand.Shuffle(len(slice), func(i, j int) { slice[i], slice[j] = slice[j], slice[i] })
-	keys := make([]K, len(slice))
-	elements := make([]T, len(slice))
-	for i := range slice {
+	result := NewTreeTable[K, T]()
+	for _, i := range slice {
 
-		keys[i] = slice[i].Key()
-		elements[i] = slice[i].Element()
+		result.Put(i.Key(), util.Copy(i.Element()))
 
 	}
-	return NewTreeTableFromSlice(keys, elements)
+	return result
 
 }
 

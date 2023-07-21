@@ -207,11 +207,17 @@ func (s *TreeSet[T]) Hash() string {
 
 // Copy returns a set containing a copy of the elements of s.
 // The result of this method is of type [Set], but the effective table which is created is an [TreeSet].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (s *TreeSet[T]) Copy() Set[T] {
 
 	slice := s.ToSlice()
 	rand.Shuffle(len(slice), func(i, j int) { slice[i], slice[j] = slice[j], slice[i] })
-	return NewTreeSetFromSlice(slice)
+	result := NewTreeSet[T]()
+	for _, i := range slice {
+		result.Add(util.Copy(i))
+	}
+	return result
 
 }
 

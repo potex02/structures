@@ -250,11 +250,17 @@ func (s *MultiTreeSet[T]) Hash() string {
 
 // Copy returns a set containing a copy of the elements of s.
 // The result of this method is of type [Set], but the effective table which is created is an [MultiTreeSet].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (s *MultiTreeSet[T]) Copy() MultiSet[T] {
 
 	slice := s.ToSlice()
 	rand.Shuffle(len(slice), func(i, j int) { slice[i], slice[j] = slice[j], slice[i] })
-	return NewMultiTreeSetFromSlice(slice)
+	result := NewMultiTreeSet[T]()
+	for _, i := range slice {
+		result.Add(util.Copy(i))
+	}
+	return result
 
 }
 

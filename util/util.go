@@ -26,6 +26,12 @@ type Hasher interface {
 	Hash() string
 }
 
+// Copier defines a method that permits to make copies of a variable.
+type Copier[T any] interface {
+	// Copy returns a copy of the receiver.
+	Copy() T
+}
+
 // EqualFunction generate a function that can be used to check the equality of e and other.
 //
 // if T implements [Equaler], the resulting function use the Equal method,
@@ -44,5 +50,20 @@ func EqualFunction(e any) func(other any) bool {
 		return reflect.DeepEqual(e, other)
 
 	}
+
+}
+
+// Copy returns a copy of e.
+//
+// if T implements [Copier], the method returns e.Copy(),
+// otherwhise it returns e.
+func Copy[T any](e T) T {
+
+	if element, ok := interface{}(e).(Copier[T]); ok {
+
+		return element.Copy()
+
+	}
+	return e
 
 }

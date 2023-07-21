@@ -41,9 +41,8 @@ type BaseSet[T util.Comparer] interface {
 //
 // The check on the equality of the elements is done with the Compare method.
 type Set[T util.Comparer] interface {
+	util.Copier[Set[T]]
 	BaseSet[T]
-	// Copy returns a copy of the set.
-	Copy() Set[T]
 }
 
 // MultiSet provides all methods to use a generic dynamic set with duplicate elements.
@@ -51,6 +50,7 @@ type Set[T util.Comparer] interface {
 //
 // The check on the equality of the elements is done with the Compare method.
 type MultiSet[T util.Comparer] interface {
+	util.Copier[MultiSet[T]]
 	BaseSet[T]
 	// RemoveAll removes all occurrences of e from the set.
 	RemoveAll(e T)
@@ -58,8 +58,6 @@ type MultiSet[T util.Comparer] interface {
 	Count(e T) int
 	// ToSet returns a [Set] containing the elements of the multiset.
 	ToSet() Set[T]
-	// Copy returns a copy of the set.
-	Copy() MultiSet[T]
 }
 
 const obj uint8 = 0

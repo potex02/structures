@@ -3,6 +3,7 @@ package list
 
 import (
 	"github.com/potex02/structures"
+	"github.com/potex02/structures/util"
 )
 
 // List provides all methods to use a generic dynamic list.
@@ -14,6 +15,7 @@ import (
 // otherwise it is done with [reflect.DeepEqual].
 type List[T any] interface {
 	structures.Structure[T]
+	util.Copier[List[T]]
 	// Contains returns if e is present in the list.
 	Contains(e T) bool
 	// IndexOf returns the first position of e in the list.
@@ -72,8 +74,6 @@ type List[T any] interface {
 	//		// Code
 	//	}
 	IterReverse() Iterator[T]
-	// Copy returns a copy of the list.
-	Copy() List[T]
 }
 
 func rangeCheck[T any](list List[T], index int) bool {

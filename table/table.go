@@ -49,6 +49,7 @@ type BaseTable[K util.Comparer, T any] interface {
 // otherwise it is done with [reflect.DeepEqual].
 type Table[K util.Comparer, T any] interface {
 	BaseTable[K, T]
+	util.Copier[Table[K, T]]
 	// Get returns the element associated at the key.
 	// The method returns false if the key is not found.
 	Get(key K) (T, bool)
@@ -58,8 +59,6 @@ type Table[K util.Comparer, T any] interface {
 	// Remove removes the key from the table and returns the value associated at the key.
 	// It returns false if the the key does not exists.
 	Remove(key K) (T, bool)
-	// Copy returns a table containing a copy of the elements of the table.
-	Copy() Table[K, T]
 }
 
 // MultiTable provides all methods to use a generic dynamic table with duplicate keys.
@@ -71,6 +70,7 @@ type Table[K util.Comparer, T any] interface {
 // otherwise it is done with [reflect.DeepEqual].
 type MultiTable[K util.Comparer, T any] interface {
 	BaseTable[K, T]
+	util.Copier[MultiTable[K, T]]
 	// Contains returns true if the key is present in the table associated with the element e.
 	Contains(key K, e T) bool
 	// Get returns a slice cotaining the elements associated at the key.
@@ -86,6 +86,4 @@ type MultiTable[K util.Comparer, T any] interface {
 	Remove(key K, e T) bool
 	// RemoveKey remove all elements associated at the key and returns the slice of removed values.
 	RemoveKey(key K) []T
-	// Copy returns a table containing a copy of the elements of the table.
-	Copy() MultiTable[K, T]
 }

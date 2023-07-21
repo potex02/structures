@@ -392,9 +392,15 @@ func (l *ArrayList[T]) Hash() string {
 
 // Copy returns a list containing a copy of the elements of l.
 // The result of this method is of type [List], but the effective list which is created is an [ArrayList].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (l *ArrayList[T]) Copy() List[T] {
 
-	return NewArrayListFromSlice(l.ToSlice())
+	result := NewArrayList[T]()
+	l.Each(func(_ int, element T) {
+		result.Add(util.Copy(element))
+	})
+	return result
 
 }
 

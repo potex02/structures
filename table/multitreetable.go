@@ -324,19 +324,19 @@ func (t *MultiTreeTable[K, T]) Hash() string {
 
 // Copy returns a multitable containing a copy of the elements of t.
 // The result of this method is of type [MultiTable], but the effective table which is created is an [MultiTreeTable].
+//
+// This method uses [util.Copy] to make copies of the elements.
 func (t *MultiTreeTable[K, T]) Copy() MultiTable[K, T] {
 
 	slice := t.objects.ToSlice()
 	rand.Shuffle(len(slice), func(i, j int) { slice[i], slice[j] = slice[j], slice[i] })
-	keys := make([]K, len(slice))
-	elements := make([]T, len(slice))
-	for i := range slice {
+	result := NewMultiTreeTable[K, T]()
+	for _, i := range slice {
 
-		keys[i] = slice[i].Key()
-		elements[i] = slice[i].Element()
+		result.Put(i.Key(), util.Copy(i.Element()))
 
 	}
-	return NewMultiTreeTableFromSlice(keys, elements)
+	return result
 
 }
 
