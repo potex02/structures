@@ -53,6 +53,13 @@ func (i Int) Hash() string {
 
 }
 
+// Copy returns a copy of i.
+func (i Int) Copy() Wrapper[int] {
+
+	return i
+
+}
+
 // ToValue returns the wrapped value by i.
 func (i Int) ToValue() int {
 
@@ -101,6 +108,13 @@ func (i Int8) Compare(o any) int {
 func (i Int8) Hash() string {
 
 	return fmt.Sprintf("%v", i)
+
+}
+
+// Copy returns a copy of i.
+func (i Int8) Copy() Wrapper[int8] {
+
+	return i
 
 }
 
@@ -155,6 +169,13 @@ func (i Int16) Hash() string {
 
 }
 
+// Copy returns a copy of i.
+func (i Int16) Copy() Wrapper[int16] {
+
+	return i
+
+}
+
 // ToValue returns the wrapped value by i.
 func (i Int16) ToValue() int16 {
 
@@ -206,6 +227,13 @@ func (i Int32) Hash() string {
 
 }
 
+// Copy returns a copy of i.
+func (i Int32) Copy() Wrapper[int32] {
+
+	return i
+
+}
+
 // ToValue returns the wrapped value by i.
 func (i Int32) ToValue() int32 {
 
@@ -254,6 +282,13 @@ func (i Int64) Compare(o any) int {
 func (i Int64) Hash() string {
 
 	return fmt.Sprintf("%v", i)
+
+}
+
+// Copy returns a copy of i.
+func (i Int64) Copy() Wrapper[int64] {
+
+	return i
 
 }
 

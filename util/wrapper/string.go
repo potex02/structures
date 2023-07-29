@@ -193,6 +193,13 @@ func (s String) Hash() string {
 
 }
 
+// Copy returns a copy of s.
+func (s String) Copy() Wrapper[string] {
+
+	return s
+
+}
+
 // ToValue returns the wrapped value by s.
 func (s String) ToValue() string {
 

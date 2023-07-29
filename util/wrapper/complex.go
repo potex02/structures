@@ -75,6 +75,13 @@ func (c Complex64) Hash() string {
 
 }
 
+// Copy returns a copy of c.
+func (c Complex64) Copy() Wrapper[complex64] {
+
+	return c
+
+}
+
 // ToValue returns the wrapped value by c.
 func (c Complex64) ToValue() complex64 {
 
@@ -146,6 +153,13 @@ func (c Complex128) Compare(o any) int {
 func (c Complex128) Hash() string {
 
 	return fmt.Sprintf("%v", c.Norm())
+
+}
+
+// Copy returns a copy of c.
+func (c Complex128) Copy() Wrapper[complex128] {
+
+	return c
 
 }
 

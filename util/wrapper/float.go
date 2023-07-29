@@ -52,6 +52,13 @@ func (f Float32) Hash() string {
 
 }
 
+// Copy returns a copy of f.
+func (f Float32) Copy() Wrapper[float32] {
+
+	return f
+
+}
+
 // ToValue returns the wrapped value by f.
 func (f Float32) ToValue() float32 {
 
@@ -100,6 +107,13 @@ func (f Float64) Compare(o any) int {
 func (f Float64) Hash() string {
 
 	return fmt.Sprintf("%v", math.Floor(float64(f)))
+
+}
+
+// Copy returns a copy of f.
+func (f Float64) Copy() Wrapper[float64] {
+
+	return f
 
 }
 

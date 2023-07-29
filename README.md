@@ -1,6 +1,4 @@
 [![GoDoc](https://godoc.org/github.com/potex02/structures?status.svg)](https://godoc.org/github.com/potex02/structures)
-### Note: this module is still under development.
-### Future releases can break compatibility with previous ones.
 # Structures
 An implementation of the data structures in Go using generics types.<br/>
 The module provides the Structure interface which is implemented by all the the defined data structures:

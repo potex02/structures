@@ -54,6 +54,13 @@ func (u Uint) Hash() string {
 
 }
 
+// Copy returns a copy of u.
+func (u Uint) Copy() Wrapper[uint] {
+
+	return u
+
+}
+
 // ToValue returns the wrapped value by u.
 func (u Uint) ToValue() uint {
 
@@ -102,6 +109,13 @@ func (u Uint8) Compare(o any) int {
 func (u Uint8) Hash() string {
 
 	return fmt.Sprintf("%v", u)
+
+}
+
+// Copy returns a copy of u.
+func (u Uint8) Copy() Wrapper[uint8] {
+
+	return u
 
 }
 
@@ -156,6 +170,13 @@ func (u Uint16) Hash() string {
 
 }
 
+// Copy returns a copy of u.
+func (u Uint16) Copy() Wrapper[uint16] {
+
+	return u
+
+}
+
 // ToValue returns the wrapped value by u.
 func (u Uint16) ToValue() uint16 {
 
@@ -204,6 +225,13 @@ func (u Uint32) Compare(o any) int {
 func (u Uint32) Hash() string {
 
 	return fmt.Sprintf("%v", u)
+
+}
+
+// Copy returns a copy of u.
+func (u Uint32) Copy() Wrapper[uint32] {
+
+	return u
 
 }
 
@@ -258,6 +286,13 @@ func (u Uint64) Hash() string {
 
 }
 
+// Copy returns a copy of u.
+func (u Uint64) Copy() Wrapper[uint64] {
+
+	return u
+
+}
+
 // ToValue returns the wrapped value by u.
 func (u Uint64) ToValue() uint64 {
 
@@ -306,6 +341,13 @@ func (u UintPtr) Compare(o any) int {
 func (u UintPtr) Hash() string {
 
 	return fmt.Sprintf("%v", u)
+
+}
+
+// Copy returns a copy of u.
+func (u UintPtr) Copy() Wrapper[uintptr] {
+
+	return u
 
 }
 

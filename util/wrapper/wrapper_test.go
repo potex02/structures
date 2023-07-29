@@ -57,9 +57,14 @@ func TestNewDefaultWrapper(t *testing.T) {
 		t.Fail()
 
 	}
+	if !wrapper.Copy().Equal(wrapper) {
+
+		t.Log("The copy is", wrapper.Copy())
+		t.Fail()
+
+	}
 
 }
-
 func TestNewWrapper(t *testing.T) {
 
 	var equal = func(w Wrapper[test], o any) bool {
@@ -89,7 +94,12 @@ func TestNewWrapper(t *testing.T) {
 		return fmt.Sprintf("%v", Float32(w.ToValue().a)*w.ToValue().b)
 
 	}
-	var builder WrapperBuilder[test] = NewWrapperBuilder[test](equal, compare, hash)
+	var copy = func(w Wrapper[test]) test {
+
+		return test{a: w.ToValue().a, b: 0}
+
+	}
+	var builder WrapperBuilder[test] = NewWrapperBuilder[test](equal, compare, hash, copy)
 	var wrapper Wrapper[test] = builder.Wrap(test{a: 1, b: -4.5})
 
 	if wrapper.ToValue().a != 1 {
@@ -143,6 +153,12 @@ func TestNewWrapper(t *testing.T) {
 	if wrapper.Hash() != "-4.5" {
 
 		t.Log("hash is not \"-4.5\"")
+		t.Fail()
+
+	}
+	if !wrapper.Copy().Equal(builder.Wrap(test{a: 1, b: 0})) {
+
+		t.Log("The copy is", wrapper.Copy())
 		t.Fail()
 
 	}

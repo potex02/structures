@@ -50,6 +50,13 @@ func (b Bool) Hash() string {
 
 }
 
+// Copy returns a copy of b.
+func (b Bool) Copy() Wrapper[bool] {
+
+	return b
+
+}
+
 // ToValue returns the wrapped value by b.
 func (b Bool) ToValue() bool {
 
