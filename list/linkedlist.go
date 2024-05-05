@@ -129,7 +129,7 @@ func (l *LinkedList[T]) ToSlice() []T {
 // It returns an error if the the index is out of bounds.
 func (l *LinkedList[T]) Get(index int) (T, error) {
 
-	if !rangeCheck[T](l, index) {
+	if !rangeCheck[T](l, &index) {
 
 		var result T
 
@@ -137,6 +137,34 @@ func (l *LinkedList[T]) Get(index int) (T, error) {
 
 	}
 	return l.getElementAtIndex(index).Element(), nil
+
+}
+
+// GetDefault returns the elements at the specifies index.
+// It returns the T zero value if the the index is out of bounds.
+func (l *LinkedList[T]) GetDefault(index int) T {
+
+	if !rangeCheck[T](l, &index) {
+
+		var result T
+
+		return result
+
+	}
+	return l.getElementAtIndex(index).Element()
+
+}
+
+// GetDefaultValue returns the elements at the specifies index.
+// It returns value if the the index is out of bounds.
+func (l *LinkedList[T]) GetDefaultValue(index int, value T) T {
+
+	if !rangeCheck[T](l, &index) {
+
+		return value
+
+	}
+	return l.getElementAtIndex(index).Element()
 
 }
 
@@ -152,7 +180,7 @@ func (l *LinkedList[T]) Set(index int, e T) (T, error) {
 		return result, nil
 
 	}
-	if !rangeCheck[T](l, index) {
+	if !rangeCheck[T](l, &index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
 
@@ -255,7 +283,7 @@ func (l *LinkedList[T]) Remove(index int) (T, error) {
 
 	var result T
 
-	if !rangeCheck[T](l, index) {
+	if !rangeCheck[T](l, &index) {
 
 		return result, errors.New("Index " + strconv.Itoa(index) + " for size " + strconv.Itoa(l.len))
 

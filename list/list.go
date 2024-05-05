@@ -9,7 +9,7 @@ import (
 // List provides all methods to use a generic dynamic list.
 // A list contains all the methods of [structures.Structure].
 //
-// A list is indexed starting from 0.
+// A list is indexed starting from 0, but negative indexes are supported. Negative indexes start from the end, meaning that -1 corresponds to the last element.
 //
 // The check on the equality of the elements is done with the Equal method if T implements [util.Equaler],
 // otherwise it is done with [reflect.DeepEqual].
@@ -27,6 +27,12 @@ type List[T any] interface {
 	// Get returns the elements at the specifies index.
 	// It returns an error if the the index is out of bounds.
 	Get(index int) (T, error)
+	// GetDefault returns the elements at the specifies index.
+	// It returns the T zero value if the the index is out of bounds.
+	GetDefault(index int) T
+	// GetDefaultValue returns the elements at the specifies index.
+	// It returns value if the the index is out of bounds.
+	GetDefaultValue(index int, value T) T
 	// Set sets the value of element at the specified index and returns the overwritten value.
 	// It returns an error if the the index is out of bounds.
 	Set(index int, e T) (T, error)
@@ -76,8 +82,13 @@ type List[T any] interface {
 	IterReverse() Iterator[T]
 }
 
-func rangeCheck[T any](list List[T], index int) bool {
+func rangeCheck[T any](list List[T], index *int) bool {
 
-	return index >= 0 && index < list.Len()
+	if *index < 0 {
+
+		*index += list.Len()
+
+	}
+	return *index >= 0 && *index < list.Len()
 
 }

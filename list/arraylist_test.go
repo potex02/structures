@@ -127,15 +127,59 @@ func TestGetArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if _, err = list.Get(-1); err == nil {
+	e, err = list.Get(-1)
+	if err != nil {
 
 		t.Log("error is", err)
+		t.Fail()
+
+	}
+	if e != 5 {
+
+		t.Log("e is", e)
 		t.Fail()
 
 	}
 	if _, err = list.Get(4); err == nil {
 
 		t.Log("error is", err)
+		t.Fail()
+
+	}
+
+	if _, err = list.Get(-5); err == nil {
+
+		t.Log("error is", err)
+		t.Fail()
+
+	}
+
+}
+func TestGetDefaultArrayList(t *testing.T) {
+
+	var list List[int] = NewArrayList(1, 2, 3, 5)
+
+	if e := list.GetDefault(1); e != 2 {
+
+		t.Log("e is", e)
+		t.Fail()
+
+	}
+	if e := list.GetDefaultValue(-1, 4); e != 5 {
+
+		t.Log("e is", e)
+		t.Fail()
+
+	}
+	if e := list.GetDefaultValue(4, 10); e != 10 {
+
+		t.Log("e is", e)
+		t.Fail()
+
+	}
+	if e := list.GetDefault(-5); e != 0 {
+
+		t.Log("e is", e)
 		t.Fail()
 
 	}
@@ -171,9 +215,16 @@ func TestSetArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if _, err = list.Set(-1, -1); err == nil {
+	e, err = list.Set(-2, 10)
+	if err != nil {
 
 		t.Log("error is", err)
+		t.Fail()
+
+	}
+	if e != 5 {
+
+		t.Log("e is", e)
 		t.Fail()
 
 	}
@@ -183,7 +234,13 @@ func TestSetArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if !reflect.DeepEqual(list.objects, []int{1, 4, 3, 5, -1}) {
+	if _, err = list.Set(-10, 3); err == nil {
+
+		t.Log("error is", err)
+		t.Fail()
+
+	}
+	if !reflect.DeepEqual(list.objects, []int{1, 4, 3, 10, -1}) {
 
 		t.Log("list is", list)
 		t.Fail()
@@ -299,7 +356,7 @@ func TestAddSliceArrayList(t *testing.T) {
 }
 func TestRemoveArrayList(t *testing.T) {
 
-	var list *ArrayList[int] = NewArrayList(1, 2, 3, 5)
+	var list *LinkedList[int] = NewLinkedList(1, 2, 3, 5)
 
 	if !list.RemoveElement(2) {
 
@@ -311,7 +368,7 @@ func TestRemoveArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if !reflect.DeepEqual(list, NewArrayListFromSlice([]int{1, 3, 5})) {
+	if !reflect.DeepEqual(list, NewLinkedListFromSlice([]int{1, 3, 5})) {
 
 		t.Log("lists not equals")
 		t.Fail()
@@ -322,7 +379,22 @@ func TestRemoveArrayList(t *testing.T) {
 		t.Fail()
 
 	}
-	if !reflect.DeepEqual(list, NewArrayList(3, 5)) {
+	if _, err := list.Remove(-2); err != nil {
+
+		t.Fail()
+
+	}
+	if _, err := list.Remove(1); err == nil {
+
+		t.Fail()
+
+	}
+	if _, err := list.Remove(-2); err == nil {
+
+		t.Fail()
+
+	}
+	if !reflect.DeepEqual(list, NewLinkedList(5)) {
 
 		t.Log("lists not equals")
 		t.Fail()
