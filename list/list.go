@@ -83,12 +83,8 @@ type List[T any] interface {
 }
 
 func rangeCheck[T any](list List[T], index *int) bool {
-
 	if *index < 0 {
-
 		*index += list.Len()
-
 	}
 	return *index >= 0 && *index < list.Len()
-
 }
