@@ -62,35 +62,25 @@ type HashTableIterator[K util.Hasher, T any] struct {
 
 // NewHashTableIterator returns a new [HashTableIterator] associated at the table parameter.
 func NewHashTableIterator[K util.Hasher, T any](table *HashTable[K, T]) Iterator[K, T] {
-
 	if table.IsEmpty() {
-
 		return &endIterator[K, T]{}
-
 	}
 	keys := list.NewArrayList[string]()
 	for i := range table.objects {
-
 		keys.Add(i)
-
 	}
 	key, _ := keys.Get(0)
 	return &HashTableIterator[K, T]{table: table, iterator: table.objects[key].Iter(), keys: keys, index: 0}
-
 }
 
 // Elements returns the element of the iterator.
 func (i *HashTableIterator[K, T]) Element() T {
-
 	return i.iterator.Element().Element()
-
 }
 
 // Index returns the key of the element the iterator.
 func (i *HashTableIterator[K, T]) Key() K {
-
 	return i.iterator.Element().Key()
-
 }
 
 // Remove removes the element from the table and returns the iterator of the next element.
@@ -119,45 +109,33 @@ func (i *HashTableIterator[K, T]) Key() K {
 //		// Code
 //	}
 func (i *HashTableIterator[K, T]) Remove() Iterator[K, T] {
-
 	key := i.iterator.Element().Key()
 	i.table.Remove(key)
 	return i.Next()
-
 }
 
 // Next returns the iterator of the next element.
 func (i *HashTableIterator[K, T]) Next() Iterator[K, T] {
-
 	i.iterator = i.iterator.Next()
 	if i.iterator.End() {
-
 		return i.nextKey()
-
 	}
 	return i
-
 }
 
 // End checks if the iteration is finished.
 func (i *HashTableIterator[K, T]) End() bool {
-
 	return false
-
 }
 
 func (i *HashTableIterator[K, T]) nextKey() Iterator[K, T] {
-
 	i.index++
 	key, err := i.keys.Get(i.index)
 	if err != nil {
-
 		return &endIterator[K, T]{}
-
 	}
 	i.iterator = i.table.objects[key].Iter()
 	return i
-
 }
 
 // TreeTableIterator is an iterator of a [TreeTable].
@@ -169,28 +147,20 @@ type TreeTableIterator[K util.Comparer, T any] struct {
 
 // NewTreeTableIterator returns a new [TreeTableIterator] associated at the table parameter.
 func NewTreeTableIterator[K util.Comparer, T any](table *TreeTable[K, T]) Iterator[K, T] {
-
 	if table.IsEmpty() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return &TreeTableIterator[K, T]{table: table, iterator: tree.NewTreeIterator[*Entry[K, T]](table.objects)}
-
 }
 
 // Elements returns the element of the iterator.
 func (i *TreeTableIterator[K, T]) Element() T {
-
 	return i.iterator.Element().Element()
-
 }
 
 // Index returns the key of the element the iterator.
 func (i *TreeTableIterator[K, T]) Key() K {
-
 	return i.iterator.Element().Key()
-
 }
 
 // Remove removes the element from the table and returns the iterator of the next element.
@@ -219,35 +189,25 @@ func (i *TreeTableIterator[K, T]) Key() K {
 //		// Code
 //	}
 func (i *TreeTableIterator[K, T]) Remove() Iterator[K, T] {
-
 	i.iterator = i.iterator.Remove()
 	if i.iterator.End() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return i
-
 }
 
 // Next returns the iterator of the next element.
 func (i *TreeTableIterator[K, T]) Next() Iterator[K, T] {
-
 	i.iterator = i.iterator.Next()
 	if i.iterator.End() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return i
-
 }
 
 // End checks if the iteration is finished.
 func (i *TreeTableIterator[K, T]) End() bool {
-
 	return false
-
 }
 
 // MultiHashTableIterator is an iterator of a [MultiHashTable].
@@ -261,35 +221,25 @@ type MultiHashTableIterator[K util.Hasher, T any] struct {
 
 // NewMultiHashTableIterator returns a new [MultiHashTableIterator] associated at the table parameter.
 func NewMultiHashTableIterator[K util.Hasher, T any](table *MultiHashTable[K, T]) Iterator[K, T] {
-
 	if table.IsEmpty() {
-
 		return &endIterator[K, T]{}
-
 	}
 	keys := list.NewArrayList[string]()
 	for i := range table.objects {
-
 		keys.Add(i)
-
 	}
 	key, _ := keys.Get(0)
 	return &MultiHashTableIterator[K, T]{table: table, iterator: table.objects[key].Iter(), keys: keys, index: 0}
-
 }
 
 // Elements returns the element of the iterator.
 func (i *MultiHashTableIterator[K, T]) Element() T {
-
 	return i.iterator.Element().Element()
-
 }
 
 // Index returns the key of the element the iterator.
 func (i *MultiHashTableIterator[K, T]) Key() K {
-
 	return i.iterator.Element().Key()
-
 }
 
 // Remove removes the element from the table and returns the iterator of the next element.
@@ -318,46 +268,34 @@ func (i *MultiHashTableIterator[K, T]) Key() K {
 //		// Code
 //	}
 func (i *MultiHashTableIterator[K, T]) Remove() Iterator[K, T] {
-
 	key := i.iterator.Element().Key()
 	element := i.iterator.Element().Element()
 	i.table.Remove(key, element)
 	return i.Next()
-
 }
 
 // Next returns the iterator of the next element.
 func (i *MultiHashTableIterator[K, T]) Next() Iterator[K, T] {
-
 	i.iterator = i.iterator.Next()
 	if i.iterator.End() {
-
 		return i.nextKey()
-
 	}
 	return i
-
 }
 
 // End checks if the iteration is finished.
 func (i *MultiHashTableIterator[K, T]) End() bool {
-
 	return false
-
 }
 
 func (i *MultiHashTableIterator[K, T]) nextKey() Iterator[K, T] {
-
 	i.index++
 	key, err := i.keys.Get(i.index)
 	if err != nil {
-
 		return &endIterator[K, T]{}
-
 	}
 	i.iterator = i.table.objects[key].Iter()
 	return i
-
 }
 
 // MultiTreeTableIterator is an iterator of a [MultiTreeTable].
@@ -369,28 +307,20 @@ type MultiTreeTableIterator[K util.Comparer, T any] struct {
 
 // NewMultiTreeTableIterator returns a new [MultiTreeTableIterator] associated at the table parameter.
 func NewMultiTreeTableIterator[K util.Comparer, T any](table *MultiTreeTable[K, T]) Iterator[K, T] {
-
 	if table.IsEmpty() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return &MultiTreeTableIterator[K, T]{table: table, iterator: tree.NewTreeIterator[*Entry[K, T]](table.objects)}
-
 }
 
 // Elements returns the element of the iterator.
 func (i *MultiTreeTableIterator[K, T]) Element() T {
-
 	return i.iterator.Element().Element()
-
 }
 
 // Index returns the key of the element the iterator.
 func (i *MultiTreeTableIterator[K, T]) Key() K {
-
 	return i.iterator.Element().Key()
-
 }
 
 // Remove removes the element from the table and returns the iterator of the next element.
@@ -419,65 +349,45 @@ func (i *MultiTreeTableIterator[K, T]) Key() K {
 //		// Code
 //	}
 func (i *MultiTreeTableIterator[K, T]) Remove() Iterator[K, T] {
-
 	i.iterator = i.iterator.Remove()
 	if i.iterator.End() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return i
-
 }
 
 // Next returns the iterator of the next element.
 func (i *MultiTreeTableIterator[K, T]) Next() Iterator[K, T] {
-
 	i.iterator = i.iterator.Next()
 	if i.iterator.End() {
-
 		return &endIterator[K, T]{}
-
 	}
 	return i
-
 }
 
 // End checks if the iteration is finished.
 func (i *MultiTreeTableIterator[K, T]) End() bool {
-
 	return false
-
 }
 
 type endIterator[K util.Comparer, T any] struct{}
 
 func (i *endIterator[K, T]) Element() T {
-
 	return *new(T)
-
 }
 
 func (i *endIterator[K, T]) Key() K {
-
 	return *new(K)
-
 }
 
 func (i *endIterator[K, T]) Remove() Iterator[K, T] {
-
 	return i
-
 }
 
 func (i *endIterator[K, T]) Next() Iterator[K, T] {
-
 	return i
-
 }
 
 func (i *endIterator[K, T]) End() bool {
-
 	return true
-
 }
