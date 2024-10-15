@@ -37,20 +37,14 @@ type Copier[T any] interface {
 // if T implements [Equaler], the resulting function use the Equal method,
 // otherwhise it use [reflect.DeepEqual].
 func EqualFunction(e any) func(other any) bool {
-
 	if element, ok := interface{}(e).(Equaler); ok {
-
 		return func(other any) bool {
 			return element.Equal(other)
 		}
-
 	}
 	return func(other any) bool {
-
 		return reflect.DeepEqual(e, other)
-
 	}
-
 }
 
 // Copy returns a copy of e.
@@ -58,12 +52,8 @@ func EqualFunction(e any) func(other any) bool {
 // if T implements [Copier], the method returns e.Copy(),
 // otherwhise it returns e.
 func Copy[T any](e T) T {
-
 	if element, ok := interface{}(e).(Copier[T]); ok {
-
 		return element.Copy()
-
 	}
 	return e
-
 }
