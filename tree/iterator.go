@@ -55,11 +55,8 @@ type TreeIterator[T any] struct {
 
 // NewTreeIterator returns a new [TreeIterator] associated at the tree parameter.
 func NewTreeIterator[T any](tree Tree[T]) Iterator[T] {
-
 	if tree.IsEmpty() {
-
 		return &endIterator[T]{}
-
 	}
 	iterator := &TreeIterator[T]{tree: tree, element: tree.Root().Min().Element()}
 	current := iterator
@@ -72,14 +69,11 @@ func NewTreeIterator[T any](tree Tree[T]) Iterator[T] {
 		first = false
 	})
 	return iterator
-
 }
 
 // Elements returns the element of the iterator.
 func (i *TreeIterator[T]) Element() T {
-
 	return i.element
-
 }
 
 // Remove removes the element from the tree and returns the iterator of the next element.
@@ -108,60 +102,42 @@ func (i *TreeIterator[T]) Element() T {
 //		// Code
 //	}
 func (i *TreeIterator[T]) Remove() Iterator[T] {
-
 	next := i.Next()
 	i.tree.Remove(i.element)
 	return next
-
 }
 
 // Next returns the iterator of the next element.
 func (i *TreeIterator[T]) Next() Iterator[T] {
-
 	if i.next == nil {
-
 		return &endIterator[T]{}
-
 	}
 	return i.next
-
 }
 
 // End checks if the iteration is finished.
 func (i *TreeIterator[T]) End() bool {
-
 	return false
-
 }
 
 func (i *TreeIterator[T]) setNext(next *TreeIterator[T]) {
-
 	i.next = next
-
 }
 
 type endIterator[T any] struct{}
 
 func (i *endIterator[T]) Element() T {
-
 	return *new(T)
-
 }
 
 func (i *endIterator[T]) Remove() Iterator[T] {
-
 	return i
-
 }
 
 func (i *endIterator[T]) Next() Iterator[T] {
-
 	return i
-
 }
 
 func (i *endIterator[T]) End() bool {
-
 	return true
-
 }
