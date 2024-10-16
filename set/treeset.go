@@ -150,9 +150,8 @@ func (s *TreeSet[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of s.
-func (s *TreeSet[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	return fmt.Sprintf("%v%v", check[1:], s.Len())
+func (s *TreeSet[T]) Hash() uint64 {
+	return s.objects.Hash()
 }
 
 // Copy returns a set containing a copy of the elements of s.

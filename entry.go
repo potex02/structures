@@ -1,5 +1,12 @@
 package structures
 
+import (
+	"fmt"
+	"hash/fnv"
+
+	"github.com/potex02/structures/util"
+)
+
 // Entry is a component of a linked structure.
 //
 // An entry is linked to the previous and the next entries.
@@ -79,4 +86,15 @@ func (e *Entry[T]) Next() *Entry[T] {
 // SetNext sets the entry next to e.
 func (e *Entry[T]) SetNext(next *Entry[T]) {
 	e.next = next
+}
+
+// Hash returns the hash code of e.
+func (e *Entry[T]) Hash() uint64 {
+	h := fnv.New64()
+	str := fmt.Sprintf("%v", e.element)
+	if obj, ok := interface{}(e.element).(util.Hasher); ok {
+		str = fmt.Sprintf("%v", util.Prime*obj.Hash())
+	}
+	h.Write([]byte(str))
+	return h.Sum64()
 }

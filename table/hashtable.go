@@ -2,6 +2,7 @@ package table
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures"
@@ -19,12 +20,12 @@ var _ Table[wrapper.Int, int] = NewHashTable[wrapper.Int, int]()
 // It implements the interface [Table].
 type HashTable[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
-	objects map[string]list.List[*Entry[K, T]]
+	objects map[uint64]list.List[*Entry[K, T]]
 }
 
 // NewHashTable returns a new empty [HashTable].
 func NewHashTable[K util.Hasher, T any]() *HashTable[K, T] {
-	return &HashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
+	return &HashTable[K, T]{objects: map[uint64]list.List[*Entry[K, T]]{}}
 }
 
 // NewHashTableFromSlice returns a new [HashTable] containing the elements of slice c.
@@ -195,7 +196,7 @@ func (t *HashTable[K, T]) Stream() *Stream[K, T] {
 
 // Clear removes all element from t.
 func (t *HashTable[K, T]) Clear() {
-	t.objects = map[string]list.List[*Entry[K, T]]{}
+	t.objects = map[uint64]list.List[*Entry[K, T]]{}
 }
 
 // Iter returns an [Iterator] which permits to iterate a [HashTable].
@@ -251,9 +252,12 @@ func (t *HashTable[K, T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of t.
-func (t *HashTable[K, T]) Hash() string {
-	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
-	return fmt.Sprintf("%v%v%v", check[0][1:], check[1][1:], t.Len())
+func (t *HashTable[K, T]) Hash() uint64 {
+	h := fnv.New64()
+	for _, i := range t.objects {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	}
+	return h.Sum64()
 }
 
 // Copy returns a table containing a copy of the elements of t.

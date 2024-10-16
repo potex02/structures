@@ -1,6 +1,9 @@
 package wrapper
 
-import "strings"
+import (
+	"hash/fnv"
+	"strings"
+)
 
 var _ Wrapper[string] = String("")
 
@@ -139,8 +142,10 @@ func (s String) Compare(o any) int {
 }
 
 // Hash returns the hash code of s.
-func (s String) Hash() string {
-	return string(s)
+func (s String) Hash() uint64 {
+	h := fnv.New64()
+	h.Write([]byte(s))
+	return h.Sum64()
 }
 
 // Copy returns a copy of s.

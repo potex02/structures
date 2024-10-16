@@ -136,11 +136,8 @@ func (q *DoubleLinkedQueue[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of q.
-func (q *DoubleLinkedQueue[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	head, _ := q.Head()
-	tail, _ := q.Tail()
-	return fmt.Sprintf("%v%v%v", check[1:], head, tail)
+func (q *DoubleLinkedQueue[T]) Hash() uint64 {
+	return q.objects.Hash()
 }
 
 // String returns a rapresentation of q in the form of a string.

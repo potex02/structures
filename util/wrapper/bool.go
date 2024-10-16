@@ -1,9 +1,5 @@
 package wrapper
 
-import (
-	"fmt"
-)
-
 var _ Wrapper[bool] = Bool(false)
 
 // Bool is a wrapper type for bool.
@@ -34,8 +30,11 @@ func (b Bool) Compare(o any) int {
 }
 
 // Hash returns the hash code of b.
-func (b Bool) Hash() string {
-	return fmt.Sprintf("%v", b)
+func (b Bool) Hash() uint64 {
+	if b {
+		return 1
+	}
+	return 0
 }
 
 // Copy returns a copy of b.

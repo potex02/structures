@@ -1,8 +1,8 @@
 package wrapper
 
 import (
-	"fmt"
 	"math"
+	"math/bits"
 )
 
 var _ Wrapper[float32] = Float32(0)
@@ -36,8 +36,22 @@ func (f Float32) Compare(o any) int {
 }
 
 // Hash returns the hash code of f.
-func (f Float32) Hash() string {
-	return fmt.Sprintf("%v", math.Floor(float64(f)))
+func (f Float32) Hash() uint64 {
+	if math.IsNaN(float64(f)) {
+		return 0
+	}
+	if math.IsInf(float64(f), 1) {
+		return 2e9
+	}
+	if math.IsInf(float64(f), -1) {
+		return uint64(bits.Reverse(2e9))
+	}
+	intPart, fracPart := math.Modf(float64(f))
+	hash := uint64(int(intPart))
+	if fracPart != 0 {
+		hash ^= uint64(fracPart * 1e9)
+	}
+	return hash
 }
 
 // Copy returns a copy of f.
@@ -78,8 +92,22 @@ func (f Float64) Compare(o any) int {
 }
 
 // Hash returns the hash code of f.
-func (f Float64) Hash() string {
-	return fmt.Sprintf("%v", math.Floor(float64(f)))
+func (f Float64) Hash() uint64 {
+	if math.IsNaN(float64(f)) {
+		return 0
+	}
+	if math.IsInf(float64(f), 1) {
+		return 2e9
+	}
+	if math.IsInf(float64(f), -1) {
+		return uint64(bits.Reverse(2e9))
+	}
+	intPart, fracPart := math.Modf(float64(f))
+	hash := uint64(int(intPart))
+	if fracPart != 0 {
+		hash ^= uint64(fracPart * 1e9)
+	}
+	return hash
 }
 
 // Copy returns a copy of f.

@@ -1,6 +1,8 @@
 package wrapper
 
-import "fmt"
+import (
+	"math"
+)
 
 var _ Wrapper[int] = Int(0)
 var _ Wrapper[int8] = Int8(0)
@@ -37,8 +39,8 @@ func (i Int) Compare(o any) int {
 }
 
 // Hash returns the hash code of i.
-func (i Int) Hash() string {
-	return fmt.Sprintf("%v", i)
+func (i Int) Hash() uint64 {
+	return uint64(i + math.MaxInt + 1)
 }
 
 // Copy returns a copy of i.
@@ -79,8 +81,8 @@ func (i Int8) Compare(o any) int {
 }
 
 // Hash returns the hash code of i.
-func (i Int8) Hash() string {
-	return fmt.Sprintf("%v", i)
+func (i Int8) Hash() uint64 {
+	return uint64(i + math.MaxInt8 + 1)
 }
 
 // Copy returns a copy of i.
@@ -121,8 +123,8 @@ func (i Int16) Compare(o any) int {
 }
 
 // Hash returns the hash code of i.
-func (i Int16) Hash() string {
-	return fmt.Sprintf("%v", i)
+func (i Int16) Hash() uint64 {
+	return uint64(i + math.MaxInt16 + 1)
 }
 
 // Copy returns a copy of i.
@@ -163,8 +165,8 @@ func (i Int32) Compare(o any) int {
 }
 
 // Hash returns the hash code of i.
-func (i Int32) Hash() string {
-	return fmt.Sprintf("%v", i)
+func (i Int32) Hash() uint64 {
+	return uint64(i + math.MaxInt32 + 1)
 }
 
 // Copy returns a copy of i.
@@ -205,8 +207,8 @@ func (i Int64) Compare(o any) int {
 }
 
 // Hash returns the hash code of i.
-func (i Int64) Hash() string {
-	return fmt.Sprintf("%v", i)
+func (i Int64) Hash() uint64 {
+	return uint64(i + math.MaxInt64 + 1)
 }
 
 // Copy returns a copy of i.

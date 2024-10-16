@@ -2,6 +2,7 @@ package queue
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures"
@@ -160,11 +161,12 @@ func (q *LinkedQueue[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of q.
-func (q *LinkedQueue[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	head, _ := q.Head()
-	tail, _ := q.Tail()
-	return fmt.Sprintf("%v%v%v", check[1:], head, tail)
+func (q *LinkedQueue[T]) Hash() uint64 {
+	h := fnv.New64()
+	for i := q.head; i != nil; i = i.Next() {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	}
+	return h.Sum64()
 }
 
 // String returns a rapresentation of q in the form of a string.

@@ -3,6 +3,7 @@ package list
 import (
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"reflect"
 	"strconv"
 
@@ -378,9 +379,12 @@ func (l *LinkedList[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of l.
-func (l *LinkedList[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	return fmt.Sprintf("%v%v", check[1:], l.Len())
+func (l *LinkedList[T]) Hash() uint64 {
+	h := fnv.New64()
+	for i := l.root; i != nil; i = i.Next() {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	}
+	return h.Sum64()
 }
 
 // Copy returns a list containing a copy of the elements of l.

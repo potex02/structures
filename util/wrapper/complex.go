@@ -1,8 +1,9 @@
 package wrapper
 
 import (
-	"fmt"
 	"math"
+
+	"github.com/potex02/structures/util"
 )
 
 var _ Wrapper[complex64] = Complex64(0)
@@ -53,8 +54,8 @@ func (c Complex64) Compare(o any) int {
 }
 
 // Hash returns the hash code of c.
-func (c Complex64) Hash() string {
-	return fmt.Sprintf("%v", c.Norm())
+func (c Complex64) Hash() uint64 {
+	return Float32(c.Real()).Hash() + util.Prime*Float32(c.Imag()).Hash()
 }
 
 // Copy returns a copy of c.
@@ -112,8 +113,8 @@ func (c Complex128) Compare(o any) int {
 }
 
 // Hash returns the hash code of c.
-func (c Complex128) Hash() string {
-	return fmt.Sprintf("%v", c.Norm())
+func (c Complex128) Hash() uint64 {
+	return Float64(c.Real()).Hash() + util.Prime*Float64(c.Imag()).Hash()
 }
 
 // Copy returns a copy of c.

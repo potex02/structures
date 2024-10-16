@@ -121,6 +121,6 @@ func (t test) Compare(o any) int {
 	return wrapper.Int(t.n1 + t.n2).Compare(wrapper.Int(value.n1 + value.n2))
 }
 
-func (t test) Hash() string {
+func (t test) Hash() uint64 {
 	return wrapper.Int(t.n1 + t.n2).Hash()
 }

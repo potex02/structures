@@ -3,6 +3,7 @@ package list
 import (
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"reflect"
 	"strconv"
 
@@ -307,9 +308,16 @@ func (l *ArrayList[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of l.
-func (l *ArrayList[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	return fmt.Sprintf("%v%v", check[1:], l.Len())
+func (l *ArrayList[T]) Hash() uint64 {
+	h := fnv.New64()
+	for _, i := range l.objects {
+		str := fmt.Sprintf("%v", i)
+		if obj, ok := interface{}(i).(util.Hasher); ok {
+			str = fmt.Sprintf("%v", util.Prime*obj.Hash())
+		}
+		h.Write([]byte(str))
+	}
+	return h.Sum64()
 }
 
 // Copy returns a list containing a copy of the elements of l.

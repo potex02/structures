@@ -1,7 +1,6 @@
 package wrapper
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -39,8 +38,8 @@ func TestNewDefaultWrapper(t *testing.T) {
 		t.Log("compare is not 0")
 		t.Fail()
 	}
-	if wrapper.Hash() != fmt.Sprintf("%v", wrapper.ToValue()) {
-		t.Log("hash is not the value")
+	if wrapper.Hash() != 4151711685334854028 {
+		t.Log("hash is ", wrapper.Hash())
 		t.Fail()
 	}
 	if !wrapper.Copy().Equal(wrapper) {
@@ -64,8 +63,8 @@ func TestNewWrapper(t *testing.T) {
 		}
 		return -2
 	}
-	var hash = func(w Wrapper[test]) string {
-		return fmt.Sprintf("%v", Float32(w.ToValue().a)*w.ToValue().b)
+	var hash = func(w Wrapper[test]) uint64 {
+		return (Float32(w.ToValue().a) * w.ToValue().b).Hash()
 	}
 	var copy = func(w Wrapper[test]) test {
 		return test{a: w.ToValue().a, b: 0}
@@ -105,8 +104,8 @@ func TestNewWrapper(t *testing.T) {
 		t.Log("compare is not 1")
 		t.Fail()
 	}
-	if wrapper.Hash() != "-4.5" {
-		t.Log("hash is not \"-4.5\"")
+	if wrapper.Hash() != 499999996 {
+		t.Log("hash is ", wrapper.Hash())
 		t.Fail()
 	}
 	if !wrapper.Copy().Equal(builder.Wrap(test{a: 1, b: 0})) {

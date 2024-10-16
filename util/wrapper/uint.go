@@ -1,7 +1,5 @@
 package wrapper
 
-import "fmt"
-
 var _ Wrapper[uint] = Uint(0)
 var _ Wrapper[uint8] = Uint8(0)
 var _ Wrapper[uint16] = Uint16(0)
@@ -38,8 +36,8 @@ func (u Uint) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u Uint) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u Uint) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.
@@ -80,8 +78,8 @@ func (u Uint8) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u Uint8) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u Uint8) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.
@@ -122,8 +120,8 @@ func (u Uint16) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u Uint16) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u Uint16) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.
@@ -164,8 +162,8 @@ func (u Uint32) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u Uint32) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u Uint32) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.
@@ -206,8 +204,8 @@ func (u Uint64) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u Uint64) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u Uint64) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.
@@ -248,8 +246,8 @@ func (u UintPtr) Compare(o any) int {
 }
 
 // Hash returns the hash code of u.
-func (u UintPtr) Hash() string {
-	return fmt.Sprintf("%v", u)
+func (u UintPtr) Hash() uint64 {
+	return uint64(u)
 }
 
 // Copy returns a copy of u.

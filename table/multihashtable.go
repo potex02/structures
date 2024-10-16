@@ -2,6 +2,7 @@ package table
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures"
@@ -19,12 +20,12 @@ var _ MultiTable[wrapper.Int, int] = NewMultiHashTable[wrapper.Int, int]()
 // It implements the interface [MultiTable].
 type MultiHashTable[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
-	objects map[string]list.List[*Entry[K, T]]
+	objects map[uint64]list.List[*Entry[K, T]]
 }
 
 // NewHashTable returns a new empty [MultiHashTable].
 func NewMultiHashTable[K util.Hasher, T any]() *MultiHashTable[K, T] {
-	return &MultiHashTable[K, T]{objects: map[string]list.List[*Entry[K, T]]{}}
+	return &MultiHashTable[K, T]{objects: map[uint64]list.List[*Entry[K, T]]{}}
 }
 
 // NewMultiHashTableFromSlice returns a new [MultiHashTable] containing the elements of slice c.
@@ -235,7 +236,7 @@ func (t *MultiHashTable[K, T]) Stream() *Stream[K, T] {
 
 // Clear removes all element from t.
 func (t *MultiHashTable[K, T]) Clear() {
-	t.objects = map[string]list.List[*Entry[K, T]]{}
+	t.objects = map[uint64]list.List[*Entry[K, T]]{}
 }
 
 // Iter returns an [Iterator] which permits to iterate a [MultiHashTable].
@@ -291,9 +292,12 @@ func (t *MultiHashTable[K, T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of t.
-func (t *MultiHashTable[K, T]) Hash() string {
-	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
-	return fmt.Sprintf("%v%v%v", check[0][1:], check[1][1:], t.Len())
+func (t *MultiHashTable[K, T]) Hash() uint64 {
+	h := fnv.New64()
+	for _, i := range t.objects {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	}
+	return h.Sum64()
 }
 
 // Copy returns a multitable containing a copy of the elements of t.

@@ -56,7 +56,7 @@ type HashTableIterator[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	table    *HashTable[K, T]
 	iterator list.Iterator[*Entry[K, T]]
-	keys     list.List[string]
+	keys     list.List[uint64]
 	index    int
 }
 
@@ -65,7 +65,7 @@ func NewHashTableIterator[K util.Hasher, T any](table *HashTable[K, T]) Iterator
 	if table.IsEmpty() {
 		return &endIterator[K, T]{}
 	}
-	keys := list.NewArrayList[string]()
+	keys := list.NewArrayList[uint64]()
 	for i := range table.objects {
 		keys.Add(i)
 	}
@@ -215,7 +215,7 @@ type MultiHashTableIterator[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	table    *MultiHashTable[K, T]
 	iterator list.Iterator[*Entry[K, T]]
-	keys     list.List[string]
+	keys     list.List[uint64]
 	index    int
 }
 
@@ -224,7 +224,7 @@ func NewMultiHashTableIterator[K util.Hasher, T any](table *MultiHashTable[K, T]
 	if table.IsEmpty() {
 		return &endIterator[K, T]{}
 	}
-	keys := list.NewArrayList[string]()
+	keys := list.NewArrayList[uint64]()
 	for i := range table.objects {
 		keys.Add(i)
 	}

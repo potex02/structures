@@ -2,10 +2,12 @@ package stack
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/list"
+	"github.com/potex02/structures/util"
 )
 
 var _ structures.Structure[int] = NewLinkedStack[int]()
@@ -136,10 +138,16 @@ func (s *LinkedStack[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of s.
-func (s *LinkedStack[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	top, _ := s.Top()
-	return fmt.Sprintf("%v%v", check[1:], top)
+func (s *LinkedStack[T]) Hash() uint64 {
+	h := fnv.New64()
+	for i := s.top; i != nil; i = i.Next() {
+		str := fmt.Sprintf("%v", i)
+		if obj, ok := interface{}(i).(util.Hasher); ok {
+			str = fmt.Sprintf("%v", obj.Hash())
+		}
+		h.Write([]byte(str))
+	}
+	return h.Sum64()
 }
 
 // String returns a rapresentation of s in the form of a string.

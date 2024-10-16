@@ -370,7 +370,8 @@ func TestEqualArrayList(t *testing.T) {
 func TestCompareArrayList(t *testing.T) {
 
 	var list List[List[int]] = NewArrayList[List[int]](
-		NewLinkedList(1, 2, 3), NewArrayList(4, 2),
+		NewLinkedList(1, 2, 3),
+		NewArrayList(4, 2),
 		NewArrayList(5, 6, 8, 8),
 	)
 	var listWrapper List[List[wrapper.Int]] = NewArrayList[List[wrapper.Int]](

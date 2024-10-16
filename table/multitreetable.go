@@ -2,6 +2,7 @@ package table
 
 import (
 	"fmt"
+	"hash/fnv"
 	"math/rand"
 	"reflect"
 
@@ -243,9 +244,12 @@ func (t *MultiTreeTable[K, T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of t.
-func (t *MultiTreeTable[K, T]) Hash() string {
-	check := []string{reflect.TypeOf(new(K)).String(), reflect.TypeOf(new(T)).String()}
-	return fmt.Sprintf("%v%v%v", check[0][1:], check[1][1:], t.Len())
+func (t *MultiTreeTable[K, T]) Hash() uint64 {
+	h := fnv.New64()
+	t.objects.Each(t.objects.Root(), func(i *tree.Node[*Entry[K, T]]) {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	})
+	return h.Sum64()
 }
 
 // Copy returns a multitable containing a copy of the elements of t.

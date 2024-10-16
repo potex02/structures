@@ -108,10 +108,8 @@ func (s *ArrayStack[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of s.
-func (s *ArrayStack[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	top, _ := s.Top()
-	return fmt.Sprintf("%v%v", check[1:], top)
+func (s *ArrayStack[T]) Hash() uint64 {
+	return s.objects.Hash()
 }
 
 // String returns a rapresentation of s in the form of a string.

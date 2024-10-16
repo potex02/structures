@@ -3,6 +3,9 @@ package util
 
 import "reflect"
 
+// Prime is the prime number used in hash calculations.
+var Prime uint64 = 31
+
 // Equaler defines a method to check the equality between two variables.
 type Equaler interface {
 	// Equal returns true if the receiver and o are equals.
@@ -22,8 +25,8 @@ type Comparer interface {
 // Hasher defines a method that provides hashing for the variable.
 type Hasher interface {
 	Comparer
-	// Hash returns a string that is used to perform the hashing.
-	Hash() string
+	// Hash returns a uint that is used to perform the hashing.
+	Hash() uint64
 }
 
 // Copier defines a method that permits to make copies of a variable.

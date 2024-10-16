@@ -2,6 +2,7 @@ package tree
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures"
@@ -269,9 +270,12 @@ func (t *BinaryTree[T]) Compare(st any) int {
 }
 
 // Hash returns the hash code of t.
-func (t *BinaryTree[T]) Hash() string {
-	check := reflect.TypeOf(new(T)).String()
-	return fmt.Sprintf("%v%v", check[1:], t.Len())
+func (t *BinaryTree[T]) Hash() uint64 {
+	h := fnv.New64()
+	t.Each(t.Root(), func(i *Node[T]) {
+		h.Write([]byte(fmt.Sprintf("%v", i.Hash())))
+	})
+	return h.Sum64()
 }
 
 // String returns a rapresentation of t in the form of a string.

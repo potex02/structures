@@ -3,6 +3,7 @@ package wrapper
 
 import (
 	"fmt"
+	"hash/fnv"
 	"reflect"
 
 	"github.com/potex02/structures/util"
@@ -45,8 +46,10 @@ func DefaultCompare[T any](w Wrapper[T], o any) int {
 // DefaultHash is the default function used as method Hash by a [WrapperBuilder] to create wrappers.
 //
 // The result is the string rapresentation of the wrapped value.
-func DefaultHash[T any](w Wrapper[T]) string {
-	return fmt.Sprintf("%v", w.ToValue())
+func DefaultHash[T any](w Wrapper[T]) uint64 {
+	h := fnv.New64()
+	h.Write([]byte(fmt.Sprintf("%v", w.ToValue())))
+	return h.Sum64()
 }
 
 // DefaultCopy is the default function used as method Copy by a [WrapperBuilder] to create wrappers.
@@ -61,7 +64,7 @@ type WrapperBuilder[T any] struct {
 	// contains filtered or unexported fields
 	equal   func(r Wrapper[T], o any) bool
 	compare func(r Wrapper[T], o any) int
-	hash    func(r Wrapper[T]) string
+	hash    func(r Wrapper[T]) uint64
 	copy    func(r Wrapper[T]) T
 }
 
@@ -87,7 +90,7 @@ func NewDefaultWrapperBuilder[T any]() WrapperBuilder[T] {
 func NewWrapperBuilder[T any](
 	equal func(w Wrapper[T], o any) bool,
 	compare func(w Wrapper[T], o any) int,
-	hash func(w Wrapper[T]) string,
+	hash func(w Wrapper[T]) uint64,
 	copy func(w Wrapper[T]) T,
 ) WrapperBuilder[T] {
 	return WrapperBuilder[T]{
@@ -128,7 +131,7 @@ func NewCompareWrapperBuilder[T any](compare func(w Wrapper[T], o any) int) Wrap
 // the custom Compare and Hash methods.
 //
 // The w parameters of the functions are the receivers of the methods.
-func NewHashWrapperBuilder[T any](compare func(w Wrapper[T], o any) int, hash func(w Wrapper[T]) string) WrapperBuilder[T] {
+func NewHashWrapperBuilder[T any](compare func(w Wrapper[T], o any) int, hash func(w Wrapper[T]) uint64) WrapperBuilder[T] {
 	return WrapperBuilder[T]{
 		equal:   DefaultEqual[T],
 		compare: compare,
@@ -178,7 +181,7 @@ type wrapperResult[T any] struct {
 	builder WrapperBuilder[T]
 	equal   func(r Wrapper[T], o any) bool
 	compare func(r Wrapper[T], o any) int
-	hash    func(r Wrapper[T]) string
+	hash    func(r Wrapper[T]) uint64
 	copy    func(r Wrapper[T]) T
 }
 
@@ -190,7 +193,7 @@ func (r wrapperResult[T]) Compare(o any) int {
 	return r.compare(r, o)
 }
 
-func (r wrapperResult[T]) Hash() string {
+func (r wrapperResult[T]) Hash() uint64 {
 	return r.hash(r)
 }
 

@@ -1,6 +1,9 @@
 package table
 
 import (
+	"fmt"
+	"hash/fnv"
+
 	"github.com/potex02/structures/util"
 )
 
@@ -38,4 +41,20 @@ func (e *Entry[K, T]) Compare(o any) int {
 		return e.key.Compare(entry.Key())
 	}
 	return -2
+}
+
+// Hash returns the hash code of e.
+func (e *Entry[K, T]) Hash() uint64 {
+	h := fnv.New64()
+	key := fmt.Sprintf("%v", e.key)
+	if obj, ok := interface{}(e.key).(util.Hasher); ok {
+		key = fmt.Sprintf("%v", util.Prime*obj.Hash())
+	}
+	h.Write([]byte(key))
+	elem := fmt.Sprintf("%v", e.element)
+	if obj, ok := interface{}(e.element).(util.Hasher); ok {
+		elem = fmt.Sprintf("%v", util.Prime*obj.Hash())
+	}
+	h.Write([]byte(elem))
+	return h.Sum64()
 }
