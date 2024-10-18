@@ -13,12 +13,12 @@ import (
 )
 
 var _ structures.Structure[wrapper.Int] = NewPriorityQueue[wrapper.Int]()
-var _ Queue[wrapper.Int] = NewPriorityQueue[wrapper.Int]()
+var _ BaseQueue[wrapper.Int] = NewPriorityQueue[wrapper.Int]()
 
 // PriorityQueue provides a generic priority queue which mantains the order of the elements.
 // It is implemented through an [tree.BinaryTree].
 //
-// It implements the interface [Queue].
+// It implements the interface [BaseQueue].
 type PriorityQueue[T util.Comparer] struct {
 	// contains filtered or unexported fields
 	objects *tree.BinaryTree[T]
@@ -109,7 +109,7 @@ func (q *PriorityQueue[T]) Clear() {
 // Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue] or a [LinkedQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
 func (q *PriorityQueue[T]) Equal(st any) bool {
-	queue, ok := st.(Queue[T])
+	queue, ok := st.(BaseQueue[T])
 	if ok && q != nil && queue != nil {
 		return list.NewArrayListFromStructure[T](q).Equal(list.NewArrayListFromStructure[T](queue))
 	}
@@ -125,7 +125,7 @@ func (q *PriorityQueue[T]) Equal(st any) bool {
 // between the first different element of the two queues if T implemets [util.Comparer],
 // otherwhise the result is 0.
 func (q *PriorityQueue[T]) Compare(st any) int {
-	queue, ok := st.(Queue[T])
+	queue, ok := st.(BaseQueue[T])
 	if ok && q != nil && queue != nil {
 		return list.NewArrayListFromStructure[T](q).Compare(list.NewArrayListFromStructure[T](queue))
 	}

@@ -5,12 +5,11 @@ import (
 	"testing"
 
 	"github.com/potex02/structures"
-	"github.com/potex02/structures/util/wrapper"
 )
 
-func TestNewPriorityQueue(t *testing.T) {
+func TestNewQueue(t *testing.T) {
 
-	var queue structures.Structure[wrapper.Float32] = NewPriorityQueue[wrapper.Float32]()
+	var queue structures.Structure[float32] = NewQueue[float32]()
 
 	if queue == nil {
 		t.Log("queue is nil")
@@ -21,9 +20,9 @@ func TestNewPriorityQueue(t *testing.T) {
 		t.Fail()
 	}
 }
-func TestPriorityQueueFromSlice(t *testing.T) {
+func TestQueueFromSlice(t *testing.T) {
 
-	var queue *PriorityQueue[wrapper.Float32] = NewPriorityQueueFromSlice([]wrapper.Float32{1.3, -2.5, 3, -4})
+	var queue *Queue[float32] = NewQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
 
 	if queue == nil {
 		t.Log("queue is nil")
@@ -33,14 +32,14 @@ func TestPriorityQueueFromSlice(t *testing.T) {
 		t.Log("length is not 4")
 		t.Fail()
 	}
-	if !reflect.DeepEqual(queue.ToSlice(), []wrapper.Float32{3.0, 1.3, -2.5, -4.0}) {
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{1.3, -2.5, 3.0, -4.0}) {
 		t.Log("queue objects are", queue.ToSlice())
 		t.Fail()
 	}
 }
-func TestHeadTailPriorityQueue(t *testing.T) {
+func TestHeadTailQueue(t *testing.T) {
 
-	var queue *PriorityQueue[wrapper.Float32] = NewPriorityQueue[wrapper.Float32]()
+	var queue *Queue[float32] = NewQueue[float32]()
 
 	if _, ok := queue.Head(); ok {
 		t.Log("the queue is not empty")
@@ -50,9 +49,9 @@ func TestHeadTailPriorityQueue(t *testing.T) {
 		t.Log("the queue is not empty")
 		t.Fail()
 	}
-	queue = NewPriorityQueueFromSlice([]wrapper.Float32{1.3, -2.5, 3.0, -4.0})
+	queue = NewQueueFromSlice([]float32{1.3, -2.5, 3.0, -4.0})
 	head, ok := queue.Head()
-	if head != 3.0 {
+	if head != 1.3 {
 		t.Log("head is", head)
 		t.Fail()
 	}
@@ -70,12 +69,12 @@ func TestHeadTailPriorityQueue(t *testing.T) {
 		t.Fail()
 	}
 }
-func TestPushPriorityQueue(t *testing.T) {
+func TestPushQueue(t *testing.T) {
 
-	var queue *PriorityQueue[wrapper.Float32] = NewPriorityQueue[wrapper.Float32]()
+	var queue *Queue[float32] = NewQueue[float32]()
 
 	queue.Push(1, 3)
-	if !reflect.DeepEqual(queue.ToSlice(), []wrapper.Float32{3, 1}) {
+	if !reflect.DeepEqual(queue.ToSlice(), []float32{1, 3}) {
 		t.Log("queue is", queue.ToSlice())
 		t.Fail()
 	}
@@ -85,9 +84,9 @@ func TestPushPriorityQueue(t *testing.T) {
 		t.Fail()
 	}
 }
-func TestPopPriorityQueue(t *testing.T) {
+func TestPopQueue(t *testing.T) {
 
-	var queue BaseQueue[wrapper.Float32] = NewPriorityQueue[wrapper.Float32](1.3, -2.5)
+	var queue BaseQueue[float32] = NewQueue[float32](1.3, -2.5)
 
 	e, ok := queue.Pop()
 	if !ok {
@@ -120,15 +119,15 @@ func TestPopPriorityQueue(t *testing.T) {
 		t.Fail()
 	}
 }
-func TestEqualPriorityQueue(t *testing.T) {
+func TestEqualQueue(t *testing.T) {
 
-	var queue *PriorityQueue[wrapper.Float32] = NewPriorityQueue[wrapper.Float32](-2.5, 1.3)
+	var queue *Queue[float32] = NewQueue[float32](1.3, -2.5)
 
-	if !queue.Equal(NewQueue[wrapper.Float32](1.3, -2.5)) {
+	if !queue.Equal(NewQueue[float32](1.3, -2.5)) {
 		t.Log("queues are not equals")
 		t.Fail()
 	}
-	if queue.Equal(NewPriorityQueue[wrapper.Float32](1.3, -2.5, -1)) {
+	if queue.Equal(NewQueue[float32](1.3, -2.5, -1)) {
 		t.Log("queues are equals")
 		t.Fail()
 	}

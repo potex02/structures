@@ -29,16 +29,11 @@ For now, the only available structures are the:
 - Lists:
 	- ArrayList;
 	- LinkedList (double linked list with a pointer to the root and one to the tail);
-- Stacks:
-	- ArrayStack;
-	- LinkedStack;
+- Stack;
 - Queues:
-	- ArrayQueue;
-	- LinkedQueue;
+	- Queue;
 	- PriorityQueue.
-- Double queues:
-	- DoubleArrayQueue;
-	- DoubleLinkedQueue;
+	- DoubleQueue;
 - Tables:
 	- HashTable;
 	- TreeTable;
