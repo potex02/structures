@@ -134,7 +134,7 @@ func (q *Queue[T]) Clear() {
 // Equal returns true if q and st are both queues and their elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue] or a [PriorityQueue],
+// Equal does not take into account the effective type of st. This means that if st is a [PriorityQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
 func (q *Queue[T]) Equal(st any) bool {
 	queue, ok := st.(BaseQueue[T])
@@ -147,7 +147,7 @@ func (q *Queue[T]) Equal(st any) bool {
 // Compare returns 0 if q and st are equals,
 // -1 if q is shorten than st,
 // 1 if q is longer than st,
-// -2 if st is not a [Queue] or if one between q and st is nil.
+// -2 if st is not a [BaseQueue] or if one between q and st is nil.
 //
 // If q and st have the same length, the result is the comparison
 // between the first different element of the two queues if T implemets [util.Comparer],

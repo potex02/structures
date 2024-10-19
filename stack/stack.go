@@ -83,7 +83,6 @@ func (s *Stack[T]) Clear() {
 // Equal returns true if s and st are both stacks and their elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is a [LinkedStack],
 // but the elements of s and the elements of st are equals, this method returns anyway true.
 func (s *Stack[T]) Equal(st any) bool {
 	stack, ok := st.(*Stack[T])

@@ -25,6 +25,7 @@ type PriorityQueue[T util.Comparer] struct {
 }
 
 // NewPriorityQueue returns a new [PriorityQueue] containing the elements c.
+// The head of the queue is the maximum element of c, while the tail is the minimum element.
 //
 // if no argument is passed, it will be created an empty [PriorityQueue].
 func NewPriorityQueue[T util.Comparer](c ...T) *PriorityQueue[T] {
@@ -46,7 +47,7 @@ func (q *PriorityQueue[T]) IsEmpty() bool {
 	return q.objects.IsEmpty()
 }
 
-// Head returns the max element of q.
+// Head returns the maximum element of q.
 // The method returns false if q is empty.
 func (q *PriorityQueue[T]) Head() (T, bool) {
 	if q.IsEmpty() {
@@ -58,7 +59,7 @@ func (q *PriorityQueue[T]) Head() (T, bool) {
 	return q.objects.Root().Max().Element(), true
 }
 
-// Tail returns the min element element of q.
+// Tail returns the minimum element element of q.
 // The method returns false if q is empty.
 func (q *PriorityQueue[T]) Tail() (T, bool) {
 	if q.IsEmpty() {
@@ -84,7 +85,7 @@ func (q *PriorityQueue[T]) Push(e ...T) {
 	q.objects.Add(e...)
 }
 
-// Pop removes the max element from q and returns the removed element.
+// Pop removes the maximun element from q and returns the removed element.
 // The method returns false if q is empty.
 func (q *PriorityQueue[T]) Pop() (T, bool) {
 	if q.IsEmpty() {
@@ -106,7 +107,7 @@ func (q *PriorityQueue[T]) Clear() {
 // Equal returns true if q and st are both queues and their elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is an [ArrayQueue] or a [LinkedQueue],
+// Equal does not take into account the effective type of st. This means that if st is a [LinkedQueue],
 // but the elements of q and the elements of st are equals, this method returns anyway true.
 func (q *PriorityQueue[T]) Equal(st any) bool {
 	queue, ok := st.(BaseQueue[T])
@@ -119,10 +120,10 @@ func (q *PriorityQueue[T]) Equal(st any) bool {
 // Compare returns 0 if q and st are equals,
 // -1 if q is shorten than st,
 // 1 if q is longer than st,
-// -2 if st is not a [Queue] or if one between q and st is nil.
+// -2 if st is not a [BaseQueue] or if one between q and st is nil.
 //
 // If q and st have the same length, the result is the comparison
-// between the first different element of the two queues if T implemets [util.Comparer],
+// between the first different element of the two queues,
 // otherwhise the result is 0.
 func (q *PriorityQueue[T]) Compare(st any) int {
 	queue, ok := st.(BaseQueue[T])

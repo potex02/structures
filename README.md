@@ -32,8 +32,9 @@ For now, the only available structures are the:
 - Stack;
 - Queues:
 	- Queue;
-	- PriorityQueue.
+	- PriorityQueue;
 	- DoubleQueue;
+	- DoublePriorityQueue;
 - Tables:
 	- HashTable;
 	- TreeTable;
