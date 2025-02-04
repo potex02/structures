@@ -251,7 +251,7 @@ func TestAddSliceArrayList(t *testing.T) {
 }
 func TestRemoveArrayList(t *testing.T) {
 
-	var list *LinkedList[int] = NewLinkedList(1, 2, 3, 5)
+	var list *ArrayList[int] = NewArrayList(1, 2, 3, 5)
 
 	if !list.RemoveElement(2) {
 		t.Fail()
@@ -259,7 +259,7 @@ func TestRemoveArrayList(t *testing.T) {
 	if list.Len() != 3 {
 		t.Fail()
 	}
-	if !reflect.DeepEqual(list, NewLinkedListFromSlice([]int{1, 3, 5})) {
+	if !reflect.DeepEqual(list, NewArrayListFromSlice([]int{1, 3, 5})) {
 		t.Log("lists not equals")
 		t.Fail()
 	}
@@ -275,7 +275,7 @@ func TestRemoveArrayList(t *testing.T) {
 	if _, err := list.Remove(-2); err == nil {
 		t.Fail()
 	}
-	if !reflect.DeepEqual(list, NewLinkedList(5)) {
+	if !reflect.DeepEqual(list, NewArrayList(5)) {
 		t.Log("lists not equals")
 		t.Fail()
 	}

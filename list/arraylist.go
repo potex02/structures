@@ -187,7 +187,7 @@ func (l *ArrayList[T]) Remove(index int) (T, error) {
 // In that case, the method returns true, otherwhise it returns false.
 func (l *ArrayList[T]) RemoveElement(e T) bool {
 	fun := util.EqualFunction(e)
-	for i := 0; i != len(l.objects); i++ {
+	for i := range len(l.objects) {
 		if fun(l.objects[i]) {
 			l.Remove(i)
 			return true

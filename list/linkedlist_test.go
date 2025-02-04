@@ -136,7 +136,7 @@ func TestGetDefaultLinkedList(t *testing.T) {
 }
 func TestSetLinkedList(t *testing.T) {
 
-	var list *ArrayList[int] = NewArrayList(1, 2, 3, 5)
+	var list *LinkedList[int] = NewLinkedList(1, 2, 3, 5)
 
 	e, err := list.Set(1, 4)
 	if err != nil {
@@ -173,7 +173,7 @@ func TestSetLinkedList(t *testing.T) {
 		t.Log("error is", err)
 		t.Fail()
 	}
-	if !reflect.DeepEqual(list.objects, []int{1, 4, 3, 10, -1}) {
+	if !reflect.DeepEqual(list.ToSlice(), []int{1, 4, 3, 10, -1}) {
 		t.Log("list is", list)
 		t.Fail()
 	}
