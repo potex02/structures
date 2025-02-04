@@ -290,8 +290,14 @@ func TestSortArrayList(t *testing.T) {
 		t.Log("list is", list)
 		t.Fail()
 	}
-	arrayList.SortFunc(func(i, j int) bool {
-		return i < j
+	arrayList.SortFunc(func(i, j int) int {
+		if i < j {
+			return -1
+		}
+		if i == j {
+			return 0
+		}
+		return 1
 	})
 	if !arrayList.Equal(NewArrayList[int](-3, -2, 1, 5)) {
 		t.Log("list is", list)

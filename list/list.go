@@ -63,7 +63,7 @@ type List[T any] interface {
 	// This method panics if T does not implement [util.Comparer]
 	Sort()
 	//  SortFunc sorts the elements of the list as determined by the less function.
-	SortFunc(less func(i T, j T) bool)
+	SortFunc(less func(i T, j T) int)
 	// Iter returns an [Iterator] which permits to iterate a [List].
 	//
 	//	for i := list.Iter(); !i.End(); i = i.Next() {

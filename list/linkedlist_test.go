@@ -286,18 +286,24 @@ func TestRemoveLinkedList(t *testing.T) {
 func TestSortLinkedList(t *testing.T) {
 
 	var list List[wrapper.Int] = NewLinkedList[wrapper.Int](1, -2, 5, -3)
-	var arrayList *LinkedList[int] = NewLinkedList[int](1, -2, 5, -3)
+	var linkedList *LinkedList[int] = NewLinkedList[int](1, -2, 5, -3)
 
 	list.Sort()
 	if !list.Equal(NewArrayList[wrapper.Int](-3, -2, 1, 5)) {
 		t.Log("list is", list)
 		t.Fail()
 	}
-	arrayList.SortFunc(func(i, j int) bool {
-		return i < j
+	linkedList.SortFunc(func(i, j int) int {
+		if i < j {
+			return -1
+		}
+		if i == j {
+			return 0
+		}
+		return 1
 	})
-	if !arrayList.Equal(NewArrayList[int](-3, -2, 1, 5)) {
-		t.Log("list is", list)
+	if !linkedList.Equal(NewArrayList[int](-3, -2, 1, 5)) {
+		t.Log("list is", linkedList)
 		t.Fail()
 	}
 }

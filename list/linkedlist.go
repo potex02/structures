@@ -262,7 +262,7 @@ func (l *LinkedList[T]) Sort() {
 		swapped = false
 		element := l.root
 		for element.Next() != other {
-			if interface{}(element.Element()).(util.Comparer).Compare(element.Next().Element()) > 0 {
+			if interface{}(element.Element()).(util.Comparer).Compare(element.Next().Element()) >= 0 {
 				t := element.Element()
 				element.SetElement(element.Next().Element())
 				element.Next().SetElement(t)
@@ -275,13 +275,13 @@ func (l *LinkedList[T]) Sort() {
 }
 
 // SortFunc sorts the elements of l as determined by the less function.
-func (l *LinkedList[T]) SortFunc(less func(i T, j T) bool) {
+func (l *LinkedList[T]) SortFunc(less func(i T, j T) int) {
 	other := l.tail.Next()
 	for swapped := true; swapped; {
 		swapped = false
 		element := l.root
 		for element.Next() != other {
-			if !less(element.Element(), element.Next().Element()) {
+			if less(element.Element(), element.Next().Element()) > 0 {
 				t := element.Element()
 				element.SetElement(element.Next().Element())
 				element.Next().SetElement(t)

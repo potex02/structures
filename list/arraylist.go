@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"hash/fnv"
 	"reflect"
+	"slices"
 	"strconv"
 
 	"github.com/potex02/structures"
 	"github.com/potex02/structures/util"
-	"golang.org/x/exp/slices"
 )
 
 var _ structures.Structure[int] = NewArrayList[int]()
@@ -214,13 +214,13 @@ func (l *ArrayList[T]) Stream() *Stream[T] {
 //
 // This method panics if T does not implement [util.Comparer]
 func (l *ArrayList[T]) Sort() {
-	slices.SortFunc(l.objects, func(i T, j T) bool {
-		return interface{}(i).(util.Comparer).Compare(j) < 0
+	slices.SortFunc(l.objects, func(i T, j T) int {
+		return interface{}(i).(util.Comparer).Compare(j)
 	})
 }
 
 // SortFunc sorts the elements of l as determined by the less function.
-func (l *ArrayList[T]) SortFunc(less func(i T, j T) bool) {
+func (l *ArrayList[T]) SortFunc(less func(i T, j T) int) {
 	slices.SortFunc(l.objects, less)
 }
 
