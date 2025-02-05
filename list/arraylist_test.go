@@ -307,15 +307,15 @@ func TestSortArrayList(t *testing.T) {
 func TestIterArrayList(t *testing.T) {
 
 	var list *ArrayList[int] = NewArrayList(1, -2, 3, 5)
-	var j int = 0
+	var count int = 0
 
 	for i := list.Iter(); !i.End(); i = i.Next() {
-		value, err := list.Get(j)
+		value, err := list.Get(count)
 		if err != nil {
 			t.Log("error is", err)
 			t.Fail()
 		}
-		if j != i.Index() {
+		if count != i.Index() {
 			t.Log("index is", i.Index())
 			t.Fail()
 		}
@@ -323,16 +323,16 @@ func TestIterArrayList(t *testing.T) {
 			t.Log("element is", i.Element())
 			t.Fail()
 		}
-		j++
+		count++
 	}
-	j = list.Len() - 1
+	count = list.Len() - 1
 	for i := list.IterReverse(); !i.End(); i = i.Prev() {
-		value, err := list.Get(j)
+		value, err := list.Get(count)
 		if err != nil {
 			t.Log("error is", err)
 			t.Fail()
 		}
-		if j != i.Index() {
+		if count != i.Index() {
 			t.Log("index is", i.Index())
 			t.Fail()
 		}
@@ -340,7 +340,46 @@ func TestIterArrayList(t *testing.T) {
 			t.Log("element is", i.Element())
 			t.Fail()
 		}
-		j--
+		count--
+	}
+}
+func TestRangeIterArrayList(t *testing.T) {
+
+	var list *ArrayList[int] = NewArrayList(1, -2, 3, 5)
+	var count int = 0
+
+	for i, j := range list.RangeIter() {
+		value, err := list.Get(count)
+		if err != nil {
+			t.Log("error is", err)
+			t.Fail()
+		}
+		if count != i {
+			t.Log("index is", i)
+			t.Fail()
+		}
+		if value != j {
+			t.Log("element is", j)
+			t.Fail()
+		}
+		count++
+	}
+	count = list.Len() - 1
+	for i, j := range list.RangeIterReverse() {
+		value, err := list.Get(count)
+		if err != nil {
+			t.Log("error is", err)
+			t.Fail()
+		}
+		if count != i {
+			t.Log("index is", i)
+			t.Fail()
+		}
+		if value != j {
+			t.Log("element is", j)
+			t.Fail()
+		}
+		count--
 	}
 }
 func TestEqualArrayList(t *testing.T) {

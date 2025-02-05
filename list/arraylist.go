@@ -251,6 +251,40 @@ func (l *ArrayList[T]) IterReverse() Iterator[T] {
 	return NewArrayListReverseIterator(l)
 }
 
+// RangeIter returns a function that allows to iterate an [ArrayList] using the range keyword.
+//
+//	for i, j := range l.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [ArrayList.Iter], it doesn't allow to remove elements during the iteration.
+func (l *ArrayList[T]) RangeIter() func(yield func(int, T) bool) {
+	return func(yield func(int, T) bool) {
+		for i, j := range l.objects {
+			if !yield(i, j) {
+				return
+			}
+		}
+	}
+}
+
+// RangeIterReverse returns a function that allows to iterate an [ArrayList] using the range keyword in reverse order.
+//
+//	for i, j := range l.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [ArrayList.IterReverse], it doesn't allow to remove elements during the iteration.
+func (l *ArrayList[T]) RangeIterReverse() func(yield func(int, T) bool) {
+	return func(yield func(int, T) bool) {
+		for i := len(l.objects) - 1; i >= 0; i-- {
+			if !yield(i, l.objects[i]) {
+				return
+			}
+		}
+	}
+}
+
 // Equal returns true if l and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //

@@ -80,6 +80,22 @@ type List[T any] interface {
 	//		// Code
 	//	}
 	IterReverse() Iterator[T]
+	// RangeIter returns a function that allows to iterate a [List] using the range keyword.
+	//
+	//	for i, j := range list.RangeIter() {
+	//		// Code
+	//	}
+	//
+	// Unlike [List.Iter], it doesn't allow to remove elements during the iteration.
+	RangeIter() func(yield func(int, T) bool)
+	// RangeIterReverse returns a function that allows to iterate a [List] using the range keyword in reverse order.
+	//
+	//	for i, j := range list.RangeIterReverse() {
+	//		// Code
+	//	}
+	//
+	// Unlike [List.IterReverse], it doesn't allow to remove elements during the iteration.
+	RangeIterReverse() func(yield func(int, T) bool)
 }
 
 func rangeCheck[T any](list List[T], index *int) bool {

@@ -322,6 +322,40 @@ func (l *LinkedList[T]) IterReverse() Iterator[T] {
 	return NewLinkedListReverseIterator(l)
 }
 
+// RangeIter returns a function that allows to iterate a [LinkedList] using the range keyword.
+//
+//	for i, j := range l.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [LinkedList.Iter], it doesn't allow to remove elements during the iteration.
+func (l *LinkedList[T]) RangeIter() func(yield func(int, T) bool) {
+	return func(yield func(int, T) bool) {
+		for i, j := 0, l.root; j != nil; i, j = i+1, j.Next() {
+			if !yield(i, j.Element()) {
+				return
+			}
+		}
+	}
+}
+
+// RangeIterReverse returns a function that allows to iterate a [LinkedList] using the range keyword in reverse order.
+//
+//	for i, j := range l.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [LinkedList.IterReverse], it doesn't allow to remove elements during the iteration.
+func (l *LinkedList[T]) RangeIterReverse() func(yield func(int, T) bool) {
+	return func(yield func(int, T) bool) {
+		for i, j := l.len-1, l.tail; j != nil; i, j = i-1, j.Prev() {
+			if !yield(i, j.Element()) {
+				return
+			}
+		}
+	}
+}
+
 // Equal returns true if l and st are both lists and their elements are equals.
 // In any other case, it returns false.
 //
