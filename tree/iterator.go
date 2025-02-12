@@ -55,10 +55,16 @@ type TreeIterator[T any] struct {
 
 // NewTreeIterator returns a new [TreeIterator] associated at the tree parameter.
 func NewTreeIterator[T any](tree Tree[T]) Iterator[T] {
+
+	var firstNode *Node[T] = tree.Root()
+
 	if tree.IsEmpty() {
 		return &endIterator[T]{}
 	}
-	iterator := &TreeIterator[T]{tree: tree, element: tree.Root().Min().Element()}
+	if _, ok := tree.(*NAryTree[T]); !ok {
+		firstNode = firstNode.Min()
+	}
+	iterator := &TreeIterator[T]{tree: tree, element: firstNode.Element()}
 	current := iterator
 	first := true
 	tree.Each(tree.Root(), func(i *Node[T]) {

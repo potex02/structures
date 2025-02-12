@@ -63,7 +63,9 @@ func (t *BinaryTree[T]) Contains(e T) bool {
 // ToSlice returns a slice which contains all elements of t.
 func (t *BinaryTree[T]) ToSlice() []T {
 	slice := make([]T, 0)
-	t.Each(t.root, func(i *Node[T]) { slice = append(slice, i.Element()) })
+	t.Each(t.root, func(i *Node[T]) {
+		slice = append(slice, i.Element())
+	})
 	return slice
 }
 
@@ -138,7 +140,7 @@ func (t *BinaryTree[T]) Filter(node *Node[T], fun func(i *Node[T]) bool) *Binary
 	result := NewBinaryTree[T]()
 	t.Each(t.root, func(i *Node[T]) {
 		if fun(i) {
-			result.add(i.element)
+			result.add(i.Element())
 		}
 	})
 	return result
@@ -222,6 +224,37 @@ func (t *BinaryTree[T]) Iter() Iterator[T] {
 	return NewTreeIterator[T](t)
 }
 
+// RangeIter returns a function that allows to iterate a [BinaryTree] using the range keyword.
+//
+//	for i := range t.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [BinaryTree.Iter], it doesn't allow to remove elements during the iteration.
+func (t *BinaryTree[T]) RangeIter() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		if t.root == nil {
+			return
+		}
+		index := 0
+		var inorder func(*Node[T]) bool
+		inorder = func(node *Node[T]) bool {
+			if node == nil {
+				return true
+			}
+			if !inorder(node.left) {
+				return false
+			}
+			if !yield(node.Element()) {
+				return false
+			}
+			index++
+			return inorder(node.right)
+		}
+		inorder(t.root)
+	}
+}
+
 // Equal returns true if t and st are both [BinaryTree] and their elements are equals.
 // In any other case, it returns false.
 func (t *BinaryTree[T]) Equal(st any) bool {
@@ -234,7 +267,7 @@ func (t *BinaryTree[T]) Equal(st any) bool {
 		j := 0
 		return t.All(t.root, func(i *Node[T]) bool {
 			j++
-			return util.EqualFunction(i.element)(others[j-1])
+			return util.EqualFunction(i.Element())(others[j-1])
 		})
 	}
 	return false

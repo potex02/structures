@@ -251,6 +251,34 @@ func (t *NAryTree[T]) Iter() Iterator[T] {
 	return NewTreeIterator[T](t)
 }
 
+// RangeIter returns a function that allows to iterate a [NAryTree] using the range keyword.
+//
+//	for i := range t.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [NAryTree.Iter], it doesn't allow to remove elements during the iteration.
+func (t *NAryTree[T]) RangeIter() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		var iter func(node *Node[T]) bool
+		iter = func(node *Node[T]) bool {
+			if node == nil {
+				return true
+			}
+			if !yield(node.Element()) {
+				return false
+			}
+			for child := node.Left(); child != nil; child = child.Right() {
+				if !iter(child) {
+					return false
+				}
+			}
+			return true
+		}
+		iter(t.root)
+	}
+}
+
 // Equal returns true if t and st are both [NAryTree] and their elements are equals.
 // In any other case, it returns false.
 func (t *NAryTree[T]) Equal(st any) bool {

@@ -33,9 +33,17 @@ type Tree[T any] interface {
 	Each(node *Node[T], fun func(i *Node[T]))
 	// Iter returns an [Iterator] which permits to iterate a [Tree].
 	//
-	//	for i := t.Iter(); !i.End(); i = i.Next() {
+	//	for i := tree.Iter(); !i.End(); i = i.Next() {
 	//		element := i.Element()
 	//		// Code
 	//	}
 	Iter() Iterator[T]
+	// RangeIter returns a function that allows to iterate a [Tree] using the range keyword.
+	//
+	//	for i, j := range tree.RangeIter() {
+	//		// Code
+	//	}
+	//
+	// Unlike [tree.Iter], it doesn't allow to remove elements during the iteration.
+	RangeIter() func(yield func(T) bool)
 }

@@ -91,8 +91,22 @@ func TestIterNAryTree(t *testing.T) {
 	slice := tree.ToSlice()
 	j := 0
 	for i := tree.Iter(); !i.End() && j != tree.Len(); i = i.Next() {
-		if reflect.DeepEqual(i, slice[j]) {
+		if !reflect.DeepEqual(i.Element(), slice[j]) {
 			t.Log("element is", i.Element())
+			t.Fail()
+		}
+		j++
+	}
+}
+func TestRangeIterNAryTree(t *testing.T) {
+
+	var tree *NAryTree[float32] = NewNAryTree[float32](3, 3, 12.5, 7, -7.6, 3.4, 9, 0.9, 50, -120)
+
+	slice := tree.ToSlice()
+	j := 0
+	for i := range tree.RangeIter() {
+		if !reflect.DeepEqual(i, slice[j]) {
+			t.Log("element is", i)
 			t.Fail()
 		}
 		j++

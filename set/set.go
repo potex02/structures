@@ -34,6 +34,14 @@ type BaseSet[T util.Comparer] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[T]
+	// RangeIter returns a function that allows to iterate a [Set] using the range keyword.
+	//
+	//	for i := range set.RangeIter() {
+	//		// Code
+	//	}
+	//
+	// Unlike [Set.Iter], it doesn't allow to remove elements during the iteration.
+	//RangeIter() func(yield func(T) bool)
 }
 
 // Set provides all methods to use a generic dynamic set.
