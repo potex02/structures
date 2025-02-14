@@ -207,6 +207,23 @@ func (t *MultiTreeTable[K, T]) Iter() Iterator[K, T] {
 	return NewMultiTreeTableIterator(t)
 }
 
+// RangeIter returns a function that allows to iterate a [MultiTreeTable] using the range keyword.
+//
+//	for i := range t.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [MultiTreeTable.Iter], it doesn't allow to remove elements during the iteration.
+func (t *MultiTreeTable[K, T]) RangeIter() func(yield func(K, T) bool) {
+	return func(yield func(K, T) bool) {
+		for i := range t.objects.RangeIter() {
+			if !yield(i.Key(), i.Element()) {
+				return
+			}
+		}
+	}
+}
+
 // Equal returns true if t and st are both multitables and their keys and elements are equals.
 // In any other case, it returns false.
 //

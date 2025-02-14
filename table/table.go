@@ -30,7 +30,7 @@ type BaseTable[K util.Comparer, T any] interface {
 	Each(fun func(key K, element T))
 	// Stream returns a [Stream] rapresenting the table.
 	Stream() *Stream[K, T]
-	// Iter returns an [Iterator] which permits to iterate a [Table].
+	// Iter returns an [Iterator] which permits to iterate a [BaseTable].
 	//
 	//	for i := table.Iter(); !i.End(); i = i.Next() {
 	//		key := i.Key()
@@ -38,6 +38,14 @@ type BaseTable[K util.Comparer, T any] interface {
 	//		// Code
 	//	}
 	Iter() Iterator[K, T]
+	// RangeIter returns a function that allows to iterate a [BaseTable] using the range keyword.
+	//
+	//	for i := range table.RangeIter() {
+	//		// Code
+	//	}
+	//
+	// Unlike [BaseTable.Iter], it doesn't allow to remove elements during the iteration.
+	RangeIter() func(yield func(K, T) bool)
 }
 
 // Table provides all methods to use a generic dynamic table.

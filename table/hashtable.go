@@ -132,11 +132,11 @@ func (t *HashTable[K, T]) Put(key K, e T) (T, bool) {
 		t.objects[key.Hash()] = list
 		return result, false
 	}
-	for i := hash.Iter(); !i.End(); i = i.Next() {
-		if key.Compare(i.Element().Key()) == 0 {
+	for _, i := range hash.RangeIter() {
+		if key.Compare(i.Key()) == 0 {
 
-			result = i.Element().Element()
-			i.Element().SetElement(e)
+			result = i.Element()
+			i.SetElement(e)
 			return result, true
 		}
 	}
@@ -208,6 +208,25 @@ func (t *HashTable[K, T]) Clear() {
 //	}
 func (t *HashTable[K, T]) Iter() Iterator[K, T] {
 	return NewHashTableIterator(t)
+}
+
+// RangeIter returns a function that allows to iterate a [HashTable] using the range keyword.
+//
+//	for i := range t.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [HashTable.Iter], it doesn't allow to remove elements during the iteration.
+func (t *HashTable[K, T]) RangeIter() func(yield func(K, T) bool) {
+	return func(yield func(K, T) bool) {
+		for _, i := range t.objects {
+			for _, j := range i.RangeIter() {
+				if !yield(j.Key(), j.Element()) {
+					return
+				}
+			}
+		}
+	}
 }
 
 // Equal returns true if t and st are both [Table] and their keys and elements are equals.

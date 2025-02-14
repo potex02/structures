@@ -250,6 +250,25 @@ func (t *MultiHashTable[K, T]) Iter() Iterator[K, T] {
 	return NewMultiHashTableIterator(t)
 }
 
+// RangeIter returns a function that allows to iterate a [MultiHashTable] using the range keyword.
+//
+//	for i := range t.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [MultiHashTable.Iter], it doesn't allow to remove elements during the iteration.
+func (t *MultiHashTable[K, T]) RangeIter() func(yield func(K, T) bool) {
+	return func(yield func(K, T) bool) {
+		for _, i := range t.objects {
+			for _, j := range i.RangeIter() {
+				if !yield(j.Key(), j.Element()) {
+					return
+				}
+			}
+		}
+	}
+}
+
 // Equal returns true if t and st are both multitables and their keys and elements are equals.
 // In any other case, it returns false.
 //
