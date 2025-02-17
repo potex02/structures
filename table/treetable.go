@@ -197,7 +197,7 @@ func (t *TreeTable[K, T]) RangeIter() func(yield func(K, T) bool) {
 // Equal returns true if t and st are both [Table] and their keys and elements are equals.
 // In any other case, it returns false.
 //
-// Equal does not take into account the effective type of st. This means that if st is an [HashTable],
+// Equal does not take into account the effective type of st. This means that if st is a [HashTable],
 // but the elements of t and the elements of st are equals, this method returns anyway true.
 func (t *TreeTable[K, T]) Equal(st any) bool {
 	table, ok := st.(Table[K, T])

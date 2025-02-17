@@ -110,6 +110,23 @@ func (s *TreeSet[T]) Iter() Iterator[T] {
 	return NewTreeSetIterator(s)
 }
 
+// RangeIter returns a function that allows to iterate a [TreeSet] using the range keyword.
+//
+//	for i := range s.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [TreeSet.Iter], it doesn't allow to remove elements during the iteration.
+func (s *TreeSet[T]) RangeIter() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for i := range s.objects.RangeIter() {
+			if !yield(i) {
+				return
+			}
+		}
+	}
+}
+
 // Equal returns true if s and st are both sets and have the same length and contains the same elements.
 // In any other case, it returns false.
 //

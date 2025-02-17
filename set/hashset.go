@@ -96,7 +96,7 @@ func (s *HashSet[T]) Clear() {
 	s.objects.Clear()
 }
 
-// Iter returns an [Iterator] which permits to iterate an [HashSet].
+// Iter returns an [Iterator] which permits to iterate a [HashSet].
 //
 //	for i := s.Iter(); !i.End(); i = i.Next() {
 //		element := i.Element()
@@ -106,18 +106,22 @@ func (s *HashSet[T]) Iter() Iterator[T] {
 	return NewHashSetIterator(s)
 }
 
-// RangeIter returns a function that allows to iterate an [HashSet] using the range keyword.
+// RangeIter returns a function that allows to iterate a [HashSet] using the range keyword.
 //
 //	for i := range s.RangeIter() {
 //		// Code
 //	}
 //
 // Unlike [HashSet.Iter], it doesn't allow to remove elements during the iteration.
-/*func (s *HashSet[T]) RangeIter() func(yield func(T) bool) {
+func (s *HashSet[T]) RangeIter() func(yield func(T) bool) {
 	return func(yield func(T) bool) {
-
+		for i := range s.objects.RangeIter() {
+			if !yield(i) {
+				return
+			}
+		}
 	}
-}*/
+}
 
 // Equal returns true if s and st are both sets and have the same lengtha nd contains the same elements.
 // In any other case, it returns false.
@@ -164,7 +168,7 @@ func (s *HashSet[T]) Hash() uint64 {
 }
 
 // Copy returns a set containing a copy of the elements of s.
-// The result of this method is of type [Set], but the effective table which is created is an [HashSet].
+// The result of this method is of type [Set], but the effective table which is created is a [HashSet].
 //
 // This method uses [util.Copy] to make copies of the elements.
 func (s *HashSet[T]) Copy() Set[T] {

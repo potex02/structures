@@ -41,7 +41,7 @@ type BaseSet[T util.Comparer] interface {
 	//	}
 	//
 	// Unlike [Set.Iter], it doesn't allow to remove elements during the iteration.
-	//RangeIter() func(yield func(T) bool)
+	RangeIter() func(yield func(T) bool)
 }
 
 // Set provides all methods to use a generic dynamic set.

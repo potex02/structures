@@ -51,7 +51,7 @@ type Iterator[K util.Comparer, T any] interface {
 	End() bool
 }
 
-// HashTableIterator is an iterator of an [HashTable].
+// HashTableIterator is an iterator of a [HashTable].
 type HashTableIterator[K util.Hasher, T any] struct {
 	// contains filtered or unexported fields
 	table    *HashTable[K, T]

@@ -280,7 +280,7 @@ func (t *HashTable[K, T]) Hash() uint64 {
 }
 
 // Copy returns a table containing a copy of the elements of t.
-// The result of this method is of type [Table], but the effective table which is created is an [HashTable].
+// The result of this method is of type [Table], but the effective table which is created is a [HashTable].
 //
 // This method uses [util.Copy] to make copies of the elements.
 func (t *HashTable[K, T]) Copy() Table[K, T] {

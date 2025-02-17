@@ -48,13 +48,13 @@ type Iterator[T util.Comparer] interface {
 	End() bool
 }
 
-// HashSetIterator is an iterator of an [HashSet] or [MultiHashSet].
+// HashSetIterator is an iterator of a [HashSet] or [MultiHashSet].
 type HashSetIterator[T util.Hasher] struct {
 	// contains filtered or unexported fields
 	iterator table.Iterator[T, uint8]
 }
 
-// NewHashSetIterator returns a new [HashSetIterator] for an [HashSet] associated at the set parameter.
+// NewHashSetIterator returns a new [HashSetIterator] for a [HashSet] associated at the set parameter.
 func NewHashSetIterator[T util.Hasher](set *HashSet[T]) Iterator[T] {
 	if set.IsEmpty() {
 		return &endIterator[T]{}

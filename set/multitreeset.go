@@ -141,6 +141,23 @@ func (s *MultiTreeSet[T]) Iter() Iterator[T] {
 	return NewMultiTreeSetIterator(s)
 }
 
+// RangeIter returns a function that allows to iterate a [MultiTreeSet] using the range keyword.
+//
+//	for i := range s.RangeIter() {
+//		// Code
+//	}
+//
+// Unlike [MultiTreeSet.Iter], it doesn't allow to remove elements during the iteration.
+func (s *MultiTreeSet[T]) RangeIter() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for i := range s.objects.RangeIter() {
+			if !yield(i) {
+				return
+			}
+		}
+	}
+}
+
 // Equal returns true if s and st are both multisets and have the same lengtha nd contains the same elements.
 // In any other case, it returns false.
 //
